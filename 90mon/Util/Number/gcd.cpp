@@ -1,9 +1,5 @@
-#include <iostream>
-#include <vector>
-#include <queue>
+#include<iostream>
 
-using namespace std;
- 
 //aとbの最大公約数を計算
 long long gcd(long long a, long long b) {
     if(b == 0) return a;
@@ -29,8 +25,7 @@ long long extgcd(long long a, long long b, long long& x, long long& y) {
 
 
 //拡張ユークリッドの互除法２(筆算形式)
-//初期値a_0, b_0をどう組み合わせるとa,bになるのかをaxy, bxyで保持し続ける 
-//最初のよびだしで
+//初期値a, bをどう組み合わせるとr_n-1,r_nになるのかをaxy, bxyで保持し続ける 
 pair<long long , long long>xyAns;
 long long extgcd2_aux(long long a, long long b, pair<long long , long long>axy, pair<long long, long long>bxy, bool swaped) {
 
@@ -94,7 +89,7 @@ void debugextgcd2(){
     cout << "(x,y)=(" << xyAns.first << "," << xyAns.second << ")" << endl; 
     cout << " extgcd2(28,21) = " << extgcd2(28, 21) << endl;
     cout << "(x,y)=(" << xyAns.first << "," << xyAns.second << ")" << endl; 
-    cout << " extgcd2(21,35) = " << extgcd2(21, 35) << endl;
+    cout << " extgcd2(21,35) = " << extgcd2(35, 21) << endl;
     cout << "(x,y)=(" << xyAns.first << "," << xyAns.second << ")" << endl; 
     cout << " extgcd2(192,54) = " << extgcd2(192, 54) << endl;
     cout << "(x,y)=(" << xyAns.first << "," << xyAns.second << ")" << endl; 
@@ -102,14 +97,3 @@ void debugextgcd2(){
     cout << "(x,y)=(" << xyAns.first << "," << xyAns.second << ")" << endl; 
 
 }
-
-
-int main(){
-
-    //debugextgcd();
-    debugextgcd2();
-
-    return 0;
-}
-
-
