@@ -104,7 +104,9 @@
     "source_location": "cpp",
     "ranges": "cpp",
     "stop_token": "cpp",
-    "syncstream": "cpp"
+    "syncstream": "cpp",
+    "__bits": "cpp",
+    "filesystem": "cpp"
   },
   "C_Cpp_Runner.cCompilerPath": "/usr/bin/clang",
   "C_Cpp_Runner.cppCompilerPath": "/usr/local/bin/g++",

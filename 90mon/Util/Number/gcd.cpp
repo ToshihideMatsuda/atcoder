@@ -1,14 +1,15 @@
 #include<iostream>
+typedef long long ll;
 
 //aとbの最大公約数を計算
-long long gcd(long long a, long long b) {
+ll gcd(ll a, ll b) {
     if(b == 0) return a;
     return gcd(b, a%b);
 }
 
 //拡張ユークリッドの互除法
 //ax+by=gcd(a,b)を計算（正直理解しづらい。。。）
-long long extgcd(long long a, long long b, long long& x, long long& y) {
+ll extgcd(ll a, ll b, ll& x, ll& y) {
     int d = a;
     if(b !=0) {
         
@@ -26,8 +27,8 @@ long long extgcd(long long a, long long b, long long& x, long long& y) {
 
 //拡張ユークリッドの互除法２(筆算形式)
 //初期値a, bをどう組み合わせるとr_n-1,r_nになるのかをaxy, bxyで保持し続ける 
-pair<long long , long long>xyAns;
-long long extgcd2_aux(long long a, long long b, pair<long long , long long>axy, pair<long long, long long>bxy, bool swaped) {
+pair<ll , ll>xyAns;
+ll extgcd2_aux(ll a, ll b, pair<ll , ll>axy, pair<ll, ll>bxy, bool swaped) {
 
     if(b == 0){
         //逆順になっているので元の順序に戻しておく
@@ -38,8 +39,8 @@ long long extgcd2_aux(long long a, long long b, pair<long long , long long>axy, 
         return a;
     }
     else{
-        long long q = a/b;
-        long long r = a%b;
+        ll q = a/b;
+        ll r = a%b;
         return extgcd2_aux(
             b, 
             r, 
@@ -49,7 +50,7 @@ long long extgcd2_aux(long long a, long long b, pair<long long , long long>axy, 
     }
 }
 
-long long extgcd2(long long a, long long b) {
+ll extgcd2(ll a, ll b) {
     bool swaped = a < b;
     if(swaped) swap(a, b);
     return extgcd2_aux(a,b,{1,0}, {0,1}, swaped);
@@ -67,7 +68,7 @@ void debuggcd(){
 }
 
 void debugextgcd(){
-    long long x,y;
+    ll x,y;
     cout << " extgcd(2,5,x,y) = " << extgcd(2,5,x,y) << endl;
     cout << "(x,y)=(" << x << "," << y << ")" << endl; 
     cout << " extgcd(5,3,x,y) = " << extgcd(5,3,x,y) << endl;
