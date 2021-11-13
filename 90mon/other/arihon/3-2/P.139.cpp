@@ -7,9 +7,13 @@
 using namespace std;
 
 
-int rev[16][16];
+
+int N=14;
+string cows ="BBFBFFBBFBFBBB";
 
 
+
+int rev[15];
 
 int check(int k) {
 

@@ -8,7 +8,7 @@ using namespace std;
 
 
 
-int P =5;
+int N=7;
 vector<int> a = {1,8,8,8,1};
 
 
