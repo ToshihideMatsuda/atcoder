@@ -1,5 +1,6 @@
 #include <iostream>
 #include <unordered_map>
+#include <vector>
 using namespace std;
 
 template<typename T>
@@ -53,49 +54,91 @@ struct UnionFindTree {
 };
 
 
+struct UnionFindTreeWithSize {
+
+    vector<int> tree;  // 実態
+                       // 正数:子, 負数:親(値は子の数)、0:未初期化
+    vector<int> dep;   // unionfind木の深さ
+
+    UnionFindTreeWithSize(int n): tree(n,0), dep(n,0){
+	    for (int i = 0; i < n; i ++) {
+	        insert(i);
+	    }
+
+    }
+
+    void insert(int edge){
+        tree[edge] = -1;
+        dep[edge] = 1;
+    }
+
+    // rootを辿って同じものかを判定
+    bool same (int e1, int e2)  {
+        int x = root(e1);
+        int y = root(e2);
+
+        if(x == y) return true;
+        return false;
+    }
+
+    // rootを辿って、深さに応じてくっつける
+    void unionTree(int e1, int e2) {
+        int x = root(e1);
+        int y = root(e2);
+
+        if(x == y) return;
+
+        if(dep[x] >= dep[y] ) {
+            tree[x] += tree[y]; //負数の要素をくっつける
+            tree[y] = x;
+            dep[y] ++;
+        } else {
+            tree[y] += tree[x]; //負数の要素をくっつける
+            tree[x] = y;
+            dep[x] ++;
+        }
+    }
+
+    // treeの先を辿ってtreeにする
+    int root(int e) {
+        int r = tree[e];
+        if(r < 0 ) { return e;} //負数が親
+        else {
+            tree[e] = root(r);
+            return tree[e];
+        }
+    }
+
+    int getSize(int e) {
+        int r = root(e);
+        return tree[r] * -1;
+    }
+
+};
+
+
 int conv(int i, int j) { return i + 2000 * j; }
  
 bool red[2001][2001];
  
 int main(){
-    int h,w,q;
-    std::cin >> h >> w >> q;
- 
-    UnionFindTree<int> utree;
-	for (int i = 1; i < 2000*2000+1; i ++) {
-	utree.insert(i);
+    UnionFindTreeWithSize utree(100);
+	for (int i = 0; i < 100; i ++) {
+	    utree.insert(i);
 	}
+
+    int zero = utree.getSize(0);
+    utree.unionTree(0,1);
+    utree.unionTree(1,2);
+    utree.unionTree(2,3);
+    int two = utree.getSize(2);
+    utree.unionTree(4,1);
+    utree.unionTree(8,9);
+    utree.unionTree(10,9);
+    two = utree.getSize(2);
+    int ten = utree.getSize(10);
 	
 	
-    string s = "";
-    for (int i = 0; i < q; i ++) {
-        int t;
-        cin >> t;
-        if(t==1) {
-            int ra, ca;
-            cin >> ra >> ca;
- 
-            red[ra][ca] = true;
- 
-            if(red[ra - 1][ca] == true) utree.unionTree(conv(ra, ca), conv(ra-1, ca));
-            if(red[ra + 1][ca] == true) utree.unionTree(conv(ra, ca), conv(ra+1, ca));
-            if(red[ra][ca - 1] == true) utree.unionTree(conv(ra, ca), conv(ra, ca-1));
-            if(red[ra][ca + 1] == true) utree.unionTree(conv(ra, ca), conv(ra, ca+1));
-        }
-        else if(t==2) {
-            int ra, ca, rb, cb;
-            cin >> ra >> ca  >> rb >> cb;
-            bool value = utree.same( conv(ra, ca), conv(rb,  cb)) && red[ra][ca] && red[rb][cb];
-            
-            if(value) {
-                s += "Yes\n";
-            } else {
-                s += "No\n";
-            }
-        }
-    }
- 
-    std::cout << s;
  
     return 0;
 }

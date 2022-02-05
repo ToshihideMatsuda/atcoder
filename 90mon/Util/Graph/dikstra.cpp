@@ -1,5 +1,12 @@
+#define rep(i,n)     for(int i = 0; i < n; i++ ) 
+#define reps(i,m,n)  for(int i = m; i < n; i++ ) 
+
+#define INT_MAX  1<< 28
+
+vector<int> G[MAX_N];
+
 void dikstra(int start) {
-    for (int i = 1; i < n+1; i ++) cost[i] = INT_MAX;
+    reps(i,1,N+1) cost[i] = INT_MAX;
 
     priority_queue<pair<int,int>, vector<pair<int,int>>,greater<pair<int, int>>> Q;
     
@@ -9,7 +16,7 @@ void dikstra(int start) {
     while(Q.size() > 0) {
         auto from = Q.top();Q.pop();
         auto to = G[from.second];
-        for(int i = 0; i < to.size(); i++){
+        rep(i,to.size()){
             int current = cost[to[i].second];
             int better = to[i].first + from.first;
             if(current > better){
