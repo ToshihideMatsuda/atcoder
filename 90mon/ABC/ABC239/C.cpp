@@ -3,11 +3,9 @@
 #include <unordered_map>
 #include <map>
 #include <set>
-#include <stack>
 #include <queue>
 #include <algorithm>
 #include <iomanip>
-#include <numeric>
 
 using namespace std;
 
@@ -28,54 +26,31 @@ typedef long long ll;
 #if debug == true
     #define MAX_N 100 + 5
 #else
-    #define MAX_N 2*100000 + 5
+    #define MAX_N 2 * 100000 + 5
 #endif
 
-void OK() {
-  cout << "Yes" << endl;
-  exit(0);
-}
+int dx[] = {1, 2,  1, 2, -1, -2,  -1, -2};
+int dy[] = {2, 1, -2,-1,  2,  1,  -2, -1};
+
 
 void solve(){
-  ll N, K;
-  cin >> N >> K;
+    int x1, y1, x2, y2;
+    cin >> x1 >> y1 >> x2 >> y2;
 
-  vector<ll>A(N);
-  rep(i,N) cin >> A[i];
+    set<pair<int,int>> kouho1, kouho2;
 
-  ll X = 0;
-  ll cnt = 0;
-  unordered_map<ll,int> s;
-  rep(i,N) {
-    if(s.count(X%N)>0) {
-      s.insert(X%N);
+    rep(i,8) {
+        kouho1.insert({x1 + dx[i], y1 + dy[i]});
+        kouho2.insert({x2 + dx[i], y2 + dy[i]});
     }
-    else {
-      s[X%N] = i;
+
+    for(auto xy: kouho1) {
+        if(kouho2.count(xy) > 0) {
+            cout << "Yes" << endl;
+            return;
+        }
     }
-    cout << "X%N: " << X%N << endl;
-    X += A[X%N];
-    if(X%N == 0) {
-      cnt = i+1;
-    }
-  }
-
-  X = 0;
-  if(K <= cnt) {
-    rep(i,K) X += A[i];
-  } else {
-    ll X0 =0;
-    rep(i,cnt) X0 += A[i];
-
-    X = (K / cnt) * X0;
-    ll K0 = K % cnt;
-    rep(i,K0) X += A[X % N];
-  }
-    cout << X << endl;
-
-
-
-  return;
+    cout << "No" << endl;
 }
 
 
@@ -93,4 +68,3 @@ int main(){
 
     return 0;
 }
-

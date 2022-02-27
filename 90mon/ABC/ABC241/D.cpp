@@ -37,43 +37,44 @@ void OK() {
 }
 
 void solve(){
-  ll N, K;
-  cin >> N >> K;
+  ll Q, q, x, k;
+  cin >> Q;
 
-  vector<ll>A(N);
-  rep(i,N) cin >> A[i];
+  vector<ll> A;
 
-  ll X = 0;
-  ll cnt = 0;
-  unordered_map<ll,int> s;
-  rep(i,N) {
-    if(s.count(X%N)>0) {
-      s.insert(X%N);
+  rep(_,Q) { 
+    cin >> q;
+    if(q == 1) {
+      cin >> x;
+      auto it = lower_bound(A.begin(),A.end(),x);
+      A.insert(it, x);
     }
-    else {
-      s[X%N] = i;
-    }
-    cout << "X%N: " << X%N << endl;
-    X += A[X%N];
-    if(X%N == 0) {
-      cnt = i+1;
-    }
+    else if(q == 2) {
+      cin >> x >> k;
+      auto it = upper_bound(A.begin(),A.end(),x);
+      int K = distance(A.begin(),it);
+      if(K == 0) {
+        cout << -1 << endl;
+      } else if(K-(k-1) < 0) {
+        cout << -1 << endl;
+      } else {
+        cout << A[K-(k-1)] << endl;
+      }
+
+    } else if(q == 3) {
+      cin >> x >> k;
+      auto it = lower_bound(A.begin(),A.end(),x);
+      int K = distance(A.begin(),it);
+      if(K == A.size()) {
+        cout << -1 << endl;
+      } else if(K+(k-1) >= A.size()) {
+        cout << -1 << endl;
+      } else {
+        cout << A[K+(k-1)] << endl;
+      }
+    } 
+
   }
-
-  X = 0;
-  if(K <= cnt) {
-    rep(i,K) X += A[i];
-  } else {
-    ll X0 =0;
-    rep(i,cnt) X0 += A[i];
-
-    X = (K / cnt) * X0;
-    ll K0 = K % cnt;
-    rep(i,K0) X += A[X % N];
-  }
-    cout << X << endl;
-
-
 
   return;
 }

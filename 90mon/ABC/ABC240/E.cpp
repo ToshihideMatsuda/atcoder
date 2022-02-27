@@ -31,51 +31,45 @@ typedef long long ll;
     #define MAX_N 2*100000 + 5
 #endif
 
-void OK() {
-  cout << "Yes" << endl;
-  exit(0);
+vector<int> G[MAX_N];
+pair<int,int> ans[MAX_N];
+int cur = 1;
+
+void computeAns(int v, int from) {
+    if(G[v].size() == 1 && G[v][0] == from) {
+        ans[v] = {cur, cur};
+        cur ++;
+        return;
+    }
+
+    int l = INF;
+    int r = -1;
+
+    for(auto u : G[v]) {
+        if(u == from) continue;
+        computeAns(u, v);
+        l = min(l, ans[u].first);
+        r = max(r, ans[u].second);
+    }
+    ans[v] = {l,r};
 }
 
 void solve(){
-  ll N, K;
-  cin >> N >> K;
-
-  vector<ll>A(N);
-  rep(i,N) cin >> A[i];
-
-  ll X = 0;
-  ll cnt = 0;
-  unordered_map<ll,int> s;
-  rep(i,N) {
-    if(s.count(X%N)>0) {
-      s.insert(X%N);
+    int N;
+    cin >> N;
+    rep(i,N-1) {
+        int a,b;
+        cin >> a >> b;
+        G[a].push_back(b);
+        G[b].push_back(a);
     }
-    else {
-      s[X%N] = i;
+
+    computeAns(1,-1);
+
+    reps(i,1, N+1) {
+        cout << ans[i].first << " " << ans[i].second << endl;
     }
-    cout << "X%N: " << X%N << endl;
-    X += A[X%N];
-    if(X%N == 0) {
-      cnt = i+1;
-    }
-  }
 
-  X = 0;
-  if(K <= cnt) {
-    rep(i,K) X += A[i];
-  } else {
-    ll X0 =0;
-    rep(i,cnt) X0 += A[i];
-
-    X = (K / cnt) * X0;
-    ll K0 = K % cnt;
-    rep(i,K0) X += A[X % N];
-  }
-    cout << X << endl;
-
-
-
-  return;
 }
 
 
@@ -93,4 +87,3 @@ int main(){
 
     return 0;
 }
-

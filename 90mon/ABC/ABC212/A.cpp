@@ -31,51 +31,18 @@ typedef long long ll;
     #define MAX_N 2*100000 + 5
 #endif
 
-void OK() {
-  cout << "Yes" << endl;
-  exit(0);
-}
 
 void solve(){
-  ll N, K;
-  cin >> N >> K;
-
-  vector<ll>A(N);
-  rep(i,N) cin >> A[i];
-
-  ll X = 0;
-  ll cnt = 0;
-  unordered_map<ll,int> s;
-  rep(i,N) {
-    if(s.count(X%N)>0) {
-      s.insert(X%N);
+    int A, B;
+    cin >> A >> B;
+    if(A > 0 && B == 0) {
+        cout << "Gold" <<endl;
     }
-    else {
-      s[X%N] = i;
+    else if(A > 0 && B > 0) {
+        cout << "Alloy" <<endl;
+    } else {
+        cout << "Silver" <<endl;
     }
-    cout << "X%N: " << X%N << endl;
-    X += A[X%N];
-    if(X%N == 0) {
-      cnt = i+1;
-    }
-  }
-
-  X = 0;
-  if(K <= cnt) {
-    rep(i,K) X += A[i];
-  } else {
-    ll X0 =0;
-    rep(i,cnt) X0 += A[i];
-
-    X = (K / cnt) * X0;
-    ll K0 = K % cnt;
-    rep(i,K0) X += A[X % N];
-  }
-    cout << X << endl;
-
-
-
-  return;
 }
 
 
@@ -93,4 +60,3 @@ int main(){
 
     return 0;
 }
-

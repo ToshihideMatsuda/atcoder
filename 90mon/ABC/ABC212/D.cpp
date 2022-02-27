@@ -31,51 +31,34 @@ typedef long long ll;
     #define MAX_N 2*100000 + 5
 #endif
 
-void OK() {
-  cout << "Yes" << endl;
-  exit(0);
-}
 
 void solve(){
-  ll N, K;
-  cin >> N >> K;
+    ll Qs;
+    cin >> Qs;
 
-  vector<ll>A(N);
-  rep(i,N) cin >> A[i];
-
-  ll X = 0;
-  ll cnt = 0;
-  unordered_map<ll,int> s;
-  rep(i,N) {
-    if(s.count(X%N)>0) {
-      s.insert(X%N);
+    priority_queue<
+        pair<ll,ll>, 
+        vector<pair<ll,ll>>, 
+        greater<pair<ll,ll>>> Q;
+    vector<ll> R;
+    R.push_back(0);
+    rep(_, Qs) {
+        ll q,x;
+        cin  >> q;
+        if(q == 1) {
+            cin >> x;
+            x = x - R.back();
+            Q.push({x, R.size() - 1});
+        } else if(q == 2) {
+            cin >> x;
+            R.push_back(R.back() + x);
+        } else {
+            pair<ll,ll> q = Q.top();Q.pop();
+            ll ans = (q.first + R[q.second]) + (R.back() - R[q.second]);
+            cout << ans << endl; 
+        }
     }
-    else {
-      s[X%N] = i;
-    }
-    cout << "X%N: " << X%N << endl;
-    X += A[X%N];
-    if(X%N == 0) {
-      cnt = i+1;
-    }
-  }
 
-  X = 0;
-  if(K <= cnt) {
-    rep(i,K) X += A[i];
-  } else {
-    ll X0 =0;
-    rep(i,cnt) X0 += A[i];
-
-    X = (K / cnt) * X0;
-    ll K0 = K % cnt;
-    rep(i,K0) X += A[X % N];
-  }
-    cout << X << endl;
-
-
-
-  return;
 }
 
 
@@ -94,3 +77,23 @@ int main(){
     return 0;
 }
 
+
+/*
+16
+1 3
+1 5
+1 2
+2 2
+1 1
+1 3
+1 8
+2 1
+1 4
+3
+3
+3
+3
+3
+3
+3
+*/

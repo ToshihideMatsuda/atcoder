@@ -31,51 +31,47 @@ typedef long long ll;
     #define MAX_N 2*100000 + 5
 #endif
 
-void OK() {
-  cout << "Yes" << endl;
-  exit(0);
-}
 
 void solve(){
-  ll N, K;
-  cin >> N >> K;
+    int x;
+    cin >> x;
+    vector<int> X(4);
 
-  vector<ll>A(N);
-  rep(i,N) cin >> A[i];
+    X[0] = x/1000;
+    X[1] = (x - X[0]*1000)/100;
+    X[2] = (x - X[0]*1000 - X[1]*100)/10;
+    X[3] = (x - X[0]*1000 - X[1]*100 - X[2]*10);
 
-  ll X = 0;
-  ll cnt = 0;
-  unordered_map<ll,int> s;
-  rep(i,N) {
-    if(s.count(X%N)>0) {
-      s.insert(X%N);
+    bool weak = true;
+    rep (i, 3) {
+        if(X[i] == X[i+1]) 
+            continue;
+        weak = false;
     }
-    else {
-      s[X%N] = i;
+    if(weak){
+       cout << "Weak" <<endl; 
+       return;
     }
-    cout << "X%N: " << X%N << endl;
-    X += A[X%N];
-    if(X%N == 0) {
-      cnt = i+1;
+
+    weak = true;
+    rep(i,3) {
+        
+        if(X[i] == 9 && X[i+1] == 0) 
+            continue;
+        if(X[i+1] -X[i] == 1) 
+            continue;
+        
+        weak = false;
     }
-  }
 
-  X = 0;
-  if(K <= cnt) {
-    rep(i,K) X += A[i];
-  } else {
-    ll X0 =0;
-    rep(i,cnt) X0 += A[i];
-
-    X = (K / cnt) * X0;
-    ll K0 = K % cnt;
-    rep(i,K0) X += A[X % N];
-  }
-    cout << X << endl;
+    if(weak){
+       cout << "Weak" <<endl; 
+       return;
+    }
+    cout << "Strong" <<endl; 
+    
 
 
-
-  return;
 }
 
 
@@ -93,4 +89,3 @@ int main(){
 
     return 0;
 }
-

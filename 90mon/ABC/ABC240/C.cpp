@@ -3,7 +3,6 @@
 #include <unordered_map>
 #include <map>
 #include <set>
-#include <stack>
 #include <queue>
 #include <algorithm>
 #include <iomanip>
@@ -28,54 +27,37 @@ typedef long long ll;
 #if debug == true
     #define MAX_N 100 + 5
 #else
-    #define MAX_N 2*100000 + 5
+    #define MAX_N 100000 + 5
 #endif
 
-void OK() {
-  cout << "Yes" << endl;
-  exit(0);
-}
+int N, X;
+
+bool dp[100+5][MAX_N];
 
 void solve(){
-  ll N, K;
-  cin >> N >> K;
+    cin >> N >> X;
 
-  vector<ll>A(N);
-  rep(i,N) cin >> A[i];
+    rep(i,100+5) rep(j,MAX_N) dp[i][j] = false;
+    dp[0][0] = true;
+    
 
-  ll X = 0;
-  ll cnt = 0;
-  unordered_map<ll,int> s;
-  rep(i,N) {
-    if(s.count(X%N)>0) {
-      s.insert(X%N);
+    reps(i,1,N+1) {
+        int a, b;
+        cin >> a >> b;
+        rep(j, MAX_N) {
+            if(j-a >= 0 && j-b >= 0) {
+                if(dp[i-1][j-a] || dp[i-1][j-b]) dp[i][j] = true;
+            } else if(j-a >= 0) { 
+                if(dp[i-1][j-a]) dp[i][j] = true;
+            } else if(j-b >= 0) {
+                if(dp[i-1][j-b]) dp[i][j] = true;
+            }
+        }
     }
-    else {
-      s[X%N] = i;
-    }
-    cout << "X%N: " << X%N << endl;
-    X += A[X%N];
-    if(X%N == 0) {
-      cnt = i+1;
-    }
-  }
-
-  X = 0;
-  if(K <= cnt) {
-    rep(i,K) X += A[i];
-  } else {
-    ll X0 =0;
-    rep(i,cnt) X0 += A[i];
-
-    X = (K / cnt) * X0;
-    ll K0 = K % cnt;
-    rep(i,K0) X += A[X % N];
-  }
-    cout << X << endl;
 
 
-
-  return;
+    if(dp[N][X]) cout << "Yes" << endl;
+    else cout << "No" << endl;
 }
 
 
@@ -93,4 +75,3 @@ int main(){
 
     return 0;
 }
-

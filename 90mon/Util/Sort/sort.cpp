@@ -91,6 +91,35 @@ void mergeSort(vector<int>&a,int left,int right){
 	
 }
 
+//mergeソート（転置数取得
+int merge_cnt(vector<int> &a) {
+  int n = a.size();
+
+  if (n <= 1) {
+    return 0;
+  }
+
+  int cnt = 0;
+
+  vector<int> b(a.begin(), a.begin() + n / 2);
+  vector<int> c(a.begin() + n / 2, a.end());
+
+  cnt += merge_cnt(b);
+  cnt += merge_cnt(c);
+
+  int ai = 0, bi = 0, ci = 0;
+  // merge の処理
+  while (ai < n) {
+    if (bi < (int)b.size() && (ci == (int)c.size() || b[bi] <= c[ci])) {
+      a[ai++] = b[bi++];
+    } else {
+      cnt += n / 2 - bi;
+      a[ai++] = c[ci++];
+    }
+  }
+  return cnt;
+}
+
 // 区間 [left,right)に対する クイックソート 
 void quickSort(vector<int>&a,int left,int right){
 	if(right-left <= 1) return;//leaf
@@ -140,3 +169,5 @@ void quick2(vector<int> a, int left, int right) {
     quick2(a,lessIndx, right);
 
 }
+
+
