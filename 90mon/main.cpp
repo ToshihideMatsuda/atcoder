@@ -37,44 +37,9 @@ void OK() {
 }
 
 void solve(){
-  ll N, K;
-  cin >> N >> K;
-
-  vector<ll>A(N);
-  rep(i,N) cin >> A[i];
-
-  ll X = 0;
-  ll cnt = 0;
-  unordered_map<ll,int> s;
-  rep(i,N) {
-    if(s.count(X%N)>0) {
-      s.insert(X%N);
-    }
-    else {
-      s[X%N] = i;
-    }
-    cout << "X%N: " << X%N << endl;
-    X += A[X%N];
-    if(X%N == 0) {
-      cnt = i+1;
-    }
-  }
-
-  X = 0;
-  if(K <= cnt) {
-    rep(i,K) X += A[i];
-  } else {
-    ll X0 =0;
-    rep(i,cnt) X0 += A[i];
-
-    X = (K / cnt) * X0;
-    ll K0 = K % cnt;
-    rep(i,K0) X += A[X % N];
-  }
-    cout << X << endl;
-
-
-
+    int i;
+    cin >> i;
+    cout << i * 2 + 1 << endl;
   return;
 }
 
