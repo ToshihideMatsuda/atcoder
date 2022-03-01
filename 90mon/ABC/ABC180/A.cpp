@@ -28,10 +28,9 @@ void OK() {
 }
 
 void solve(){
-    vector<int> a;
-    int i;
-    cin >> i;
-    cout << i * 8 + 1 << endl;
+    int n, a, b;
+    cin >> n >> a >> b;
+    cout << n-a+b << endl;
     return;
 }
 
