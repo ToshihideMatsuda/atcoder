@@ -5,20 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(lldb) 起動",
-            "type": "cppdbg",
+            "name": "(lldb) debug",
+            "type": "lldb",
             "request": "launch",
-            "program": "${workspaceFolder}/main",
+            "program": "${fileDirname}/${fileBasenameNoExtension}",
             "args": [],
-            "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "console": "externalTerminal",
-            "externalConsole": true,
+            "console": "integratedTerminal",
             "MIMode": "lldb",
-            "targetArchitecture": "x86_64",
-            "outputCapture": "std"
-        }
+        },
           
     ]
 }

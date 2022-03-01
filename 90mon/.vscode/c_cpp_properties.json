@@ -1,17 +1,19 @@
 {
   "configurations": [
     {
-      "name": "macos-clang-x64",
+      "name": "Mac",
       "includePath": [
         "${workspaceFolder}/**",
         "/usr/local/include/**"
       ],
       "defines": [],
-      "macFrameworkPath": [],
-      "compilerPath": "/usr/bin/gcc", 
+      "macFrameworkPath": [
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/System/Library/Frameworks"
+      ],
+      "compilerPath": "/usr/local/bin/g++", 
       "cStandard": "c11",
       "cppStandard": "c++14",
-      "intelliSenseMode": "macos-clang-x64"
+      "intelliSenseMode": "gcc-x64"
     }
   ],
   "version": 4
