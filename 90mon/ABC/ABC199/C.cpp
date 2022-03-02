@@ -37,11 +37,10 @@ void OK() {
   exit(0);
 }
 
-vector<int> G[MAX_N];
-
 void solve(){
-    int N, M;
-    cin >> N >> M;
+    int N, Q;
+    string S;
+    cin >> N >> S >> Q;
 
     bool chng = false;
     

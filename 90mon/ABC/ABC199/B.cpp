@@ -37,34 +37,22 @@ void OK() {
   exit(0);
 }
 
-vector<int> G[MAX_N];
-
 void solve(){
-    int N, M;
-    cin >> N >> M;
+    int N;
+    cin >> N;
+    vector<int> A(N),B(N);
+    rep(i,N) cin >> A[i];
+    rep(i,N) cin >> B[i];
 
-    bool chng = false;
-    
-    rep(i,Q){
-        int t, A, B;
-        cin >> t >> A >> B;
-        if(t == 1) {
-            int A2 = ((A-1) + (chng? N : 0) ) % (2*N);
-            int B2 = ((B-1) + (chng? N : 0) ) % (2*N);
-            swap(S[A2], S[B2]);
-        } else if (t == 2) {
-            chng = !chng;
-        }
+    int ans = 0;
+    int a =0, b = 1001;
+    rep(i,N){
+        a = max(A[i],a);
+        b = min(B[i],b);
     }
-    string T(S.begin(),   S.begin() + N);
-    string U(S.begin()+N, S.end());
-    if(chng) {
-        cout << U <<  T << endl;
-        return;
-    } else {
-        cout << T <<  U << endl;
-        return;
-    }
+    if(a <= b) ans = b - a + 1;
+    cout << ans << endl;
+    return;
 }
 
 
