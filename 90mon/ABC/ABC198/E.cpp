@@ -1,13 +1,3 @@
-#include <iostream>
-#include <vector>
-#include <unordered_map>
-#include <map>
-#include <set>
-#include <stack>
-#include <queue>
-#include <algorithm>
-#include <iomanip>
-#include <numeric>
 #include <bits/stdc++.h> 
 
 using namespace std;
@@ -29,7 +19,7 @@ typedef long long ll;
 #if debug == true
     #define MAX_N 100 + 5
 #else
-    #define MAX_N 2*100000 + 5
+    #define MAX_N 100000 + 5
 #endif
 
 void YES() {
@@ -45,50 +35,44 @@ void UNSOLVABLE() {
   cout << "UNSOLVABLE" << endl;
 }
 
+int N;
+int C[MAX_N];
 vector<int> G[MAX_N];
 
-void solve(){
+unordered_map<int,int> mp;
+vector<int> good;
 
-    string S[3];
-    cin >> S[0] >> S[1] >> S[2];
-
-    vector<int> ptn(10);
-    rep(i,10) ptn[i] = i;
-
-    string SS;
-    SS = S[0] + S[1] + S[2];
-    int mp[27];
-    int cnt = 0;
-    rep(i, 27) mp[i] = -1;
-    rep(i,SS.size()) {
-        if(mp[SS[i] - 'a'] == -1) mp[SS[i] - 'a'] = cnt ++;
+void dfs(int v, int bf) {
+    if(mp[C[v]] == 0) {
+        good.push_back(v);
     }
-
-    if(cnt >= 11) {
-        UNSOLVABLE();
-        return;
-    }
-
-    do {
-        ll s[3];
-        s[0] = 0;s[1] = 0;s[2] = 0;
-        rep(i,3) {
-            ll keta = 1;
-            if(ptn[mp[S[i][0] - 'a']] == 0) goto next;
-            rep(j,S[i].size()) {
-                s[i] += (ptn[mp[S[i][S[i].size() - 1 - j] - 'a']] * keta);
-                keta *= 10;
-            }
-            if(s[0] + s[1] == s[2]) {
-                cout << s[0] << endl << s[1] <<endl << s[2] << endl;
-                return;
-            }
+    mp[C[v]] ++;
+    for(int u : G[v]) {
+        if(u == bf) {
+            // 親の場合には何もしない
+            continue;
         }
+        dfs(u, v);
+    }
+    mp[C[v]] --;
+}
 
-        next:
-        continue;
-    } while(next_permutation(ptn.begin(), ptn.end()));
-    UNSOLVABLE();
+void solve(){
+    cin >> N;
+    rep(i,N) cin >> C[i];
+    rep(i,N-1) {
+        int a,b;
+        cin >> a >> b;
+        a--; b--;
+        G[a].push_back(b);
+        G[b].push_back(a);
+    }
+    dfs(0, -1);
+
+    sort(good.begin(),good.end());
+
+    for(int g : good) cout << g + 1 << endl;
+
 }
 
 
