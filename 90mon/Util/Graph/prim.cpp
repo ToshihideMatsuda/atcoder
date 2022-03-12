@@ -2,11 +2,13 @@
 #include <vector>
 #include <queue>
 
+//プリム法　重み付き連結グラフの最小全域木を求める最適化問題のアルゴリズム
+
 using namespace std;
 
 #define MAX_V 10000
 #define INF 1 << 28;
-vector<pair<int, int>> G[MAX_V+1]; // G[v] = { c, u } 頂点 v->u の辺のコストがc
+vector<pair<int, int>> G[MAX_V+1]; // G[from] = { cost, to } 頂点 from->to の辺のコストがcost
 int mincost[MAX_V+1];               // すでに確定済みの部分グラフTからの拡張点の最小コスト
 int used[MAX_V+1];
 int usedCnt =0;

@@ -14,14 +14,15 @@ using namespace std;
 
 #define debug false
 
-#define rep(i,n)     for(int i = 0; i < n; i++ ) 
-#define reps(i,m,n)  for(int i = m; i < n; i++ ) 
-
-
 typedef long long ll;
 
-#define INF 1 << 28
-#define MINF -1*(1 << 28)
+#define rep(i,n)     for(ll i = 0; i < n; i++ ) 
+#define reps(i,m,n)  for(ll i = m; i < n; i++ ) 
+
+
+
+#define INF 1 << 30
+#define MINF -1*(1 << 30)
 #define INF_LL 1LL << 60
 #define MINF_LL - (1LL << 60)
 #define MOD 998244353
@@ -29,7 +30,7 @@ typedef long long ll;
 #if debug == true
     #define MAX_N 100 + 5
 #else
-    #define MAX_N 2*100000 + 5
+    #define MAX_N 10000 + 5
 #endif
 
 void YES() {
@@ -45,65 +46,65 @@ void UNSOLVABLE() {
   cout << "UNSOLVABLE" << endl;
 }
 
-vector<int> G[MAX_N];
+
+/*
+    以下のロジックでグラフGに頂点aから頂点bへのコストcを入れておく
+    rep(i,M){
+        ll a, b, c;
+        cin >> a >> b >> c;
+        G.push_back({a,b,c});
+        G.push_back({b,a,c});
+    }
+*/
+vector<tuple<ll,ll,ll>> G; // G = [{from, to, cost}];
+
+ll N, M; // 頂点数, 辺の数
+
+
+ll d[MAX_N]; // distance（最終的な出力）
+// 戻り値が true -> 負の閉路がある
+bool bellmanford(ll start) {
+
+    rep(i,MAX_N) d[i] = INF_LL;
+    d[start] = 0;
+
+    ll from, to, cost;
+    rep (cnt, N) {
+        for (auto g : G) {
+            tie(from, to, cost) = g;
+
+            if (d[from] != INF_LL && d[from] + cost < d[to]) {
+                if(cnt == N-1) return true; //頂点数に達していれば負閉路がある
+                d[to] = d[from] + cost;
+            }
+        }
+    }
+    //負閉路がなし
+    return false;
+}
+
 
 void solve(){
+    cin >> N >> M;
 
-    string S[3];
-    cin >> S[0] >> S[1] >> S[2];
-
-    vector<int> ptn(10);
-    rep(i,10) ptn[i] = i;
-
-    string SS;
-    SS = S[0] + S[1] + S[2];
-    int mp[27];
-    int cnt = 0;
-    rep(i, 27) mp[i] = -1;
-    rep(i,SS.size()) {
-        if(mp[SS[i] - 'a'] == -1) mp[SS[i] - 'a'] = cnt ++;
+    rep(i,M){
+        ll a, b, c;
+        cin >> a >> b >> c;
+        G.push_back({a,b,c * -1});
     }
-
-    if(cnt >= 11) {
-        UNSOLVABLE();
+    bool ret = bellmanford(1);
+    if(ret) {
+        cout << "inf" << endl;
         return;
     }
 
-    do {
-        ll s[3];
-        s[0] = 0;s[1] = 0;s[2] = 0;
-        rep(i,3) {
-            ll keta = 1;
-            if(ptn[mp[S[i][0] - 'a']] == 0) goto next;
-            rep(j,S[i].size()) {
-                s[i] += (ptn[mp[S[i][S[i].size() - 1 - j] - 'a']] * keta);
-                keta *= 10;
-            }
-            if(s[0] + s[1] == s[2]) {
-                cout << s[0] << endl << s[1] <<endl << s[2] << endl;
-                return;
-            }
-        }
+    cout << -1LL*d[N] << endl;
 
-        next:
-        continue;
-    } while(next_permutation(ptn.begin(), ptn.end()));
-    UNSOLVABLE();
 }
 
 
 int main(){
-
-#if debug == true
-    while(true){
-        cout << "---debugMode---" << endl;
-#endif
-        solve();
-        cout << endl;
-#if debug == true
-    }
-#endif
-
+    solve();
     return 0;
 }
 
