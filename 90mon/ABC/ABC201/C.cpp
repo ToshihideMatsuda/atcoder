@@ -8,7 +8,6 @@
 #include <algorithm>
 #include <iomanip>
 #include <numeric>
-
 #include <bits/stdc++.h> 
 
 using namespace std;
@@ -38,39 +37,18 @@ void OK() {
   exit(0);
 }
 
-int dp[1000000+5][10];
-
-char next(char ch, int i) {
-    if ( i == 0 || i == 1 || i == 2) {
-        return (char)(((ch - 'A') + i)%3 + 'A') ;
-    } else {
-        cout << "Exception" << endl;
-        exit(1);
-    }
-}
-
-string S;
-char f(ll t, ll k) {
-    if(t == 0) return S[k];
-    if(k == 0) return next(S[k],t % 3);
-    else if (k % 2 == 0) return next(f(t-1, k/2), 1);
-    else if (k % 2 == 1) return next(f(t-1, k/2), 2);
-    return '$';
-}
+vector<int> G[MAX_N];
 
 void solve(){
-    int Q;
-    cin>> S >> Q;
-    vector<char> ans;
-    rep(_,Q) {
-        ll t, k;
-        cin >> t >> k;
-        k--;
-        ans.push_back(f(t,k));
-    }
-
-    rep(i,Q) cout << ans[i] << endl;
-    
+    string s;
+    cin >> s;
+    int mc =0;
+    rep(i,10) mc += (s[i] == 'o') ? 1 : 0;
+    if(mc > 4) 
+    {
+        cout << 0 << endl; 
+        return ;
+    } 
 }
 
 
@@ -88,5 +66,4 @@ int main(){
 
     return 0;
 }
-
 

@@ -40,36 +40,41 @@ void OK() {
 
 int dp[1000000+5][10];
 
-char next(char ch, int i) {
-    if ( i == 0 || i == 1 || i == 2) {
-        return (char)(((ch - 'A') + i)%3 + 'A') ;
-    } else {
-        cout << "Exception" << endl;
-        exit(1);
-    }
-}
+/*
+ACCCAAAA
 
-string S;
-char f(ll t, ll k) {
-    if(t == 0) return S[k];
-    if(k == 0) return next(S[k],t % 3);
-    else if (k % 2 == 0) return next(f(t-1, k/2), 1);
-    else if (k % 2 == 1) return next(f(t-1, k/2), 2);
-    return '$';
-}
-
+1 * 2 * 26
+1 * 1 * 3
+-1
+*/
 void solve(){
-    int Q;
-    cin>> S >> Q;
-    vector<char> ans;
-    rep(_,Q) {
-        ll t, k;
-        cin >> t >> k;
-        k--;
-        ans.push_back(f(t,k));
+    int T;
+    cin>> T;
+    vector<int> ans;
+    rep(_,T) {
+        int N;
+        string S;
+        cin >> N >> S;
+        
+        int inside = 1;
+        bool sameIsOk = true;
+
+        rep(i, (N+1) /2) {
+            char c = S[i];
+            int cnt = c - 'A' + 1;
+            
+            if(c != 'A') {
+                inside = (inside * cnt) % MOD + (cnt - 1)  %MOD;
+            }
+
+            if(S[i] > S[N-1-i]) sameIsOk = false;
+        }
+
+        int ansE = (inside + sameIsOk ? 1 : 0) % MOD;
+        ans.push_back(ansE);
     }
 
-    rep(i,Q) cout << ans[i] << endl;
+    rep(i,T) cout << ans[i] << endl;
     
 }
 
