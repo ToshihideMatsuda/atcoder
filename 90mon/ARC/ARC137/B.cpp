@@ -55,8 +55,8 @@ void solve(){
         if(A[i] == 0) { cursol --;}
         else { cursol ++;}
 
-        peak   = max(peak, cursol);
-        bottom = min(bottom, cursol);
+        peak   = max(peak, cursol);   //  1の個数 - 0の個数、の最大値
+        bottom = min(bottom, cursol); //  1の個数 - 0の個数、の最小値
 
         maxPoint  = max(maxPoint, cursol - bottom);
         minPoint  = min(minPoint, cursol - peak);
