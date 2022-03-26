@@ -36,36 +36,34 @@ void UNSOLVABLE() {
   cout << "UNSOLVABLE" << endl;
 }
 
+
+
 void solve(){
   ll N, M;
   cin >> N >> M;
-  vector<ll> A(N),B(N),C(M),D(M);
-  multiset<ll> ms;
-  rep(i,N) cin >> A[i];
-  rep(i,N) cin >> B[i];
-  rep(i,M) cin >> C[i];
-  rep(i,M) cin >> D[i];
 
-  vector<tuple<ll, ll, ll>> ABCD;
-  rep(i,N) ABCD.push_back({A[i], B[i], 0}); //ch
-  rep(i,M) ABCD.push_back({C[i], D[i], 1}); //box
+  vector<ll> A(N+1),C(N+M+1), B(M+1);
+  rep(i, N+1) cin >> A[i];
+  rep(i, N+M+1) cin >> C[i];
 
-  sort(ABCD.begin(), ABCD.end(), greater<tuple<ll, ll, ll>>());
 
-  ll a, b, t;
-  rep(i, ABCD.size()) {
-    tie(a, b, t) = ABCD[i];
-    if (t == 0) { //ch
-      auto e = ms.lower_bound(b);
-      if(e == ms.end() || ms.empty())  
-        NO();
-      
-      ms.erase(e);
-    } else {  //box
-      ms.insert(b);
+  reverse(A.begin(), A.end());
+  reverse(C.begin(), C.end());
+
+  rep(i, M +1) {
+     B[i]= C[i] / A[0];
+
+    rep(j,N+1) {
+      C[i+j] -= B[i] * A[j];
     }
   }
-  YES();
+
+  reverse(B.begin(), B.end());
+
+  rep(i, M +1) {
+    cout << B[i] << " ";
+  }
+  cout << endl;
 
 }
 
