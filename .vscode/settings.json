@@ -3,6 +3,8 @@
         "queue": "cpp",
         "stack": "cpp",
         "random": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "chrono": "cpp",
+        "cmath": "cpp"
     }
 }
