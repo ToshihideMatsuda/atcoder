@@ -14,7 +14,7 @@
             "environment": [],
             "console": "integratedTerminal",
             "MIMode": "lldb",
-        },
+        }
           
     ]
 }

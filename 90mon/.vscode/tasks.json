@@ -3,9 +3,12 @@
         {
             "type": "shell",
             "label": "C/C++: g++ debug build",
-            "command": "/usr/local/bin/g++",
+            "command": "clang++",
+            //"command": "/usr/local/bin/g++",
             "args": [
-                "-O0",
+                //"-O0",
+                "-std=c++14",
+                "-stdlib=libc++",
                 "-g",
                 "${file}",
                 "-o",
