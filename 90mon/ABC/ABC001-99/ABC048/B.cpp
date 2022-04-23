@@ -20,7 +20,7 @@ typedef long long ll;
 #if debug == true
     #define MAX_N 100 + 5
 #else
-    #define MAX_N 3000+5
+    #define MAX_N 10000 + 5
 #endif
 
 void YES() {
@@ -36,39 +36,24 @@ void UNSOLVABLE() {
   cout << "UNSOLVABLE" << endl;
 }
 
-
-ll dp[MAX_N][MAX_N][26+1][MAX_N];
-
 void solve(){
-  ll N, P;
-  cin >> N >> P;
+    ll a, b, x;
 
-  dp[0][0][0] = 1;
-  rep(c,26) {
-    dp[1][1][c] = 1;
-  }   
-  
+    cin >> a >> b >> x;
 
-  reps(i,1,N+1) {
-    //ok
-    rep(j,1,MAX_N) {
-      rep(c, 26) {
-        if(dp[i-1][j][c] > 0) {
+    if(a == 0 & b == 0) {
+        cout << 1 << endl;
+    } else if(a == 0) {
+        ll bb = b/x;
+        ll aa = (a-1)/x;
 
-        }
-          dp[i][j][c] = dp[i-1][j-1][c];
-      }
+        cout << bb + 1 << endl;
+    } else {
+        ll bb = b/x;
+        ll aa = (a-1)/x;
+
+        cout << bb - aa << endl;
     }
-    
-  }
-  
-  ll ans =0;
-
-  reps(j,1,27) reps(k,1,27) {
-    ans += dp[N][j][k][1];
-    ans %= P;
-  }
-  cout << ans << endl;
 
 }
 
