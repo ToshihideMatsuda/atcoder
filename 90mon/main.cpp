@@ -1,5 +1,4 @@
 #include <bits/stdc++.h> 
-
 using namespace std;
 
 typedef long long ll;
@@ -18,7 +17,7 @@ typedef long long ll;
 #define MINF_LL - (1LL << 60)
 #define MOD 998244353
 
-#define MAX_N 1000+5
+#define MAX_N 2*100000+5
 
 void YES() {
   cout << "Yes" << endl;
@@ -29,21 +28,17 @@ void NO() {
   cout << "No" << endl;
   exit(0);
 }
-void UNSOLVABLE() {
-  cout << "UNSOLVABLE" << endl;
-}
+int main()
+{
+    int S, T, X;
+    cin >> S >> T >> X;
+    if(S < T) {
+        if( S <= X && X < T ) YES();
+        NO();
+    } else {
+        if( (S <= X && X <= 23) || (0 <= X && X < T) ) YES();
+        NO();
+    }
 
-
-
-void solve(){
-  ll A, B;
-  
-  cout << max(0,A-B+1) <<endl;
-}
-
-
-
-int main(){
-    solve();
-    return 0;
+	return 0;
 }
