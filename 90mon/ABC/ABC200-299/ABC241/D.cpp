@@ -1,26 +1,18 @@
-#include <iostream>
-#include <vector>
-#include <unordered_map>
-#include <map>
-#include <set>
-#include <stack>
-#include <queue>
-#include <algorithm>
-#include <iomanip>
-#include <numeric>
+#include <bits/stdc++.h> 
 
 using namespace std;
 
 #define debug false
 
-#define rep(i,n)     for(int i = 0; i < n; i++ ) 
-#define reps(i,m,n)  for(int i = m; i < n; i++ ) 
-
-
 typedef long long ll;
 
-#define INF 1 << 28
-#define MINF -1*(1 << 28)
+#define rep(i,n)     for(ll i = 0; i < n; i++ ) 
+#define reps(i,m,n)  for(ll i = m; i < n; i++ ) 
+
+
+
+#define INF 1 << 30
+#define MINF -1*(1 << 30)
 #define INF_LL 1LL << 60
 #define MINF_LL - (1LL << 60)
 #define MOD 998244353
@@ -28,13 +20,23 @@ typedef long long ll;
 #if debug == true
     #define MAX_N 100 + 5
 #else
-    #define MAX_N 2*100000 + 5
+    #define MAX_N 10000 + 5
 #endif
 
-void OK() {
+void YES() {
   cout << "Yes" << endl;
   exit(0);
 }
+
+void NO() {
+  cout << "No" << endl;
+  exit(0);
+}
+void UNSOLVABLE() {
+  cout << "UNSOLVABLE" << endl;
+}
+
+
 
 void solve(){
   ll Q, q, x, k;
@@ -53,21 +55,17 @@ void solve(){
       cin >> x >> k;
       auto it = upper_bound(A.begin(),A.end(),x);
       int K = distance(A.begin(),it);
-      if(K == 0) {
-        cout << -1 << endl;
-      } else if(K-(k-1) < 0) {
+      if(K == 0 || K-k < 0) {
         cout << -1 << endl;
       } else {
-        cout << A[K-(k-1)] << endl;
+        cout << A[K-k] << endl;
       }
 
     } else if(q == 3) {
       cin >> x >> k;
       auto it = lower_bound(A.begin(),A.end(),x);
       int K = distance(A.begin(),it);
-      if(K == A.size()) {
-        cout << -1 << endl;
-      } else if(K+(k-1) >= A.size()) {
+      if(K == A.size() || K+(k-1) >= A.size()) {
         cout << -1 << endl;
       } else {
         cout << A[K+(k-1)] << endl;
@@ -79,19 +77,7 @@ void solve(){
   return;
 }
 
-
 int main(){
-
-#if debug == true
-    while(true){
-        cout << "---debugMode---" << endl;
-#endif
-        solve();
-        cout << endl;
-#if debug == true
-    }
-#endif
-
+    solve();
     return 0;
 }
-
