@@ -15,6 +15,10 @@ struct UnionFindTree {
         tree[edge] = edge;
         dep[edge] = 1;
     }
+    
+    bool exist(T edge){
+        return tree.count(edge) > 0;
+    }
 
     // rootを辿って同じものかを判定
     bool same (T e1, T e2)  {
