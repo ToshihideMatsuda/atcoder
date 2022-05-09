@@ -1,24 +1,15 @@
-#include <iostream>
-#include <vector>
-#include <unordered_map>
-#include <map>
-#include <set>
-#include <stack>
-#include <queue>
-#include <algorithm>
-#include <iomanip>
-#include <numeric>
 #include <bits/stdc++.h> 
-
+#include <unordered_map>
 using namespace std;
-
-#define debug false
 
 typedef long long ll;
 
 #define rep(i,n)     for(ll i = 0; i < n; i++ ) 
 #define reps(i,m,n)  for(ll i = m; i < n; i++ ) 
-
+#define max(a,b)   (a>b?a:b)
+#define max3(a,b,c) max(a,max(b,c))
+#define min(a,b)   (a<b?a:b)
+#define min3(a,b,c) min(a,min(b,c))
 
 
 #define INF 1 << 30
@@ -27,11 +18,7 @@ typedef long long ll;
 #define MINF_LL - (1LL << 60)
 #define MOD 998244353
 
-#if debug == true
-    #define MAX_N 100 + 5
-#else
-    #define MAX_N 10000 + 5
-#endif
+#define MAX_N 2*1000000+5
 
 void YES() {
   cout << "Yes" << endl;
@@ -42,69 +29,51 @@ void NO() {
   cout << "No" << endl;
   exit(0);
 }
-void UNSOLVABLE() {
-  cout << "UNSOLVABLE" << endl;
-}
 
 
-/*
-    以下のロジックでグラフGに頂点aから頂点bへのコストcを入れておく
-    rep(i,M){
-        ll a, b, c;
-        cin >> a >> b >> c;
-        G.push_back({a,b,c});
-        G.push_back({b,a,c});
-    }
-*/
-vector<tuple<ll,ll,ll>> G; // G = [{from, to, cost}];
+void solve() {
+    ll N, K;
+    cin >> N >> K;
+    
+    vector<ll> A(N);
+    rep(i,N) cin >> A[i];
 
-ll N, M; // 頂点数, 辺の数
+    ll X = 0, Y = 0;
+    ll L = 0, R = 0;
+
+    unordered_map<ll,pair<ll,ll>> mp;
 
 
-ll d[MAX_N]; // distance（最終的な出力）
-// 戻り値が true -> 負の閉路がある
-bool bellmanford(ll start) {
+    rep(i, min(K, N + 1) ) {
+        if(mp.count(X%N)) 
+        {
+            Y = X - mp[X%N].first;
+            R = L - mp[X%N].second;
+            L = mp[X%N].second;
 
-    rep(i,MAX_N) d[i] = INF_LL;
-    d[start] = 0;
-
-    ll from, to, cost;
-    rep (cnt, N) {
-        for (auto g : G) {
-            tie(from, to, cost) = g;
-
-            if (d[from] != INF_LL && d[from] + cost < d[to]) {
-                if(cnt == N-1) return true; //頂点数に達していれば負閉路がある
-                d[to] = d[from] + cost;
-            }
+            break;
         }
-    }
-    //負閉路がなし
-    return false;
-}
 
-
-void solve(){
-    cin >> N >> M;
-
-    rep(i,M){
-        ll a, b, c;
-        cin >> a >> b >> c;
-        G.push_back({a,b,c * -1});
-    }
-    bool ret = bellmanford(1);
-    if(ret) {
-        cout << "inf" << endl;
-        return;
+        mp[X%N] = {X, L};
+        X += A[X%N];
+        L++;
     }
 
-    cout << -1LL*d[N] << endl;
+    X = 0;
+
+    rep(_, L) X += A[X%N];
+    if(R > 0) 
+    {
+        if( (K-L)/R > 0) X += ((K-L)/R) * Y;
+        rep(_, (K-L)%R ) X += A[X%N];
+    }
+
+    cout << X << endl;
 
 }
 
-
-int main(){
+int main()
+{
     solve();
-    return 0;
+	return 0;
 }
-
