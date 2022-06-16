@@ -7,6 +7,12 @@ ll gcd(ll a, ll b) {
     return gcd(b, a%b);
 }
 
+//aとbの最小公倍数
+ll lcm(ll a, ll b) {
+    return a*b/gcd(a,b);
+}
+
+
 //拡張ユークリッドの互除法
 //ax+by=gcd(a,b)を計算（正直理解しづらい。。。）
 ll extgcd(ll a, ll b, ll& x, ll& y) {
