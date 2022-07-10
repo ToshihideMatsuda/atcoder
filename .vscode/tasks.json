@@ -2,21 +2,6 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "build",
-      "type": "shell",
-      "command": "msbuild",
-      "args": [
-        "/property:GenerateFullPaths=true",
-        "/t:build",
-        "/consoleloggerparameters:NoSummary"
-      ],
-      "group": "build",
-      "presentation": {
-        "reveal": "silent"
-      },
-      "problemMatcher": "$msCompile"
-    },
-    {
       "type": "cppbuild",
       "label": "C/C++: clang++ アクティブなファイルのビルド",
       "command": "/usr/bin/clang++",
@@ -38,6 +23,22 @@
       },
       "detail": "デバッガーによって生成されたタスク。"
     },
+    /*
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "msbuild",
+      "args": [
+        "/property:GenerateFullPaths=true",
+        "/t:build",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "group": "build",
+      "presentation": {
+        "reveal": "silent"
+      },
+      "problemMatcher": "$msCompile"
+    },
     {
       "type": "process",
       "label": "makelldb: make",
@@ -55,6 +56,6 @@
         "kind": "build",
         "isDefault": true
       }
-    }
+    }*/
   ]
 }
