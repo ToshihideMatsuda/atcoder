@@ -27,36 +27,30 @@ ll getRandom(ll begin, ll end) {
     return begin >= end ? 0 : begin + (ll) ((end - begin)*(rand()/(double)RAND_MAX));
 };
 
-void solve() {
+ll solve() {
     ll N; cin >> N;
 
-    //mp[p] = {e1,e2,,,} //less order 
-    unordered_map<ll, vector<ll> > mp;
+    unordered_map<ll,ll> maxE;    // maxE[p]    = e -> 最大値eが複数
+    unordered_map<ll,ll> maxcntE; // maxcntE[p] = c -> 最大値eの個数
+
     vector<ll> p[N], e[N];
     rep(i,N) {
         ll m; cin >> m;
         rep(j,m) {
             ll pp, ee; cin >> pp >> ee;
-            mp[pp].push_back(ee);
+            maxE[pp] = max(maxE[pp] , ee);
+
             p[i].push_back(pp);
             e[i].push_back(ee);
         }
     }
-    unordered_map<ll,ll> maxE;
-    unordered_map<ll,ll> maxcntE;
 
-
-    for(auto idx = mp.begin(); idx != mp.end(); ++idx) {
-        vector<ll> es = (*idx).second;
-        ll p  = (*idx).first;
-        
-        ll m = 0, c = 0;
-        rep(i,es.size()) m = max(m,es[i]);
-        rep(i,es.size()) if(es[i]==m) c++;
-
-        maxE[p]    = m;
-        maxcntE[p] = c;
+    rep(i,N) rep(j, p[i].size()) {
+        if(maxE[p[i][j]] == e[i][j]) {
+            maxcntE[p[i][j]] ++ ;
+        }
     }
+
 
     set<set<ll> > s;
 
@@ -70,10 +64,11 @@ void solve() {
                 ss.insert(p[i][j]);
             }
         }
+ 
         s.insert(ss);
     }
 
-    cout << s.size() << endl;
+    return s.size();
 
 
 }
@@ -82,6 +77,6 @@ void solve() {
 int main()
 {
     
-  solve();
+  cout << solve() << endl;
 	return 0;
 }
