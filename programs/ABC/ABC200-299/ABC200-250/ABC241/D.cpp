@@ -42,35 +42,53 @@ void solve(){
   ll Q, q, x, k;
   cin >> Q;
 
-  vector<ll> A;
+  multiset<ll> A;
+
 
   rep(_,Q) { 
     cin >> q;
     if(q == 1) {
       cin >> x;
-      auto it = lower_bound(A.begin(),A.end(),x);
-      A.insert(it, x);
+      A.insert(x);
     }
-    else if(q == 2) {
+    else { 
+      if(q == 2) {
+        bool check = true;
       cin >> x >> k;
-      auto it = upper_bound(A.begin(),A.end(),x);
-      int K = distance(A.begin(),it);
-      if(K == 0 || K-k < 0) {
-        cout << -1 << endl;
-      } else {
-        cout << A[K-k] << endl;
+      auto it = A.upper_bound(x);
+      rep(_,k) {
+        if(it == A.begin()) {
+          check = false;
+          break;
+        }
+        it--;
       }
+      if(check)cout << *it << "\n";
+      else cout << "-1\n";
 
     } else if(q == 3) {
+        bool check = true;
       cin >> x >> k;
-      auto it = lower_bound(A.begin(),A.end(),x);
-      int K = distance(A.begin(),it);
-      if(K == A.size() || K+(k-1) >= A.size()) {
-        cout << -1 << endl;
-      } else {
-        cout << A[K+(k-1)] << endl;
+      auto it = A.lower_bound(x);
+
+      rep(_,k-1) {
+        if(it == A.end()) {
+          check = false;
+          break;
+        }
+        it++;
       }
+
+      if(it == A.end()) {
+          check = false;
+      }
+      if(check)cout << *it << "\n";
+      else cout << "-1\n";
     } 
+    }
+
+    next:
+    continue;
 
   }
 
