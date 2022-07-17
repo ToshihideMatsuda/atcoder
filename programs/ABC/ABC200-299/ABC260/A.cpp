@@ -22,6 +22,19 @@ typedef long long ll;
 
 
 void solve() {
+    string S;
+    cin >> S;
+    if(S[0] != S[1] && S[0] != S[2]){
+        cout << S[0];
+        return;
+    } else if(S[0] == S[1]) {
+        if(S[2] != S[0]) {cout << S[2];
+        return;}
+    } else if(S[0] == S[2]) {
+        if(S[1] != S[0]) {cout << S[1];
+        return;}
+    }
+    cout << "-1";
 }
 
 

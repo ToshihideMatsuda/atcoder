@@ -21,7 +21,26 @@ typedef long long ll;
 #define MAX_N 2*100000+5
 
 
+//3942349900
+//700251025
+
 void solve() {
+  ll N, X, Y;
+  cin >> N >> X >> Y;
+
+  ll R = 1;
+  ll B = 0;
+  for(int i = N; i > 1; i--) {
+
+    ll nxR = R * (1 + X) + B;
+    B      = (R * X + B) * Y;
+    R = nxR;
+  }
+
+  cout << B << endl;
+
+
+
 }
 
 
