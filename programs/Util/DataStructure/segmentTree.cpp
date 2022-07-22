@@ -10,18 +10,22 @@
 
 using namespace std;
 
+
 template<typename T>
 struct SegTree {
     private :
 #define MIN_MODE    0
 #define MAX_MODE    1
 #define SUM_MODE    2
-    int mode =  MIN_MODE;  // 0:最小値, 1:最大値
+#define XOR_MODE    3
+    int mode =  MIN_MODE;  // 0:最小値, 1:最大値, 2:和, 3:XOR
     
     const T P_INF = numeric_limits<T>::max();
     const T M_INF = numeric_limits<T>::min();
     
-    T INF;
+    // 演算結果に影響しない0元
+    // 最小値：inf, 最大値: -inf, sum:0, xor:0
+    T ZERO;
     
     
     int n;          // 要素数
@@ -44,22 +48,25 @@ public:
         n = x;
         setMode(mode_);
         
-        vector<T>dattmp (n * 2 - 1, INF); //セグメント木は、要素数 sz * 2 - 1の配列を準備
+        vector<T>dattmp (n * 2 - 1, ZERO); //セグメント木は、要素数 sz * 2 - 1の配列を準備
         dat = dattmp;
-        vector<T>lazytmp(n * 2 - 1, INF); //遅延評価配列も同じ数準備
+        vector<T>lazytmp(n * 2 - 1, ZERO); //遅延評価配列も同じ数準備
         lazy = lazytmp;
         
     }
     
     
-    // 区間[a,b)を値xで更新、最大最小-> 遅延評価。和 -> 通常
+    // 区間[a,b)を値xで更新、最大最小-> 遅延評価。和, XOR, その他-> 通常
     void update(int a, int b, T x) {
         
         if(mode == MIN_MODE || mode == MAX_MODE)
         {
             updateLazy_forMinMax(a, b, x, 0, 0, n);
         }
-        else if(mode == SUM_MODE) {
+        else if(mode == SUM_MODE || mode == XOR_MODE) {
+            updateNolazy_forSum(a, b, x);
+        }
+        else {
             updateNolazy_forSum(a, b, x);
         }
     }
@@ -70,7 +77,7 @@ public:
     void debug() {
         cout <<  "---dat---" << endl;
         for(int i = 0; i < dat.size(); i++) {
-            if(dat[i] == INF) {
+            if(dat[i] == ZERO) {
                 cout << "- ";
             }
             else {
@@ -82,7 +89,7 @@ public:
         
         cout <<  "---lazy---" << endl;
         for(int i = 0; i < lazy.size(); i++) {
-            if(lazy[i] == INF) {
+            if(lazy[i] == ZERO) {
                 cout << "- ";
             }
             else {
@@ -94,14 +101,14 @@ public:
     
     //lazy[k]に登録してあった値を、１階層下の子要素に伝播させて、自身の値も変更
     void eval(int k) {
-        if(lazy[k] == INF) return ;
+        if(lazy[k] == ZERO) return ;
         if(k < n -1) //kは末端ノード（葉）ではない
         {
             lazy[2 * k + 1] = lazy[k];
             lazy[2 * k + 2] = lazy[k];
         }
         dat[k] = lazy[k];
-        lazy[k] = INF;
+        lazy[k] = ZERO;
     }
     
 private:
@@ -139,7 +146,7 @@ private:
     T query_sub(int a, int b, int k, int l, int r) {
         eval(k);
         if(b <= l || r <= a)
-            return INF;    //区間外
+            return ZERO;    //区間外
         if(a <= l && r <= b )
             return dat[k]; // 区間にすっぽり収まる
         
@@ -154,13 +161,16 @@ private:
     void setMode(int mode_) {
         mode = mode_;
         if(mode == MIN_MODE) {
-            INF = P_INF;
+            ZERO = P_INF;
         }
         else if (mode == MAX_MODE) {
-            INF =  M_INF;
+            ZERO =  M_INF;
         }
         else if (mode == SUM_MODE) {
-            INF =  0;
+            ZERO =  0;
+        }
+        else if (mode == XOR_MODE) {
+            ZERO =  0;
         }
     }
     
@@ -168,14 +178,15 @@ private:
         return
             mode == MIN_MODE ? min(a, b) :
             mode == MAX_MODE ? max(a, b) :
-            mode == SUM_MODE ? a + b      : INF;
+            mode == SUM_MODE ? a + b     :
+            mode == XOR_MODE ? a ^ b     : ZERO;
     }
     
 
 };
 
 
-void test(){
+int main(){
     SegTree<int> segTreeMax(10, MAX_MODE);
     
     segTreeMax.update(2, 9, 1);    // 2,3,4,5,6,7,8 -> 1
@@ -250,5 +261,7 @@ void test(){
      - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
      Program ended with exit code: 0
      */
+
+    return 1;
 }
 
