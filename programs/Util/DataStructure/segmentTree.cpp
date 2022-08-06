@@ -70,9 +70,16 @@ public:
             updateNolazy_forSum(a, b, x);
         }
     }
+    // dat[a]を値xで更新
+    void update(int a, T x) {
+        update(a,a+1,x);
+    }
     
     //区間[a,b)の値を取得するクエリ
     T query(int a, int b) { return query_sub(a, b, 0, 0, n); };
+    
+    //全区間の値を取得するクエリ
+    T allquery() { return query_sub(0, n+1, 0, 0, n); };
     
     void debug() {
         cout <<  "---dat---" << endl;
@@ -151,8 +158,8 @@ private:
             return dat[k]; // 区間にすっぽり収まる
         
         //一部重なる
-        int lv = query_sub(a, b, 2 * k + 1, l          , (r + l)/ 2 );
-        int rv = query_sub(a, b, 2 * k + 2, (r + l) / 2, r );
+        T lv = query_sub(a, b, 2 * k + 1, l          , (r + l)/ 2 );
+        T rv = query_sub(a, b, 2 * k + 2, (r + l) / 2, r );
         
         return choice(lv,rv);
     }
