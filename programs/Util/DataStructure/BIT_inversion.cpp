@@ -11,20 +11,21 @@ typedef long long ll;
 #define min(a,b)   (a<b?a:b)
 #define min3(a,b,c) min(a,min(b,c))
 
+template<typename T>
 struct BIT {
   ll N;
-  vector<ll> bit;
+  vector<T> bit;
   BIT(ll N) : N(N), bit(N+1) {}
 
-  void update(ll i, ll v) {
+  void update(ll i, T v) {
     while(i <= N) {
       bit[i] += v;
       i += i & -i;
     }
   }
 
-  ll query(ll i) {
-    ll sum = 0;
+  T query(ll i) {
+    T sum = 0;
     while(i > 0) {
       sum += bit[i];
       i -= i & -i;
@@ -32,7 +33,7 @@ struct BIT {
     return sum;
   }
 
-  ll query(ll i, ll j) {
+  T query(ll i, ll j) {
     return query(j) - query(i-1);
   }
   

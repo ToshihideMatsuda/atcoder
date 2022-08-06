@@ -2,7 +2,6 @@
 //  segmentTree.cpp
 //  90mon
 //
-//  Created by 松田敏秀 on 2021/10/20.
 //
 #include <iostream>
 #include <vector>
