@@ -6,10 +6,10 @@ typedef long long ll;
 
 #define rep(i,n)     for(ll i = 0; i < n; i++ ) 
 #define reps(i,m,n)  for(ll i = m; i < n; i++ ) 
-#define max(a,b)   (a>b?a:b)
-#define max3(a,b,c) max(a,max(b,c))
-#define min(a,b)   (a<b?a:b)
-#define min3(a,b,c) min(a,min(b,c))
+#define MAX(a,b)   (a>b?a:b)
+#define MAX3(a,b,c) max(a,MAX(b,c))
+#define MIN(a,b)   (a<b?a:b)
+#define MIN3(a,b,c) min(a,MIN(b,c))
 
 #define INF 1 << 30
 #define MINF -1*(1 << 30)
