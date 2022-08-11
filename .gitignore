@@ -5,3 +5,4 @@ main
 sample*.in
 sample*.out
 contest.acc.json
+*.dSYM
