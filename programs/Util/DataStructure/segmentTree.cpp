@@ -19,9 +19,6 @@ struct SegTree {
 #define XOR_MODE    3
     int mode =  MIN_MODE;  // 0:最小値, 1:最大値, 2:和, 3:XOR
     
-    const T P_INF = numeric_limits<T>::max();
-    const T M_INF = numeric_limits<T>::min();
-    
     // 演算結果に影響しない0元
     // 最小値：inf, 最大値: -inf, sum:0, xor:0
     T ZERO;
@@ -39,13 +36,13 @@ struct SegTree {
     
 public:
     
-    SegTree(int n_, int mode_) {
+    SegTree(int n_, int mode_, T Z) {
         int x = 1;
         while(x < n_) {
             x *= 2;         //n以上の 2^m形式に変換
         }
         n = x;
-        setMode(mode_);
+        ZERO = Z;
         
         vector<T>dattmp (n * 2 - 1, ZERO); //セグメント木は、要素数 sz * 2 - 1の配列を準備
         dat = dattmp;
@@ -163,23 +160,6 @@ private:
         return choice(lv,rv);
     }
     
-    
-    void setMode(int mode_) {
-        mode = mode_;
-        if(mode == MIN_MODE) {
-            ZERO = P_INF;
-        }
-        else if (mode == MAX_MODE) {
-            ZERO =  M_INF;
-        }
-        else if (mode == SUM_MODE) {
-            ZERO =  0;
-        }
-        else if (mode == XOR_MODE) {
-            ZERO =  0;
-        }
-    }
-    
     T choice(T a, T b) {
         return
             mode == MIN_MODE ? min(a, b) :
@@ -193,7 +173,7 @@ private:
 
 
 int main(){
-    SegTree<int> segTreeMax(10, MAX_MODE);
+    SegTree<int> segTreeMax(10, MAX_MODE, -(1<<28));
     
     segTreeMax.update(2, 9, 1);    // 2,3,4,5,6,7,8 -> 1
     segTreeMax.update(1, 2, 4);    // 1 -> 4
@@ -207,7 +187,7 @@ int main(){
     }
     
     
-    SegTree<int> segTreeMin(10, MIN_MODE);
+    SegTree<int> segTreeMin(10, MIN_MODE, (1<<28));
     
     segTreeMin.update(2, 9, 5);    // 2,3,4,5,6,7,8 -> 5
     segTreeMin.update(1, 2, 2);    // 1 -> 2
@@ -221,7 +201,7 @@ int main(){
     }
     
     
-    SegTree<int> segTreeSum(10, SUM_MODE);
+    SegTree<int> segTreeSum(10, SUM_MODE, 0);
     
     segTreeSum.update(2,9,5);  // 2,3,4,5,6,7,8 -> 5
     segTreeSum.update(1,2,2);  // 1 -> 2
