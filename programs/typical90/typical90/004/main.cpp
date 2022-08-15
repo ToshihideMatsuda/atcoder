@@ -21,6 +21,24 @@ typedef long long ll;
 
 
 void solve() {
+  ll H, W; cin >> H >> W;
+  ll A[H][W]; rep(h,H) rep(w,W) cin >> A[h][w];
+  ll Hs[W],Ws[H];
+
+  rep(w,W){
+    Hs[w] = 0;
+    rep(h,H) Hs[w] += A[h][w];
+  }
+
+  rep(h,H){
+    Ws[h] = 0;
+    rep(w,W) Ws[h] += A[h][w];
+  }
+  rep(h,H){ 
+    rep(w,W) cout << Hs[w] + Ws[h] - A[h][w] << " ";
+    cout << endl;
+  }
+
 }
 
 

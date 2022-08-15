@@ -19,8 +19,40 @@ typedef long long ll;
 
 #define MAX_N 2*100000+5
 
+set<string> ans[21];
+void dfs(ll n) {
+  if(n <= 0) {
+    return;
+  }
+
+  dfs(n-2);
+  for(string s : ans[n-2]) {
+    ans[n].insert("(" + s + ")");
+  }
+
+
+  for(int m = 2; n-m > 0 ; m += 2) {
+    for(string s : ans[n-m]) {
+      for(string t : ans[m])  {
+        ans[n].insert(s+t);
+      }
+    }
+  }
+}
 
 void solve() {
+  ll N; cin >> N;
+  if(N % 2 == 1) {
+    cout << "" << endl;
+    return;
+  }
+  ans[0] = { "" };
+  dfs(N);
+
+  vector<string> out;
+  for(string s : ans[N]) out.push_back(s);
+  sort(out.begin(), out.end()) ;
+  for(string s : out) cout << s << endl;
 }
 
 
