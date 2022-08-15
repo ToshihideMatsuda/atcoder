@@ -39,9 +39,8 @@ void solve() {
       //偏角を求めるロジック
       double dx = X[j] - X[i];
       double dy = Y[j] - Y[i];
-      double r = sqrt(dx*dx + dy*dy);
       //偏角を求めている
-      double s = dy >= 0 ? (acos(dx/r) * 180.0/M_PI) : 360 - (acos(dx/r) * 180.0/M_PI) ;
+      double s = (atan2(dy,dx) + M_PI) * 180.0/M_PI ;
       S.push_back(s); // -pi <= asin <= pi, 
     }
     sort(S.begin(),S.end());
