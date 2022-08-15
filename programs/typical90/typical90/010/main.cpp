@@ -21,6 +21,31 @@ typedef long long ll;
 
 
 void solve() {
+  ll N; cin >> N;
+  ll P[3][N+1];
+  rep(i,3)rep(j,N+1)P[i][j] = 0;
+  reps(i,1,N+1) {
+    ll c, p; cin >> c >> p;
+    P[c][i] = p;
+  }
+
+  ll S[3][N+1];
+  S[1][0] = 0; S[2][0] = 0;
+  reps(c,1,3)reps(i,1,N+1) S[c][i] = S[c][i-1] + P[c][i];
+
+
+  ll Q; cin >> Q;
+  vector<pair<ll,ll>> LR(Q);
+  rep(i,Q) {
+    ll l, r; cin >> l >> r;
+    LR[i] = {l,r};
+  }
+  for(auto lr : LR){
+    ll l = lr.first, r = lr.second;
+    cout << S[1][r] - S[1][l-1] << " " <<  S[2][r] - S[2][l-1] << endl;
+  }
+
+
 }
 
 

@@ -15,12 +15,30 @@ typedef long long ll;
 #define MINF -1*(1 << 30)
 #define INF_LL 1LL << 60
 #define MINF_LL - (1LL << 60)
-#define MOD 998244353
+#define MOD 1000000000 + 7
 
 #define MAX_N 2*100000+5
 
 
 void solve() {
+  ll N; cin >> N;
+  string S; cin >> S;
+  S = "*" + S;
+  string a = "atcoder";
+  ll dp[N+5][8];
+  rep(i,N+5)rep(j,8) dp[i][j] = 0;
+
+  rep(i,N+5)dp[i][0] = 1;
+
+  reps(i,1,N+1){
+    rep(j,8) dp[i][j] = dp[i-1][j];
+    rep(j,a.size()) if(S[i] == a[j]) {
+      dp[i][j+1] += dp[i-1][j];
+      dp[i][j+1] %= MOD;
+    }
+  }
+  cout << dp[N][7] << endl;
+
 }
 
 

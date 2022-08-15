@@ -21,6 +21,28 @@ typedef long long ll;
 
 
 void solve() {
+  ll N; cin >> N;
+
+  vector<ll> A(N); rep(i,N) cin >> A[i];
+  sort(A.begin(),A.end());
+  ll mi = A[0];
+  ll ma = A[A.size()-1];
+  
+  ll Q; cin >> Q;
+  vector<ll> B(Q);
+  rep(i,Q)  cin >> B[i];
+  for(auto b : B) {
+    if(b <= mi) {
+      cout <<  abs(mi - b) << endl;
+    } else if(ma <= b) {
+      cout <<  abs(ma -b) << endl;
+    } else {
+      auto idx = lower_bound(A.begin(),A.end(),b);
+      ll v1 = *idx;
+      ll v0 = *(--idx);
+      cout <<  MIN(abs(v1 - b), abs(v0 - b)) << endl;
+    }
+  }
 }
 
 
