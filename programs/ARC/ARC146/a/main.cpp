@@ -22,53 +22,31 @@ typedef long long ll;
 
 void solve() {
   ll N; cin >> N;
-  vector<tuple<ll,string,ll>> A;
+  vector<ll> A;
   rep(i,N) {
     ll a = 0;
     cin >> a;
-    A.push_back({a,to_string(a), 0});
+    A.push_back(a);
   }
 
-  sort(A.begin(),A.end(),greater<tuple<ll,string,ll>>());
+  sort(A.begin(),A.end(),greater<ll>());
+  vector<string> AA{to_string(A[0]), to_string(A[1]), to_string(A[2])};
 
-  auto a0 = A[0], a1 = A[1], a2 = A[2];
-  ll v,c = 0; string s;
-  tie(v,s,c) = a0;
-
-  ll l = s.length();
-
-
-  tie(v,s,c) = a1;
-
-  while(s.length() < l) {
-    s += "0";
-    c++;
-  }
-  a1 = {stoll(s), s, c};
-
-  tie(v,s,c) = a2;
-  while(s.length() < l) {
-    s += "0";
-    c++;
-  }
-  a2 = {stoll(s), s, c};
-
-  vector<tuple<ll,string,ll>> AA {a0,a1,a2};
+  vector<ll> ans{
+    stoll(AA[0] + AA[1] + AA[2]),
+    stoll(AA[0] + AA[2] + AA[1]),
+    stoll(AA[1] + AA[0] + AA[2]),
+    stoll(AA[1] + AA[2] + AA[0]),
+    stoll(AA[2] + AA[0] + AA[1]),
+    stoll(AA[2] + AA[1] + AA[0])
+  };
 
 
-  sort(AA.begin(),AA.end(),greater<tuple<ll,string,ll>>());
+  sort(ans.begin(),ans.end(),greater<ll>());
 
-  rep(i,3) {
-    tie(v,s,c) = AA[i];
 
-    while(c > 0) {
-      v /= 10;
-      c--;
-    }
-    cout << v;
-  }
 
-  cout << endl;
+  cout << ans[0] <<  endl;
 
 
 }
