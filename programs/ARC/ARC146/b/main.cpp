@@ -1,4 +1,11 @@
-#include <bits/stdc++.h> 
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <map>
+#include <set>
+#include <queue>
+#include <algorithm>
+#include <iomanip>
 #include <unordered_map>
 using namespace std;
 
@@ -19,73 +26,52 @@ typedef long long ll;
 
 #define MAX_N 2*100000+5
 
-ll get10Keta(ll N) {
-  ll k = 0;
-  ll tmp = N; 
-  while(tmp > 0) {
-    tmp /= 10;
-    k++;
-  }
-  return k;
-}
-
-ll getTen(ll N) {
-  ll ten = 1; 
-  while(N > 0) {
-    ten *= 10;
-    N--;
-  }
-  return ten;
-}
-
 void solve() {
   ll N, M, K; cin >> N >> M >> K;
   vector<ll> A(N); rep(i,N) cin >> A[i]; 
   sort(A.begin(),A.end(),greater<ll>()); 
 
-  ll ans = INF_LL;
+  ll ans = 0;
+  
+  ll mask[32];// mask[i]=2^i
+  rep(i,32) {
+  	mask[i] = 1<<i;
+  }
+  
+  
   
   for(int i = 30; i >= 0; i --) {
 
     ll threshold = 1; // 000100000000 (i+1桁目が1)
-    ll t = 0;
     ll tmp = i;
     while(tmp > 0) {
       threshold <<= 1;
       tmp --;
     }
-    t = threshold;
-    if(ans != INF_LL)
     threshold += ans;
-
-    vector<ll> AA;
+    vector<ll> sub;
     rep(i,A.size()) {
       ll val = A[i];
-
-      if(val <= ans) {
-        AA.push_back(A[i]);
-      } else {
-        for(int j = 30; j >= 0; j --) {
-          val = !((!val) || (1<<j)); // j+1 bit reverse
-          if(val <= ans){
-            AA.push_back(val);
-            break;
-          }
-        }
+      bool mode=false;
+      ll b =0;
+      for(int j=31;j>=0;j--){
+      	if(mode){
+      		b += (threshold&mask[j]);
+      	} else if((val&mask[j])>=1){
+      		b += val&mask[j];
+      	} else if((val&mask[j])==0&&(threshold&mask[j])>=1){
+      		b += threshold&mask[j];
+      		mode = true;
+      	}
       }
-
+      sub.push_back(b-A[i]);
     }
 
-    sort(AA.begin(),AA.end(),greater<ll>()); 
+    sort(sub.begin(),sub.end()); 
 
 
     ll dif = 0;
-    ll cnt = 0;
-    rep(i,A.size()) {
-      if(A[i] < threshold) {
-        dif += threshold - A[i];
-      }
-    }
+    rep(i,K) dif += sub[i];
 
     if(dif <= M) {
       //ok
