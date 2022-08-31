@@ -54,7 +54,7 @@ ll inverse_cnt(vector<ll> & a) {
 
     // 解
     ll inversion = 0;
-    BIT bit(a.size());
+    BIT<ll> bit(a.size());
     
     rep(i, a.size()) {
         // a[i]に対する前方の正置数
@@ -73,7 +73,7 @@ ll inverse_cnt(vector<ll> & a) {
 
 
 void debugBIT() {
-  BIT tree(10);
+  BIT<ll> tree(10);
   ll list[10] = {1,4,2,62,5,2,5,321,2,1};
   
   //sum[0] = 0, sum[1] = list[0], sum[2] = list[0] + list[1], sum[3] = list[0] + list[1] + list[2], ...
