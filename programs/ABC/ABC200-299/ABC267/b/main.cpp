@@ -18,11 +18,32 @@ typedef long long ll;
 #define MOD 998244353
 
 #define MAX_N 2*100000+5
-vector<ll> G[MAX_N];
-bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
-void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
+
 
 void solve() {
+  string S;cin>>S;
+	bool c[7];rep(i,7)c[i]=true;
+	
+	if(S[0]=='0'){
+		if(S[6]=='0')c[0]=false;
+		if(S[3]=='0')c[1]=false;
+		if(S[1]=='0'&&S[7]=='0')c[2]=false;
+		if(S[4]=='0')c[3]=false;
+		if(S[2]=='0'&&S[8]=='0')c[4]=false;
+		if(S[5]=='0')c[5]=false;
+		if(S[9]=='0')c[6]=false;
+		rep(i,5)if(c[i]==true){
+			if(c[i+1]==false){
+				reps(j,i+2,7) if(c[j]){
+					cout<<"Yes";
+					return ;
+				}
+			}
+		}
+	}
+	
+	cout << "No";
+	
 }
 
 

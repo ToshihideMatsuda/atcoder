@@ -18,11 +18,16 @@ typedef long long ll;
 #define MOD 998244353
 
 #define MAX_N 2*100000+5
-vector<ll> G[MAX_N];
-bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
-void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
+
 
 void solve() {
+	map<string,ll> mp;
+	mp["Monday"]=5;
+	mp["Tuesday"]=4;
+	mp["Wednesday"]=3;
+	mp["Thursday"]=2;
+	mp["Friday"]=1;
+	string s;cin>>s;cout<<mp[s];
 }
 
 
