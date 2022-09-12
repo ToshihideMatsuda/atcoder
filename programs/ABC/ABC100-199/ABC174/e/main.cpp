@@ -23,6 +23,32 @@ bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
 void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
 void solve() {
+  ll N, K; cin >> N >> K;
+  ll m = 0;
+  vector<ll> A(N);rep(i,N){ 
+    cin >> A[i];
+    m = MAX(m,A[i]);
+  }
+
+  ll lb = 0, ub = m;
+  while(lb + 1 < ub) {
+    ll mid = (lb + ub) / 2;
+
+    ll k = K;
+    rep(i, N) {
+      k -= (A[i] - 1) / mid;
+    }
+    if(k >= 0) {
+      ub = mid;
+    } else {
+      lb = mid;
+    }
+  }
+
+  cout << ub << endl;
+
+
+
 }
 
 

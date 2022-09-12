@@ -27,32 +27,16 @@ void solve() {
   }
   
   rep(i,4){
-  	set<bool> v;
-  	if(P[i+1][0]==P[i][0]){
-  		rep(j,4)
-  		if(i!=j&&(i+1)%4!=j) {
-  			v.insert(P[j][0]<=P[i][0]);
-  		}
-  	}else if(P[i+1][1]==P[i][1]){
-  		rep(j,4)
-  		if(i!=j&&(i+1)%4!=j)
-  		    v.insert(P[j][1]<=P[i][1]);
-  	} else {
-  		double dx =P[i+1][0]-P[i][0];
-  		double dy =P[i+1][1]-P[i][1];
   	
-  		double a = dy/dx;
-  		double b = P[i][1] - a*P[i][0];
-  		//y=a*x+b
+  	double a1 =P[i+2][0]-P[i+1][0];
+  	double b1 =P[i+2][1]-P[i+1][1];
   	
-  		rep(j,4) if(i!=j&&(i+1)%4!=j) 
-  		    v.insert(P[j][1]<=a*P[j][0]+b);
+  	double a2 =P[i][0]-P[i+1][0];
+  	double b2 =P[i][1]-P[i+1][1];
+  	
+  	if(a1*b2-a2*b1 <= 0){
+  		cout << "No";return;
   	}
-  	
-  	if(v.size()>=2){
-  		cout << "No";
-  		return;
-  	}	
   	
   }
   cout << "Yes";

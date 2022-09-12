@@ -23,6 +23,13 @@ bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
 void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
 void solve() {
+  ll N, D; cin >> N >> D;
+  ll ans = 0;
+  rep(i,N) {
+    ll x, y; cin >> x >> y;
+    ans += (x*x + y*y <= D*D)? 1 :0;
+  }
+  cout << ans << endl;
 }
 
 

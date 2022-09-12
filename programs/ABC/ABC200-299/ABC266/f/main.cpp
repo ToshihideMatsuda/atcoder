@@ -24,7 +24,7 @@ ll kind[MAX_N];
 vector<ll> G[MAX_N];
 bool ch[MAX_N];
 bool ex = false;
-vector<ll> getcycle(ll p, vector<ll>& pre){
+vector<ll> getCycle(ll p, vector<ll>& pre){
   vector<ll> empty;
   if(ex) return empty;
 
@@ -47,7 +47,7 @@ vector<ll> getcycle(ll p, vector<ll>& pre){
     }
 
     pre.push_back(p);
-    vector<ll> ret = getcycle(g, pre);
+    vector<ll> ret = getCycle(g, pre);
     pre.pop_back();
 
     if(ret.size() > 0) {
@@ -78,7 +78,7 @@ void solve() {
   }
 
   vector<ll> pre{0};
-  vector<ll> cycle = getcycle(1,pre);
+  vector<ll> cycle = getCycle(1,pre);
   
   for(auto e: cycle) s.insert(e);
   rep(i,MAX_N) ch[i] = false;

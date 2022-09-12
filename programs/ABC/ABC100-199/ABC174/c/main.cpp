@@ -23,6 +23,20 @@ bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
 void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
 void solve() {
+  ll K; cin >> K;
+  ll rem = 7;
+
+  reps(i,1,K+1) {
+    rem = rem % K;
+    if(rem == 0) {
+      cout << i << endl;
+      return;
+    }
+    rem = (rem * 10) + 7;
+  }
+  cout << -1 << endl;
+
+
 }
 
 

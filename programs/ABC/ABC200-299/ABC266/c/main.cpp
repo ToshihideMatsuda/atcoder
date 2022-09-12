@@ -27,32 +27,35 @@ void solve() {
   }
   
   rep(i,4){
-  	set<bool> v;
-  	if(P[i+1][0]==P[i][0]){
-  		rep(j,4)
-  		if(i!=j&&(i+1)%4!=j) {
-  			v.insert(P[j][0]<=P[i][0]);
-  		}
-  	}else if(P[i+1][1]==P[i][1]){
-  		rep(j,4)
-  		if(i!=j&&(i+1)%4!=j)
-  		    v.insert(P[j][1]<=P[i][1]);
-  	} else {
-  		double dx =P[i+1][0]-P[i][0];
-  		double dy =P[i+1][1]-P[i][1];
   	
-  		double a = dy/dx;
-  		double b = P[i][1] - a*P[i][0];
-  		//y=a*x+b
+  	double dx1 =P[i+2][0]-P[i][0];
+  	double dy1 =P[i+2][1]-P[i][1];
+  	double b1  =dx1*P[i][1]-dy1*P[i][0];
+  	//dx1*y=dy1*x+b1
   	
-  		rep(j,4) if(i!=j&&(i+1)%4!=j) 
-  		    v.insert(P[j][1]<=a*P[j][0]+b);
+  	double dx2 =P[i+3][0]-P[i+1][0];
+  	double dy2 =P[i+3][1]-P[i+1][1];
+  	double b2  =dx2*P[i+1][1]-dy2*P[1+i][0];
+  	//dx2*y=dy2*x+b2
+  	
+  	if(dx2*dy1-dx1*dy2==0){
+  		cout<<"No";
+  	return;
   	}
   	
-  	if(v.size()>=2){
-  		cout << "No";
-  		return;
-  	}	
+  	double x0 = -(dx2*b1-dx1*b2)/(dx2*dy1-dx1*dy2);
+  	double y0 = (dy2*b1-dy1*b2)/(dy2*dx1-dy1*dx2);
+  	
+  	if(min(P[i][0],P[i+2][0])<= x0 && 
+  	   x0 <=max(P[i][0],P[i+2][0]) &&
+  	   min(P[i][1],P[i+2][1])<= y0 && 
+  	   y0 <=max(P[i][1],P[i+2][1]) ){
+  		continue;
+  	}
+  	
+  	//cout << x0<<","<<y0<<endl;
+  	cout<<"No";
+  	return;
   	
   }
   cout << "Yes";

@@ -23,6 +23,7 @@ bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
 void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
 void solve() {
+  ll X; cin >> X; if(X >=30) cout << "Yes"; else cout << "No";
 }
 
 
