@@ -16,6 +16,7 @@ typedef long long ll;
 #define INF_LL 1LL << 60
 #define MINF_LL - (1LL << 60)
 #define MOD 998244353
+#define INV2 499122177 // inverse of 2 in MOD
 
 #define MAX_N 2*100000+5
 vector<ll> G[MAX_N];
