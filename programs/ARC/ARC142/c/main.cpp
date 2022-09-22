@@ -47,7 +47,7 @@ void solve() {
       m = d[1][i] + d[2][i];
     }
     
-    if(abs(d[1][i] - d[2][i])) if(d[1][i] + d[1][i] < m ) {
+    if(abs(d[1][i] - d[2][i])) if(d[1][i] + d[2][i] < m ) {
       m = d[1][i] + d[2][i];
     }
 
@@ -56,7 +56,6 @@ void solve() {
 
   }
 
-  bool near = false;
   if(m == 3) {
     if(idxs[3].size() != 2) { m = 1; } 
     else {
@@ -69,7 +68,7 @@ void solve() {
     }
   }
 
-  cout << m << endl;
+  cout << "! " << m << endl;
 
 
 
