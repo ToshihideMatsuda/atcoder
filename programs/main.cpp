@@ -11,9 +11,9 @@ typedef long long ll;
 #define min(a,b)   (a<b?a:b)
 #define min3(a,b,c) min(a,min(b,c))
 
-#define INF 1 << 30
+#define INF (1 << 30)
 #define MINF -1*(1 << 30)
-#define INF_LL 1LL << 60
+#define INF_LL (1LL << 60)
 #define MINF_LL - (1LL << 60)
 #define MOD 998244353
 
