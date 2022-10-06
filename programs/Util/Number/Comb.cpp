@@ -2,15 +2,28 @@
 typedef long long ll;
 #define MOD 998244353
 
-ll modPow(ll x, ll a) {
+ll euler_phi(ll n) {
+  ll ret = n;
+  for(ll i = 2; i * i <= n; i++) {
+    if(n % i == 0) {
+      ret -= ret / i;
+      while(n % i == 0) n /= i;
+    }
+  }
+  if(n > 1) ret -= ret / n;
+  return ret;
+}
+
+long long modPow(long long x, long long a) {
+  if (a == 0) return 1;
   if (a == 1) return x;
   if (a % 2) return (x * modPow(x, a - 1)) % MOD;
-  ll t = modPow(x, a / 2);
+  long long t = modPow(x, a / 2);
   return (t * t) % MOD;
 }
 
-ll modInv(ll x) {
-  return modPow(x, MOD - 2);
+long long modInv(long long x) {
+  return modPow(x, euler_phi(MOD) - 1);
 }
 
 ll modPerm(ll n, ll k) {
