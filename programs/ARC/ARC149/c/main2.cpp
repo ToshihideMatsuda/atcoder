@@ -23,7 +23,7 @@ typedef long long ll;
 //c[i] = true -> 素数
 bool prime[2*1000*1000+9];
 void elatsWithFactor(ll N){
-  rep(i,2000+5) prime[i] = true;
+  rep(i,2*1000*1000+5) prime[i] = true;
   prime[0] = false;
   prime[1] = false;
 	for(ll i= 2; i<N+1;i++){
@@ -41,71 +41,65 @@ void solve() {
   elatsWithFactor(2*N*N + 5);
 
   set<ll> odd; 
-  vector<ll> even; 
-  reps(i,1, N*N+1) if(i % 2 == 0) even.push_back(i); else odd.insert(i);
+  set<ll> even; 
+  reps(i,1, N*N+1) if(i % 2 == 0) even.insert(i); else odd.insert(i);
 
-  reverse(even.begin(),even.end()); 
-  set<ll> odd2(odd); 
+  ll surface = 0;
+  if(N%2==1) {
+    surface = (N*N-1)/2 + 1;
+    mp[surface/N + 1][surface % N    ] = 7;
+    mp[surface/N    ][surface % N + 1] = 1;
+    odd.erase(7);odd.erase(1);
+
+    mp[surface/N + 1][surface % N + 1] = 8;
+    mp[surface/N + 2][surface % N    ] = 2;
+    even.erase(8);even.erase(2);
+  } else {
+    surface = N*N/2;
+  }
+
+
+  set<ll> odd_ex; 
+  set<ll> even_ex; 
+  ll limit = N;
+
+  if(N%2==1) {
+    limit--;
+  } 
+  for(ll i = 0; i < limit; i++) {
+    ll ii = surface-1-i;
+    if(N%2==1) {
+      ii--;
+    } 
+    if(mp[ii/N + 1][ii%N + 1] != 0) continue;
+    for(auto o : odd) if(!odd_ex.count(o)){
+      for(auto e : even) if(!even_ex.count(e)) {
+        if(prime[o+e] == false) {
+          mp[ii/N + 1][ii%N + 1]  = o;
+          mp[ii/N + 2][ii%N + 1]  = e;
+          odd_ex.insert(o);
+          even_ex.insert(e);
+          goto next;
+        }
+      }
+    }
+    next:
+    continue;
+  }
 
   ll i = 0;
-  ll H = 0, W = 0;
-  if(N % 2 == 0) { // even
-    H = N/2; W = N;
-  } else {         // odd
-    H = N-1; W = (N+1)/2;
+
+  for(auto o : odd) if(!odd_ex.count(o)){
+    mp[i/N + 1][i%N + 1]  = o;
+    i++;
   }
 
-  for(auto e : even) if(e != 8) {
-    mp[i/W+1][i%W+1] = e;
-    i ++;
+  i =  (N*N-1)/2  + (N + 1);
+
+  for(auto e : even) if(!even_ex.count(e)){
+    mp[i/N + 1][i%N + 1]  = e;
+    i++;
   }
-
-  mp[H][W] = 8;
-  
-  if(N % 2 == 0) { // even
-    reps(j,1,N) {
-      for(auto o : odd) if(odd2.count(o)) {
-        if( prime[ mp[H][j] + o]) continue;
-        odd2.erase(o);
-        mp[H+1][j] = o;
-        break;
-      }
-    }
-  } else if(W == (N+1)/2) { // odd
-    mp[H][W+1] = 1;
-    mp[H+1][W] = 7;
-    odd2.erase(1);
-    odd2.erase(7);
-
-    reps(h,1,H) {
-      for(auto o : odd) if(odd2.count(o)) {
-        if( prime[ mp[h][W] + o]) continue;
-        odd2.erase(o);
-        mp[h][W+1] = o;
-        break;
-      }
-    }
-
-    reps(w,1,W) {
-      for(auto o : odd) if(odd2.count(o)) {
-        if( prime[ mp[H][w] + o]) continue;
-        odd2.erase(o);
-        mp[H+1][w] = o;
-        break;
-      }
-    }
-  } 
-
-
-  vector<ll> o;
-  for(auto i : odd2) o.push_back(i);
-
-  ll id = 0;
-  reps(h,1,N+1)reps(w,1,N+1) if(mp[h][w] == 0){
-    mp[h][w] = o[id++];
-  }
-
-
   reps(x,1,N+1){
     reps(y,1,N+1) cout <<  mp[x][y] << " ";
     cout << endl;
