@@ -6,6 +6,8 @@ typedef long long ll;
 
 #define rep(i,n)     for(ll i = 0; i < n; i++ ) 
 #define reps(i,m,n)  for(ll i = m; i < n; i++ ) 
+#define rev(i,n)     for(ll i = n; i > -1; i--) 
+#define revs(i,m,n)  for(ll i = m; i > n; i--) 
 #define MAX(a,b)   (a>b?a:b)
 #define MAX3(a,b,c) max(a,MAX(b,c))
 #define MIN(a,b)   (a<b?a:b)
