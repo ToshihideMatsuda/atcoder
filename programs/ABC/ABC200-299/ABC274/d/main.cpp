@@ -28,49 +28,33 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 void solve() {
   ll N, x, y; cin >> N >> x >> y;
   vector<ll> A(N+1);rep(i,N) cin >> A[i+1];
-  set<pair<ll,ll>> s0, sl;
+  set<ll> sx, sy;
 
-  s0.insert({A[1],0});
-  sl.insert({x,y});
+  sx.insert(A[1]);
+  sy.insert(0);
 
-  revs(i, N, N/2+1) {
+  reps(i, 2, N+1) {
     bool ydic = (i%2==0);
-    set<pair<ll,ll>> tmp;
-    
-    for(auto s : sl) {
-      if(ydic) {
-        tmp.insert({s.first, s.second + A[i]});
-        tmp.insert({s.first, s.second - A[i]});
-      } else {
-        tmp.insert({s.first + A[i], s.second});
-        tmp.insert({s.first - A[i], s.second});
+    set<ll> tmp;
+
+    if(ydic) {
+      for(auto s: sy) {
+        tmp.insert(s + A[i]);
+        tmp.insert(s - A[i]);
       }
+      sy = tmp;
+    } else {
+      for(auto s: sx) {
+        tmp.insert(s + A[i]);
+        tmp.insert(s - A[i]);
+      }
+      sx = tmp;
     }
-    
-    sl = move(tmp);
   } 
 
   
-  reps(i, 2, N/2+1) {
-    bool ydic = (i%2==0);
 
-    set<pair<ll,ll>> tmp;
-
-    for(auto s : s0) {
-      if(ydic) {
-        tmp.insert({s.first, s.second + A[i]});
-        tmp.insert({s.first, s.second - A[i]});
-      } else {
-        tmp.insert({s.first + A[i], s.second});
-        tmp.insert({s.first - A[i], s.second});
-      }
-    }
-
-    s0 = move(tmp);
-  }
-
-  bool ok = false;
-  for(auto s : s0) if(sl.count(s)) ok = true;
+  bool ok = sx.count(x) && sy.count(y);
 
   if(ok) {
     cout << "Yes" << endl;
