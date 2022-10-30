@@ -25,11 +25,9 @@ vector<ll> G[MAX_N];
 bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
 void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
+// dp[n][x][k] = n/Nまで見た場合に選ぶ数がxとなり、かつ、末尾の選択がk(0/1)
 // dp[n][x][0] = min(dp[n-1][x][1]+1, dp[n-1][x][0]);
 // dp[n][x][1] = min(dp[n-1][x-A[n][1], dp[n-1][x-A[n][0] + 1 );
-
-//ll dp[3005][3005][2];
-
 ll dp[3005][3005][2];
 
 void solve() {
