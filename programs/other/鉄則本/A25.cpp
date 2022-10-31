@@ -36,16 +36,27 @@ void solve() {
 
   dp[0][0] = 1;
 
+  //配るDP
+  /*
   rep(h,H){
     rep(w,W) {
+      // 地点(h,w) から、地点(h,w+1)、(h+1,w)に値を配る遷移
       if(C[h][w+1] == '.') dp[h][w+1] += dp[h][w];
       if(C[h+1][w] == '.') dp[h+1][w] += dp[h][w];
     }
   }
+  */
+
+  //貰うDP
+  rep(h,H){
+    rep(w,W) if(C[h][w] == '.') {
+      // 地点(h,w)に、地点（h-1,w)、(h,w-1)から値を貰う遷移
+      if(h > 0) dp[h][w] += dp[h-1][w];
+      if(w > 0) dp[h][w] += dp[h][w-1];
+    }
+  }
+
  
-
-
-
   cout << dp[H-1][W-1] << endl;
 
 }
