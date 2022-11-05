@@ -13,18 +13,16 @@ typedef long long ll;
 
 template<typename T>
 struct BIT {
+
+private:
   ll N;
   vector<T> bit;
+
+public:
   BIT(ll N) : N(N), bit(N+1) {}
 
-  void update(ll i, T v) {
-    while(i <= N) {
-      bit[i] += v;
-      i += i & -i;
-    }
-  }
-
-  T query(ll i) {
+private:
+  T queryFromZero(ll i) {
     T sum = 0;
     while(i > 0) {
       sum += bit[i];
@@ -33,10 +31,28 @@ struct BIT {
     return sum;
   }
 
+public:
+/*
+   bit[i] = +v 及びその上位にvを加算する
+*/
+  void add(ll i, T v) {
+    while(i <= N) {
+      bit[i] += v;
+      i += i & -i;
+    }
+  }
+
+/*
+  bit[i]...bit[j]の和
+*/
   T query(ll i, ll j) {
-    return query(j) - query(i-1);
+    return queryFromZero(j) - queryFromZero(i-1);
   }
   
+// bit[i]
+  T query(ll i) {
+    return bit[i];
+  }
 };
 
 // 可変配列 a の転置数を返却
@@ -64,7 +80,7 @@ ll inverse_cnt(vector<ll> & a) {
 
         // 転置数を加算
         inversion += t;
-        bit.update(f[a[i]], 1);
+        bit.add(f[a[i]], 1);
     }
 
     return inversion;
@@ -80,7 +96,7 @@ void debugBIT() {
   ll sum[11];sum[0] = 0;
 
   reps(i,1,11) sum[i] = sum[i-1] + list[i-1];
-  rep(i,10) tree.update(i+1,list[i]);
+  rep(i,10) tree.add(i+1,list[i]);
 
 
   reps(i,1,11){
@@ -99,8 +115,8 @@ void debugBIT() {
   list[3] += d3;
   list[8] += d8;
 
-  tree.update(4,d3);
-  tree.update(9,d8);
+  tree.add(4,d3);
+  tree.add(9,d8);
 
   reps(i,1,11) sum[i] = sum[i-1] + list[i-1];
 

@@ -22,8 +22,14 @@ long long modPow(long long x, long long a) {
   return (t * t) % MOD;
 }
 
-long long modInv(long long x) {
+// modInvCompositeはオイラー関数を使用するため遅い。
+// あらかじめオイラー関数を計算させた方が良い。
+long long modInvComposite(long long x) {
   return modPow(x, euler_phi(MOD) - 1);
+}
+
+long long modInv(long long x) {
+  return modPow(x, MOD - 1);
 }
 
 ll modPerm(ll n, ll k) {
