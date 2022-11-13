@@ -20,7 +20,7 @@ typedef long long ll;
 #define MOD 998244353
 #define INV2 499122177 // inverse of 2 in MOD
 
-#define MAX_N 2*100000+5
+#define MAX_N (2*100000+5)
 vector<ll> G[MAX_N];
 bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
 void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
