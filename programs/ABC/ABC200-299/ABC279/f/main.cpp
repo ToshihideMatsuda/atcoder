@@ -101,7 +101,7 @@ void solve() {
       if(rootBox.count(rootOf[x]) && rootBox.count(rootOf[y])) {
         uft.unionTree(rootOf[x],rootOf[y]);
         rootBox.erase(rootOf[y]);
-      } else {
+      } else if(rootBox.count(rootOf[y])){
         rootBox[rootOf[y]] = x;
         rootOf[x] = rootOf[y];
       }
