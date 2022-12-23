@@ -4,36 +4,45 @@
 
 //プリム法　重み付き連結グラフの最小全域木を求める最適化問題のアルゴリズム
 
+typedef long long ll;
 using namespace std;
 
 #define MAX_V 10000
-#define INF 1 << 28;
-vector<pair<int, int>> G[MAX_V+1]; // G[from] = { cost, to } 頂点 from->to の辺のコストがcost
-int mincost[MAX_V+1];               // すでに確定済みの部分グラフTからの拡張点の最小コスト
-int used[MAX_V+1];
-int usedCnt =0;
-int N;
+vector<pair<ll, ll>> G[MAX_V+1]; // G[from] = { cost, to } 頂点 from->to の辺のコストがcost
+ll used[MAX_V+1];
+ll usedCnt =0;
+ll N;
 
 // Gが連結なグラフの場合に動作する
-int prim(int s) {
-    for (int i = 1;i <= N; i++) {
-        mincost[i] = INF;
+ll prim(ll s, bool min) {
+    for (ll i = 1;i <= N; i++) {
         used[i] = false;
     }
 
-    priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> Q;// priority queue { c, v }
+    priority_queue Q;
+    if(min) {
+        //最小全域木
+        Q = priority_queue<
+        pair<ll,ll>,
+        vector<pair<ll,ll>>,
+        greater<pair<ll,ll>>>(); // priority queue { c, v }
+    } else {
+        //最大全域木
+        Q = priority_queue<
+        pair<ll,ll>,
+        vector<pair<ll,ll>>,
+        less<pair<ll,ll>>>(); // priority queue { c, v }
+    }
 
     //開始地点sから到達できる箇所のコストを登録
     for(auto pair:G[s]){
-        auto v = pair.second;
-        auto c = pair.first;
-        Q.push({c,v});
+        Q.push(pair);
     }
 
     used[s] = true;
     usedCnt ++;
 
-    int ans = 0;
+    ll ans = 0;
     
     while(usedCnt < N) {    //全てのVが登録されるまで実施
         //コスト最小辺を抽出
@@ -41,7 +50,7 @@ int prim(int s) {
         auto v = pair.second;
         auto c = pair.first;
 
-        if(!used[v]) {
+        if(used[v] == false) {
             used[v] = true;
             ans += c;       //コストを追加
             usedCnt ++;
@@ -51,7 +60,7 @@ int prim(int s) {
     return ans;
 }
 
-int debug() {
+ll debug() {
     N = 4;
 
     // 1-2 cost 6
@@ -79,7 +88,7 @@ int debug() {
     G[4].push_back({1,2});
 
 
-    int res = prim(2);
+    ll res = prim(2);
 
     cout << res << endl;
 }
