@@ -4,16 +4,15 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/usr/local/include/**"
+                "/usr/local/include/**",
+                "/usr/local/include/bits"
             ],
             "defines": [],
             "macFrameworkPath": [],
-            "compilerPath": "/usr/local/bin/g++",
+            "compilerPath": "/usr/bin/clang++",
             "cStandard": "gnu17",
-            "cppStandard": "c++17",
+            "cppStandard": "c++20",
             "intelliSenseMode": "gcc-x64"
-            //"cppStandard": "gnu++17",
-            //"intelliSenseMode": "macos-gcc-arm64"
         }
     ],
     "version": 4

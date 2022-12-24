@@ -8,6 +8,20 @@
         "cmath": "cpp",
         "iostream": "cpp",
         "limits": "cpp",
-        "unordered_map": "cpp"
-    }
+        "unordered_map": "cpp",
+        "string": "cpp",
+        "deque": "cpp",
+        "functional": "cpp",
+        "list": "cpp",
+        "map": "cpp",
+        "set": "cpp",
+        "unordered_set": "cpp",
+        "vector": "cpp",
+        "*.tcc": "cpp",
+        "regex": "cpp",
+        "sstream": "cpp",
+        "__split_buffer": "cpp",
+        "iosfwd": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
 }
