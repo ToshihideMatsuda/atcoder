@@ -29,7 +29,7 @@ long long modInvComposite(long long x) {
 }
 
 long long modInv(long long x) {
-  return modPow(x, MOD - 1);
+  return modPow(x, MOD - 2);
 }
 
 ll modPerm(ll n, ll k) {
