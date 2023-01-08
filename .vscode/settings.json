@@ -21,7 +21,18 @@
         "regex": "cpp",
         "sstream": "cpp",
         "__split_buffer": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "forward_list": "cpp",
+        "__bit_reference": "cpp",
+        "__hash_table": "cpp",
+        "__tree": "cpp",
+        "array": "cpp",
+        "filesystem": "cpp",
+        "initializer_list": "cpp",
+        "span": "cpp",
+        "string_view": "cpp",
+        "valarray": "cpp",
+        "ranges": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }
