@@ -10,9 +10,9 @@ typedef unsigned long long ull;
 #define rev(i,n)     for(ll i = n; i > -1; i--) 
 #define revs(i,m,n)  for(ll i = m; i > n; i--) 
 #define MAX(a,b)   (a>b?a:b)
-#define MAX3(a,b,c) max(a,MAX(b,c))
+#define MAX3(a,b,c) MAX(a,MAX(b,c))
 #define MIN(a,b)   (a<b?a:b)
-#define MIN3(a,b,c) min(a,MIN(b,c))
+#define MIN3(a,b,c) MIN(a,MIN(b,c))
 #define out(s) cout << s << endl;
 #define out2(s) cout << s;
 
