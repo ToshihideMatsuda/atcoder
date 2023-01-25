@@ -13,8 +13,10 @@ using namespace std;
 typedef long long ll;
 template<typename T>
 
-//最大値：SegTreeAbstract<ll> segTreeMax(10, [](ll x, ll y) { return x < y ? y : x; }, -(1LL<<61));
-//最小値：
+//max: SegTreeAbstract<ll> segTreeMax(N, [](ll x, ll y) { return x < y ? y : x; }, -(1LL<<61));
+//min: SegTreeAbstract<ll> segTreeMin(N, [](ll x, ll y) { return x < y ? x : y; }, (1LL<<61));
+//sum: SegTreeAbstract<ll> segTreeSum(N, [](ll x, ll y) { return x + y; }, 0);
+//xor: SegTreeAbstract<ll> segTreeXor(N, [](ll x, ll y) { return x ^ y; }, 0);
 struct SegTreeAbstract {
     //最大値: compare = [](ll x, lly)
     function<T(T,T)> compare; //比較用関数オブジェクト
