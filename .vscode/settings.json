@@ -32,7 +32,12 @@
         "span": "cpp",
         "string_view": "cpp",
         "valarray": "cpp",
-        "ranges": "cpp"
+        "ranges": "cpp",
+        "barrier": "cpp",
+        "latch": "cpp",
+        "ratio": "cpp",
+        "semaphore": "cpp",
+        "algorithm": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }
