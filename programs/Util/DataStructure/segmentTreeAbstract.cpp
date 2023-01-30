@@ -11,12 +11,12 @@ using namespace std;
 
 
 typedef long long ll;
-template<typename T>
 
-//max: SegTreeAbstract<ll> segTreeMax(N, [](ll x, ll y) { return x < y ? y : x; }, -(1LL<<61));
-//min: SegTreeAbstract<ll> segTreeMin(N, [](ll x, ll y) { return x < y ? x : y; }, (1LL<<61));
-//sum: SegTreeAbstract<ll> segTreeSum(N, [](ll x, ll y) { return x + y; }, 0);
-//xor: SegTreeAbstract<ll> segTreeXor(N, [](ll x, ll y) { return x ^ y; }, 0);
+//max: SegTreeAbstract<ll> segTreeMax(N+1, [](ll x, ll y) { return x < y ? y : x; }, -(1LL<<61));
+//min: SegTreeAbstract<ll> segTreeMin(N+1, [](ll x, ll y) { return x < y ? x : y; }, (1LL<<61));
+//sum: SegTreeAbstract<ll> segTreeSum(N+1, [](ll x, ll y) { return x + y; }, 0);
+//xor: SegTreeAbstract<ll> segTreeXor(N+1, [](ll x, ll y) { return x ^ y; }, 0);
+template<typename T>
 struct SegTreeAbstract {
     //最大値: compare = [](ll x, lly)
     function<T(T,T)> compare; //比較用関数オブジェクト
