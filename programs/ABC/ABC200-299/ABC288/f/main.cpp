@@ -29,6 +29,44 @@ bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
 void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
 void solve() {
+  ll N; cin >> N;
+  string S; cin >> S;
+
+  // dp[i]:1~i文字目まで見た場合の解とおくと、以下の等式が成立
+  // dp[i]	=	dp[i-1] * S[i:i]   + 
+  //          dp[i-2] * S[i-1:i] + ...
+  //          dp[1]   * S[2:i]   +
+  //          dp[0]   * S[1:i] 
+  //
+  // ここで、j < iにおいて、S[j:i] = 10 * S[j:i-1] + S[i:i]となるので、上記を変形して、
+  // dp[i]  =	dp[i-1] * (10*0          + S[i:i]) + 
+  //          dp[i-2] * (10*S[i-1:i-1] + S[i:i]) + ...
+  //          dp[1]   * (10*S[2  :i-1] + S[i:i]) + 
+  //          dp[0]   * (10*S[1  :i-1] + S[i:i]) 
+  //        = dp[i-1] * (10*0          + S[i:i]) + 
+  //          10 * dp[i-1] +     Σ(j=0...i-2)dp[j]*S[i:i]
+  //        = 10 * dp[i-1] +     Σ(j=0...i-1)dp[j]*S[i:i]
+  // よって、累積和R[i] = Σ(j=0...i)dp[j]とすると、以下のような式となる。
+  // dp[i]  = 10 * dp[i-1] + R[i-1] * S[i:i]
+  vector<ll> dp(N+1);
+  vector<ll> R(N+1);
+
+  dp[0] = 1;
+  dp[1] = S[0] - '0';
+  
+  R[0] = dp[0];
+  R[1] = dp[1] + R[0];
+
+  reps(i,2,N+1) {
+    dp[i] = 10*dp[i-1] + R[i-1] * (S[i-1] - '0');
+    dp[i] %= MOD;
+
+    R[i] = dp[i] + R[i-1];
+    R[i] %= MOD;
+  }
+
+  out(dp[N]);
+
 }
 
 

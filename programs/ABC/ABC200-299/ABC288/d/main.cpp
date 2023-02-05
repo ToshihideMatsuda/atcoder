@@ -33,6 +33,7 @@ void solve() {
   vector<ll> A(N);
   rep(i,N) cin >> A[i];
 
+  //S[i][j] : A[i-1]まで見た時の添え字%K=jとなるものの総和
   vector<vector<ll>> S(N+1);
   vector<ll> Z;
   rep(i,K) Z.push_back(0);

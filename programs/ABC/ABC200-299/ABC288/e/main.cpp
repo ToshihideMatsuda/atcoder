@@ -29,11 +29,7 @@ bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
 void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
 void solve() {
-  ll N; cin >> N;
-  rep(i,N) {
-    ll a, b; cin >> a >> b;
-    out(a+b)
-  }
+
 }
 
 
