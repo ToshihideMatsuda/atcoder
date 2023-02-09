@@ -15,10 +15,10 @@ struct Trie {
         vector<ll> next;         // 子の頂点番号を格納。存在しなければ-1
         vector<ll> acceptWordId; // 末端がこの頂点になるwordId
         ll c;                    // base からの間隔をll型で表現したもの
-        ll common;               // いくつの文字列がこの頂点を共有しているか
+        ll childWordCnt;         // いくつの文字列がこの頂点を共有しているか
         Node(ll c_)  {
             c = c_;
-            common = 0;
+            childWordCnt = 0;
             next.assign(char_size, -1);
         }
     };
@@ -35,7 +35,7 @@ public:
     //単語wordの挿入
     void insert(const string &word) {
         //
-        _insert(word, nodes[0].common);
+        _insert(word, nodes[0].childWordCnt);
     }
 
 
@@ -49,11 +49,29 @@ public:
     }
     // 挿入した単語の数
     ll count() const {
-        return (nodes[0].common);
+        return (nodes[0].childWordCnt);
     }
     // Trie木のノード数
     ll size() const {
         return ((ll)nodes.size() -1);
+    }
+
+    // 単語とprefixの検索
+    ll common_word_length(const string &word) {
+        ll node_id = 0;
+        ll length = 0;
+        rep(i,word.size()) {
+            ll c = (ll)(word[i] - base);
+            ll &next_id = nodes[node_id].next[c];
+            if (next_id == -1) {  // 次の頂点が存在しなければ終了
+                return -1;
+            }
+            if(nodes[next_id].childWordCnt >= 2) {
+                length = i+1;
+            }
+            node_id = next_id;
+        }
+        return  length;
     }
 
 private:
@@ -85,12 +103,12 @@ private:
                 nodes.push_back(Node(c));
             }
             //インクリメント
-            nodes[node_id].common ++;
+            nodes[node_id].childWordCnt ++;
 
             //現在の頂点を更新
             node_id = next_id;
         }
-        nodes[node_id].common++;
+        nodes[node_id].childWordCnt++;
         nodes[node_id].acceptWordId.push_back(word_id); // 単語の終端なので、頂点に番号を入れておく
     }
 
