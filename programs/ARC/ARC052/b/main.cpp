@@ -23,19 +23,12 @@ typedef unsigned long long ull;
 #define MOD 998244353
 #define INV2 499122177 // inverse of 2 in MOD
 
-#define MAX_N (5000 + 5)
+#define MAX_N (2*100000+5)
 vector<ll> G[MAX_N];
 bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
 void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
-// dp[k][i][j]: 頂点 i を根とする部分木に含まれる頂点を Vとして選ぶかどうかを決める方法であって、連結成分数が j であるようなものの個数
-//              ただし、k=0 ならば頂点 i は選ばれず、k=1 ならば選ばれている。
-ll dp[2][MAX_N][MAX_N];
-// dp
 void solve() {
-  ll N; cin >> N;
-  readG(N-1);
-
 }
 
 

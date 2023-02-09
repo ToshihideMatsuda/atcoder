@@ -45,7 +45,6 @@ void solve(){
 		reps(j,2,N+1){
 			cost[i][j]= min(cost[i][j-1],C[i-(j-1)]);
 		}
-		//reps(j,1,N+1)cout<<i<<","<<j<<"="<<cost[i][j]<<endl;
 	}
   
   ll cnt = 0;
@@ -58,19 +57,15 @@ void solve(){
 			else if(j <= i-1){
 			  dp[i][j]=min(dp[i][j],dp[i-1][j]);
 			}
-			
-			//cout<<"dp["<<i<<"]["<<j<<"]="<<dp[i][j]<<endl;
 		}
 
-			if(X.count(i)){
-        cnt++;
-			}
-		
+		if(X.count(i)){
+      cnt++;
+		}
 	}
 	
 	ll ans =INF_LL;
 	reps(i,X.size(),N+1){
-		//cout<<dp[N][i]<<endl;
 		ans=min(ans,dp[N][i]);
 	}
 	cout<< ans;
