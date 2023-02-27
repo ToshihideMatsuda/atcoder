@@ -24,7 +24,9 @@ typedef unsigned long long ull;
 #define INV2 499122177 // inverse of 2 in MOD
 
 #define MAX_N (2*100000+5)
+//トポロジカルソート(topologicalsort)
 vector<ll> G[MAX_N];
+//次数 deg
 vector<ll> deg;
 bool ck[MAX_N]; 
 ll order[MAX_N];
@@ -37,13 +39,14 @@ void solve() {
 
   deg.resize(N+5);
 
+  //重複除去
   set<pair<ll,ll>> s;
-
   rep(i,M) { 
     ll a, b; cin >> a >> b; 
     s.insert({a,b});
   }
 
+  //有向グラフと、次数（入）を計算
   for(auto c : s) {
     ll a, b; tie(a,b) = c;
     G[b].push_back(a);
@@ -51,6 +54,7 @@ void solve() {
   } 
 
 
+  //次数0のノードを取得（一意のトポロジカルソートのため、複数あった場合にはエラー。通常はOK）
   ll r = 0;
   reps(i,1,N+1) {
     if(deg[i] == 0) {
@@ -62,12 +66,16 @@ void solve() {
     }
   }
   
+  //順序を設定
   order[r] = N;
 
-  ll c = 1;
+
+  //順序が1になるまで以下を実施
   while(order[r] > 1) {
     ll nx = 0;
 
+    //対象のノードからの行き先次数を減少させ0になるもの（rからしかいけないもの）を次の対象とする
+    //ただし、本問題は一意性が重要なので、チェックして複数あった場合にはエラー。
     for(auto g :G[r]) {
       deg[g] --;
       if(deg[g] == 0) {
@@ -80,10 +88,12 @@ void solve() {
       }
     }
 
+    //次のものが見つかったら順序を設定
     order[nx] = order[r] -1;
     r = nx;
   }
 
+  //結果を出力
   out("Yes")
   reps(i,1,N+1) {
     out2(order[i])
