@@ -32,9 +32,6 @@ typedef unsigned long long ull;
 #define INV2 499122177 // inverse of 2 in MOD
 
 #define MAX_N (2*100000+5)
-vector<ll> G[MAX_N];
-bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
-void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
 // "aabbbbaaca" -> [("a",2),("b",4),("a",2),("c",1),("a",1)]
 vector<pair<string,ll> > runLengthEncoding(string S) {
@@ -60,6 +57,14 @@ void solve() {
     ll x = 0;
     rep(i,N) if(S[i] == 'X') x++;
 
+    if(x < K) {
+        K = N-K;
+        x = N-x;
+        string T;
+        rep(i,N) if(S[i] == 'X') T.push_back('Y'); else T.push_back('X');
+        S = T;
+    }
+
     if(x == N) {
         if(K <= 1) {
             out(0)
@@ -67,17 +72,7 @@ void solve() {
             out(K-1)
         }
         return;
-    } else if(x == 0) {
-        out(MAX(N-1-K,0))
-        return ;
-    }
-
-    if(x < K) {
-        K = N-K;
-        string T;
-        rep(i,N) if(S[i] == 'X') T.push_back('Y'); else T.push_back('X');
-        S = T;
-    }
+    } 
 
     auto enc = runLengthEncoding(S);
 
