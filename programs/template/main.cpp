@@ -15,6 +15,8 @@ typedef unsigned long long ull;
 #define MIN3(a,b,c) MIN(a,MIN(b,c))
 #define out(s) cout << s << endl;
 #define out2(s) cout << s;
+#define outd(s) cout << setprecision(15) << s << endl;
+#define pb(s) push_back(s)
 
 #define INF (1 << 30)
 #define MINF -1*(1 << 30)
