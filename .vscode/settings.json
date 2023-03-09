@@ -37,7 +37,10 @@
         "latch": "cpp",
         "ratio": "cpp",
         "semaphore": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "ios": "cpp",
+        "complex": "cpp",
+        "bitset": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }
