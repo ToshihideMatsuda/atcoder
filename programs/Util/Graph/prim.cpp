@@ -1,38 +1,35 @@
-#include <iostream>
-#include <vector>
-#include <queue>
+#include <bits/stdc++.h> 
+#define rep(i,n)     for(ll i = 0; i < n; i++ ) 
 
 //プリム法　重み付き連結グラフの最小全域木を求める最適化問題のアルゴリズム
 
 typedef long long ll;
 using namespace std;
 
-#define MAX_V 10000
-vector<pair<ll, ll>> G[MAX_V+1]; // G[from] = { cost, to } 頂点 from->to の辺のコストがcost
-ll used[MAX_V+1];
+#define MAX_N (2*100000)
+vector<pair<ll, ll>> G[MAX_N]; // G[from] = { cost, to } 頂点 from->to の辺のコストがcost
+bool used[MAX_N];
 ll usedCnt =0;
 ll N;
 
 // Gが連結なグラフの場合に動作する
-ll prim(ll s, bool min) {
-    for (ll i = 1;i <= N; i++) {
-        used[i] = false;
-    }
+ll prim(ll s) {
+    rep(i,MAX_N) used[i] = false;
 
-    priority_queue Q;
-    if(min) {
-        //最小全域木
-        Q = priority_queue<
+    //最小全域木
+    priority_queue  Q = priority_queue<
         pair<ll,ll>,
         vector<pair<ll,ll>>,
         greater<pair<ll,ll>>>(); // priority queue { c, v }
-    } else {
-        //最大全域木
-        Q = priority_queue<
+
+    //最大全域木
+    /*
+    priority_queue Q = priority_queue<
         pair<ll,ll>,
         vector<pair<ll,ll>>,
         less<pair<ll,ll>>>(); // priority queue { c, v }
-    }
+    */
+    
 
     //開始地点sから到達できる箇所のコストを登録
     for(auto pair:G[s]){
