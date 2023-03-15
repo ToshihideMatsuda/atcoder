@@ -13,8 +13,13 @@ typedef unsigned long long ull;
 #define MAX3(a,b,c) MAX(a,MAX(b,c))
 #define MIN(a,b)   (a<b?a:b)
 #define MIN3(a,b,c) MIN(a,MIN(b,c))
-#define out(s) cout << s << endl;
-#define out2(s) cout << s;
+#define out0(s) cout << s;
+#define out(s) out1(s)
+#define out1(s) cout << s << endl;
+#define out2(s,t) cout << s << t << endl;
+#define out3(s,t,r) cout << s << t << r << endl;
+#define out4(s,t,r,u) cout << s << t << r << u << endl;
+#define out5(s,t,r,u,o) cout << s << t << r << u << o << endl;
 #define outd(s) cout << setprecision(15) << s << endl;
 #define pb(s) push_back(s)
 
@@ -30,12 +35,8 @@ vector<ll> G[MAX_N];
 bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
 void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
-void solve() {
-}
-
 
 int main()
 {
-  solve();
 	return 0;
 }
