@@ -31,12 +31,60 @@ typedef unsigned long long ull;
 #define INV2 499122177 // inverse of 2 in MOD
 
 #define MAX_N (2*100000+5)
-vector<ll> G[MAX_N];
+vector<pair<ll,ll>> G[MAX_N];
+vector<pair<ll,ll>> H[MAX_N];
 bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
-void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
+void readGH(ll M) { 
+	rep(i,M) { 
+		ll a, b, c; cin >> a >> b >> c; 
+		G[a].push_back({c, b}); H[b].push_back({c, a});
+	} 
+}
+
+ll cost[MAX_N];
+void dijkstra(ll start){
+  priority_queue<pair<ll,ll>, vector<pair<ll, ll>>, greater<pair<ll,ll> > > Q;
+
+  Q.push(make_pair(0,start));
+
+  rep(i, MAX_N) cost[i] = INF_LL;
+  cost[start] = 0;
+
+  while(Q.size() > 0) {
+      auto from = Q.top();Q.pop();
+      ll p = from.second;
+      ll fromC = from.first;
+
+      if(fromC != cost[p]) continue;
+      
+      for(auto to : G[p]) {
+          ll q = to.second, toC = to.first;
+
+          if(fromC + toC < cost[q]) {
+              cost[q] = fromC + toC;
+              Q.push(make_pair(cost[q] ,q));
+          }
+      }
+  }
+}
+
 
 
 int main()
 {
+	ll N, M; cin >> N >> M;
+	readGH(M);
+	reps(i,1,N+1) {
+		dijkstra(i);
+		ll c = INF_LL;
+		for(auto h : H[i] ){
+			c = MIN(c, cost[h.second] + h.first);
+		}
+		if(c == INF_LL) {
+			c = -1;
+		}
+		out(c)
+	}
+
 	return 0;
 }
