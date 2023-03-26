@@ -10,7 +10,9 @@
         "${file}",
         "-o",
         "${fileDirname}/${fileBasenameNoExtension}",
-        "-std=c++17"
+        "-std=c++17",
+        "-I",
+        "${workspaceFolder}/ac-library/."
       ],
       "options": {
         "cwd": "${fileDirname}"

@@ -41,7 +41,8 @@
         "ios": "cpp",
         "complex": "cpp",
         "bitset": "cpp",
-        "tuple": "cpp"
+        "tuple": "cpp",
+        "iomanip": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

@@ -1,5 +1,6 @@
 #include <bits/stdc++.h> 
-#include <unordered_map>
+#include <atcoder/all>
+using namespace atcoder;
 using namespace std;
 
 typedef long long ll;

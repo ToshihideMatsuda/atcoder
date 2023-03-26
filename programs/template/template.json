@@ -1,6 +1,6 @@
 {
     "task":{
-      "program": ["main.cpp"],
+      "program": ["main.cpp","atcoder"],
       "submit": "main.cpp"
     }
   }
