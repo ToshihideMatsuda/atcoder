@@ -42,7 +42,8 @@
         "complex": "cpp",
         "bitset": "cpp",
         "tuple": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "utility": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

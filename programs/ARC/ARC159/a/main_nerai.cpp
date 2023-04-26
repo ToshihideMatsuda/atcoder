@@ -52,63 +52,49 @@ mat make_mat(ll N, ll M){
 }
 
 
-mat mat_mul(mat A, mat B) {
-    // 行列乗算
-    ll N = A.size();
-    ll M = A[0].size();
-    ll M0 = B.size();
-    ll K = B[0].size();
-    if(M!=M0){
-        out("invalid input")
-        exit(1);
-    }
-
-    mat C = make_mat(N,K);
-    //C=A*B (matrix)
-	rep(n,N) rep(k,K) rep(m,M){
-        C[n][k]+=A[n][m]*B[m][k];
-    	C[n][k]= C[n][k] > 0 ? 1 :0;
-    }
-
-    return C;
-}
-
 int main()
 {
 	ll N, K; cin >> N >> K;
 
-	mat A1  = make_mat(N,N);
-	mat E =  make_mat(N,N);
-	rep (i,N) E[i][i] = 1;
-
-	rep(i,N){
-
-		rep(j,N){
-    		ll a;
- 	   		cin >> a ;
-	   		A1[i][j] = a;
- 		}
-	}
+	mat A = make_mat(N,N);
+	rep(i,N) rep(j,N) cin >> A[i][j];
 	
-	mat A[105];
-	A[0] = E;
-	reps(i,1,105) {
-		A[i] = mat_mul(A[i-1],A1);
-	}
-
-
 	ll Q; cin >> Q;
 
 	rep(_,Q) {
 		ll s, t; cin >> s >> t;
 		s--; t--;
 		s%=N, t%=N;
-		reps(i,1,105) {
-			if(A[i][s][t] > 0) {
-				out(i)
-				goto next;
+		ll ans = 0;
+		set<ll> S;
+		if(s == t) {
+			if(A[s][s] == 1) {
+				out(1)
+				continue;
+			} else {
+				rep(i,N) if(A[s][i] == 1) S.insert(i);
+				ans++;
 			}
+		} else {
+			 S.insert(s);
 		}
+
+		rep(i,N+5) {
+			set<ll> nxt;
+			for(auto q : S) {
+				if(q == t) {
+					out(ans)
+					goto next;
+				} else {
+					rep(i,N)if(A[q][i] == 1){
+						nxt.insert(i);
+					}
+				}
+			}
+			S = nxt;
+			ans ++;
+		}
+
 		out(-1)
 
 		next:
