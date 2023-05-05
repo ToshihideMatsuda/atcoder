@@ -6,7 +6,8 @@ typedef long long ll;
 //エラトステネスの篩、prime[i] = true -> 素数
 bool prime[1000000+9];
 void EratosthenesPrime(ll N){
-  rep(i,1000000+5) prime[i] = true;
+  if(N == -1) N = 1000000+5;
+  rep(i,1000000+9) prime[i] = true;
   prime[0] = false;
   prime[1] = false;
 	for(ll i= 2; i<N+1;i++){
