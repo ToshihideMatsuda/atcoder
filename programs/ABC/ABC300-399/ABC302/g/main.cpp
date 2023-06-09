@@ -39,53 +39,5 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
-	ll N, M, D; cin >> N >> M >> D;
-	vector<ll> A(N), B(M);
-	rep(i,N) cin >> A[i];
-	rep(i,M) cin >> B[i];
-
-	sort(B.begin(),B.end());
-	ll ans = -1;
-	rep(i,N) {
-		if(i == 6) {
-			ll k = 0;
-		}
-		if( B.back() < A[i] - D ) {
-			continue;
-		} 
-
-		if( A[i] + D < B.front() ) {
-			continue;
-		} 
-
-		ll lb = -1, ub = M-1;
-		while(ub - lb > 1) {
-			ll mid = (ub+lb)/2;
-			if(A[i] - D <= B[mid]) {
-				ub = mid;
-			} else {
-				lb = mid;
-			}
-		}
-
-		if(A[i] - D <= B[ub] && B[ub] <= A[i] + D) {
-			ll lb1 = ub, ub1 = M;
-			while(ub1 - lb1 > 1) {
-				ll mid = (ub1+lb1)/2;
-
-				if(B[mid] <= A[i]+D ) {
-					lb1 = mid;
-				} else {
-					ub1 = mid;
-				}
-			} 
-
-			ans = MAX(ans,B[lb1] + A[i]);
-		} else {
-			continue;
-		}
-	}
-	cout << ans ;
-
 	return 0;
 }

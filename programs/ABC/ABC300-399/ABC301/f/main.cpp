@@ -39,5 +39,75 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
+	ll N, M; cin >> N >> M;
+	vector<ll> A(N);
+	vector<ll> mp[M+1];
+	rep(i,M+1) mp[i] = {};
+
+	vector<ll> dist;
+	vector<ll> start;
+
+	rep(i,N) {
+		cin >> A[i];
+		rep(_,A[i]) {
+			ll s; cin >> s;
+
+			if(mp[s].size() > 0) {
+				for(auto j:mp[s]) {
+					G[i].push_back(j);
+					G[j].push_back(i);
+				}
+			}
+
+			mp[s].push_back(i);
+
+			if(s == 1) {
+				start.push_back(i);
+			}
+
+			if(s == M) {
+				dist.push_back(i);
+			}
+	
+		}
+	}
+
+	if(dist.size() == 0 || start.size() == 0) {
+		out(-1)
+		return 0;
+	}
+
+
+	ll c[N];
+	rep(i,N)c[i] = -1;
+
+	queue<ll> Q;
+	for(auto s : start) {
+		Q.push(s);
+		c[s] = 0;
+	}
+
+	while(Q.size() > 0) {
+		auto q = Q.front(); Q.pop();
+
+		for(auto j : G[q]) if(c[j] == -1){
+			c[j] = c[q] + 1;
+			Q.push(j);
+		}
+	}
+
+	ll ans = INF_LL;
+
+	for(auto d : dist) {
+		ans = MIN(ans, c[d]);
+	}
+
+
+	if(ans == INF_LL) {
+		out(-1)
+	} else {
+		out(ans);
+	}
+
 	return 0;
 }

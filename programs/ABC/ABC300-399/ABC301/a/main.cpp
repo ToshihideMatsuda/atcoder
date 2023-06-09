@@ -39,5 +39,11 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
+	ll A, B; cin >> A >> B;
+if(A%B == 0) {
+	cout << (A/B);
+} else
+	cout << ((A/B) +1);
+	
 	return 0;
 }

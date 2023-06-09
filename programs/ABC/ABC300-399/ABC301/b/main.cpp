@@ -39,5 +39,43 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
+	ll H, W; cin >> H >> W;
+	vector<string> S(H + 10);
+	rep(i,H+10) {
+		string s("*",W+10);
+		S[i] = s;
+	}
+	rep(i,H) {
+		string s;
+		cin >> s;
+		S[i+5] = "*****" + s + "*****";
+	}
+
+	vector<char> ch = {'s','n','u','k','e'};
+	ll dx[8] = {1,0,-1,0,1,1,-1,-1};
+	ll dy[8] = {0,1,0,-1,1,-1,1,-1};
+
+
+	vector<pair<ll,ll>> ans;
+
+	reps(h,5,H+5)reps(w,5,W+5) {
+		rep(k,8) {
+			bool ok = true;
+			rep(i,5) if(S[h+dx[k]*i][w+dy[k]*i] != ch[i]) ok = false;
+			if(ok) {
+				rep(i,5) ans.push_back({h+dx[k]*i,w+dy[k]*i});
+				break;
+			}
+		}
+	}
+
+	rep(i,ans.size()) {
+		out0(ans[i].first-4)
+		out0(" ")
+		out(ans[i].second-4)
+	}
+
+
+
 	return 0;
 }

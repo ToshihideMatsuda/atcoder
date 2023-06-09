@@ -31,13 +31,54 @@ typedef unsigned long long ull;
 #define MOD 998244353
 #define INV2 499122177 // inverse of 2 in MOD
 
-#define MAX_N (2*100000+5)
-vector<ll> G[MAX_N];
-bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
-void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
-
+#define MAX_N (3*100000+5)
+set<ll> G[MAX_N];
 
 int main()
 {
+	ll N, Q; cin >> N >> Q;
+	vector<ll> C(N);
+	ll ans = N;
+	rep(_,Q) {
+		ll t; cin >> t;
+		if(t == 1) {
+			ll u, v; cin >> u >> v;
+			u--;v--;
+			if(C[u] == 0){
+				ans --;
+			}
+
+			if(C[v] == 0){
+				ans --;
+			}
+
+			C[u] ++;
+			C[v] ++;
+			G[u].insert(v);
+			G[v].insert(u);
+
+		} else {
+			ll v; cin >> v;
+			v--;
+			if(C[v] > 0) {
+				ans++;
+			}
+			C[v] = 0;
+
+			for(auto g:G[v]) {
+				C[g]--;
+				if(C[g] == 0){
+					ans ++;
+				}
+				G[g].erase(v);
+			}
+
+			G[v].clear();
+		}
+		out(ans);
+	}
+
+
+
 	return 0;
 }

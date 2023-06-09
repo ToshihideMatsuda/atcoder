@@ -39,5 +39,35 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
+	ll N, M; cin >> N >> M;
+	vector<string> S(N);rep(i,N) cin >> S[i];
+	ll d[N][N];
+	
+	rep(i,N)rep(j,N) {
+		ll dif = 0;
+		rep(k,M)if(S[i][k] !=S[j][k])dif++;
+		d[i][j] = dif;
+		d[j][i] = dif;
+	}
+
+	vector<ll> P(N);
+	rep(i,N) P[i] = i;
+
+	do{
+		bool ok = true;
+		rep(i,N-1) {
+			if( d[P[i]][P[i+1]] != 1) ok = false;
+		}
+
+		if(ok) {
+			out("Yes")
+			return 0;
+		}
+
+	} while (next_permutation(P.begin(), P.end()));
+
+
+			out("No")
+
 	return 0;
 }
