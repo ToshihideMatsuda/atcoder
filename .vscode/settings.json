@@ -43,7 +43,8 @@
         "bitset": "cpp",
         "tuple": "cpp",
         "iomanip": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "__string": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }
