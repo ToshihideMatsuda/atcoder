@@ -36,20 +36,62 @@ vector<ll> G[MAX_N];
 bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
 void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
-struct v{
-	v& zero;
-	v& one;
-};
+
 
 int main()
 {
 	ll Q; cin >> Q;
+	multiset<ll> s;
+	multiset<ll> ans;
+	s.insert(-1);
+	s.insert(INF_LL);
 	rep(_,Q) {
 		ll t; cin >> t;
 		if(t == 1) {
 			ll x; cin >> x;
+			auto lb = s.lower_bound(x);
+			ll af = *(lb);
+			ll bf = *(--lb);
+
+			if(bf != -1) {
+				ans.insert((bf^x));
+			}
+
+			if(af != INF_LL) {
+				ans.insert((af^x));
+			}
+			if(bf != -1 && af != INF_LL) {
+				ans.erase(ans.find(bf^af));
+			}
+
+			s.insert(x);
+
 		} else if(t == 2) {
 			ll x; cin >> x;
+			auto lb = s.lower_bound(x);
+
+			ll v  = *(lb);
+			auto cp = lb;
+			auto cp2 = lb;
+			ll af = *(++lb); 
+			ll bf = *(--cp);
+
+			if(bf != -1) {
+				ans.erase(ans.find(bf^v));
+			}
+
+			if(af != INF_LL) {
+				ans.erase(ans.find(af^v));
+			}
+
+			if(bf != -1 && af != INF_LL) {
+				ans.insert((bf^af));
+			}
+
+			s.erase(cp2);
+
+		} else { // t = 3;
+			out(*(ans.begin()));
 		}
 	} 
 	return 0;
