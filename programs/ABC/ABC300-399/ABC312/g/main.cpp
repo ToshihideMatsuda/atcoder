@@ -36,8 +36,57 @@ vector<ll> G[MAX_N];
 bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
 void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
+ll n; 
+vector<ll> pathSize[MAX_N]; // v1, v2, v3, ... vm
+ll sum[MAX_N];              // v1 + v2 + v3, ... vm
+ll twoProductSum[MAX_N];    // v1*(v2 + v3 + ... ) + ...
+ll _ans[MAX_N];				// v1 * v2 * v3 + ...
+
+void add(ll p, ll v) {
+	if(pathSize[p].size() == 0 ) {
+	} else if(pathSize[p].size() == 1 ) {
+		twoProductSum[p] = v*sum[p];
+	} else {
+		_ans[p] += v*twoProductSum[p];
+		twoProductSum[p] += v*sum[p];
+	}
+	sum[p] += v;
+	pathSize[p].push_back(v);
+} 
+
+ll dfs(ll p, ll prev) {
+
+	ll sum = 0;
+	for(auto q : G[p]) if(prev != q) {
+		ll v = dfs(q,p);
+		add(p,v);
+		sum += v;
+	}
+	if(n-1-sum > 0) {
+		add(p,n-1-sum);
+	}
+
+	return sum + 1;
+}
 
 int main()
 {
+	cin >> n;
+	readG(n-1);
+
+	ll p = 0;
+	reps(i,1,n+1) if(G[i].size() == 1) {
+		p = i;
+		break;
+	}
+
+	dfs(p,-1);
+
+	ll ans = 0;
+	reps(i,1,n+1) ans += _ans[i];
+	out(ans)
+
+
+
 	return 0;
 }
