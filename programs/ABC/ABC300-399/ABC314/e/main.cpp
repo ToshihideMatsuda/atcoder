@@ -41,30 +41,43 @@ int main()
 {
 	ll N, M; cin >> N >> M;
 
-	vector<vector<double>> dp = vector(N+1,vector(M+1,0.0));
-	rep(i,N+1) rep(j,M+1) dp[i][j] = INF_LL;
-	dp[0][0] = 0;
+	vector<tuple<double,ll,vector<ll>>> R(N);
 
-	reps(i,1,1+N) {
-		ll C, P; cin >> C >> P;
-		vector<ll> S(P); rep(j,P) cin >> S[j];
-		
-		rep(j, M+1) dp[i][j] = dp[i-1][j];
 
-		vector<double> tmp(M+1, 0.0);
-		rep(j, M) {
+	rep(i,N) {
+        double C; ll P; cin >> C >>P;
+        vector<ll> S;
 
-			ll  = 0;
-			double bunbo2 = 0;
-			rep(p,P) if(j+S[p] < M){
-				tmp[j+S[p]] = dp[i-1][j] + C;
-			}
-		}
-	}
+        // Z:zero除外
+        ll Z = 0;
+        rep(j,P) {
+            ll s;
+            cin >> s;
+            if(s == 0) Z++;
+            else S.push_back(s);
+        }
 
-	double ans = INF_LL;
-	reps(i,M,205) ans = MIN(ans,dp[N][i]);
-	cout<< setprecision(15) << ans;
-	
-	return 0;
+        // zero除外
+        C *= (double)P/(double)(P-Z);
+
+        R[i] = {C, P-Z, S};
+    }
+
+    vector<double> e(M,INF_LL);
+
+	rev(i,M-1) {
+        double tmp = e[i];
+        for(auto [C, P, S] : R) {
+            double expected = 0;
+            for(auto s:S) if (i + s < M){
+                expected += e[i+s];
+            }
+            tmp = MIN(tmp, C + expected/P );
+        }
+        e[i] = tmp;
+    }
+
+    outd(e[0])
+    return 0;
+
 }
