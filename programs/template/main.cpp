@@ -15,21 +15,26 @@ typedef unsigned long long ull;
 #define MIN(a,b)   (a<b?a:b)
 #define MIN3(a,b,c) MIN(a,MIN(b,c))
 #define out0(s) cout << s;
-#define out(s) out1(s)
-#define out1(s) cout << s << endl;
-#define out2(s,t) cout << s << t << endl;
-#define out3(s,t,r) cout << s << t << r << endl;
-#define out4(s,t,r,u) cout << s << t << r << u << endl;
-#define out5(s,t,r,u,o) cout << s << t << r << u << o << endl;
+#define out(s)  cout << s << endl;
 #define outd(s) cout << setprecision(15) << s << endl;
 #define pb(s) push_back(s)
+/*
+	vector<ll> X = {4,7,3,1,7,9,4};
+	SORT(X, <)
+	OUT(X,",") //1,3,4,4,7,7,9,
+
+	SORT(X, >)
+	OUT(X," ") //9 7 7 4 4 3 1
+*/
+#define SORT(A,R) std::sort((A).begin(),(A).end(), [](auto const& x, auto const& y) { return x R y; });
+#define OUT(A,separate) for(auto a : A) { cout << a << separate; }
+
 
 #define INF (1 << 30)
 #define MINF -1*(1 << 30)
 #define INF_LL (1LL << 60)
 #define MINF_LL - (1LL << 60)
 #define MOD 998244353
-#define INV2 499122177 // inverse of 2 in MOD
 
 #define MAX_N (2*100000+5)
 vector<ll> G[MAX_N];
