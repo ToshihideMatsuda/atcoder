@@ -41,8 +41,77 @@ vector<ll> G[MAX_N];
 bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
 void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
+// Σ A_i [i in 1 ... N] 
+// = X+X^2+X^4+X^8+ ... +X^(2^N-1) mod M
 
 int main()
 {
+	ll N, X, M; cin >> N >> X >> M;
+
+	map<ll,ll> mp;
+	ll A = X;
+	ll i = 1;
+	bool loop = true;
+	while(mp.count(A) == false) {
+		mp[A] = i;
+		A = A*A;
+		A %= M;
+		i++;
+		if(N < i) {
+			loop = false;
+			break;
+		}
+	}
+
+	ll s,e;
+	if(loop) {
+		s = mp[A];
+		e = i-1;
+	} else {
+		s = 1;
+		e = N;
+	}
+
+
+	ll loop_len = e-s+1;
+	ll loop_cnt = (N+1-s)/loop_len; 
+	ll loop_rem = N - ( (s-1) + loop_len * loop_cnt );
+
+	ll ans = 0;
+
+	A = X;
+	rep(i,s-1) {
+		ans += A;
+
+		A = A*A;
+		A %= M;
+	}
+
+	ll loopSum = 0;
+	reps(i,s,e+1) {
+		loopSum += A;
+
+		A = A*A;
+		A %= M;
+	}
+	ans += loopSum * loop_cnt;
+
+	rep(i,loop_rem) {
+		ans += A;
+
+		A = A*A;
+		A %= M;
+	}
+
+	out(ans);
+
+
+	
+
+
+
+
+
+
 	return 0;
 }
