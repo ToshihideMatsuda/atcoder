@@ -19,18 +19,10 @@ typedef long long ll;
 
 	
 int main(){
-	ll N;cin>> N;
-	vector<ll> A(N);
-	rep(i,N)cin>>A[i];
-	sort(A.begin(),A.end());
-	ll ans=A[N-1];
-	ll cnt=2;
-	for(int i=N-2;i>-1;i--){
-		if(cnt>=N)break;
-		cnt++;ans+=A[i];
-		if(cnt>=N)break;
-		cnt++;ans+=A[i];
-	}
-	cout<<(ans);
+	ll N;cin>>N;
+	if(N%1000==0)cout<<0;
+	else cout<<(1000-N%1000);
+	
+	
     return 0;
 }

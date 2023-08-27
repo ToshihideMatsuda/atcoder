@@ -28,66 +28,88 @@ typedef unsigned long long ull;
 #define MINF -1*(1 << 30)
 #define INF_LL (1LL << 60)
 #define MINF_LL - (1LL << 60)
-#define MOD 998244353
+#define MOD (1000000000+7)
 #define INV2 499122177 // inverse of 2 in MOD
 
 #define MAX_N (2*100000+5)
-vector<ll> G[MAX_N];
-bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
-void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
 
-int main()
-{
-	ll N, M; cin >> N >> M;
-	vector<ll> P(N+5);
-	vector<vector<ll>> rP(N+5);
-	reps(i,2,N+1) {
-		ll p;
-		cin >> p;
-		P[i] = p;
-		rP[p].push_back(i);
+long long modPow(long long x, long long a) {
+  if (a == 0) return 1;
+  if (a == 1) return x;
+  if (a % 2) return (x * modPow(x, a - 1)) % MOD;
+  long long t = modPow(x, a / 2);
+  return (t * t) % MOD;
+}
+
+
+long long modInv(long long x) {
+  return modPow(x, MOD - 2);
+}
+
+int main(){
+	ll N,K;cin>> N>>K;
+	vector<ll> pA,mA;
+	rep(i,N){
+		ll a;cin>> a;
+		if(a>0)pA.push_back(a);
+		else mA.push_back(a);
 	}
-
-	map<ll,ll> mp;
-	rep(i,M) {
-		ll x, y; cin >> x >> y;
-		if(mp.count(x)) {
-			mp[x] = MAX(mp[x],y);
-		} else {
-			mp[x] = y;
+	
+	sort(pA.begin(),pA.end(),greater<ll>());
+	sort(mA.begin(),mA.end());
+	mA.push_back(0);
+	pA.push_back(0);
+	
+	ll i=0,j=0;
+	ll ans=1;
+	while(i+j<N){
+		if(pA[i]>=mA[j]){
+			ans*=pA[i];
+			ans%=MOD;
+			i++;
+		} else{
+			ans*=-mA[j];
+			ans%=MOD;
+			j++;
 		}
 	}
-
-	queue<pair<ll,ll>> Q;
-	vector<bool> ck(N+5,false);
-
-	if(mp.count(1)) {
-		ck[1] = true;
-		Q.push({1,mp[1]});
-	} else {
-		Q.push({1,0});
-	}
-
-	while(Q.size() > 0) {
-		auto q = Q.front(); Q.pop();
-		for(auto p: rP[q.first]) {
+	
+	if(j%2==0){
+		//nop
+	}else{
+		if(i==pA.size()-1] {
+			//only p-=1; m+=1
+			ans *= modInv(pA[i-1]);
+			ans %= MOD;
+			ans *= -mA[j];
+			ans %= MOD;
+		} else if(j==mA.size()-1) {
+			//only 
+			ans *= modInv(-mA[j-1]);
+			ans %= MOD;
+			ans *= pA[i];
+			ans %= MOD;
+		} else {
+			// p-=1; m+=1
+			ll d1 = pA[i-1];
+			ll p1 = -mA[j];
 			
-			ll cur = MAX(0, q.second-1);
-			if(mp.count(p)){
-				cur = MAX(cur,mp[p]);
+			// p+=1; m-=1
+			ll d2 = -mA[j-1];
+			ll p2 = pA[i];
+			if(p1*d2 < p2*d1) {
+				
 			}
 
-			if(cur > 0 || q.second > 0) ck[p] = true;
-			Q.push({p,cur});
-			
+
+
+
+
 		}
-
 	}
-	ll ans = 0;
-	reps(i,1,N+1) if(ck[i]) ans ++;
-	out(ans)
-
-
-	return 0;
+	
+	
+	cout<<(ans);
+    return 0;
 }

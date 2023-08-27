@@ -44,7 +44,8 @@
         "tuple": "cpp",
         "iomanip": "cpp",
         "utility": "cpp",
-        "__string": "cpp"
+        "__string": "cpp",
+        "type_traits": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

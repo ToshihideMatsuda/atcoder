@@ -19,18 +19,19 @@ typedef long long ll;
 
 	
 int main(){
-	ll N;cin>> N;
-	vector<ll> A(N);
-	rep(i,N)cin>>A[i];
-	sort(A.begin(),A.end());
-	ll ans=A[N-1];
-	ll cnt=2;
-	for(int i=N-2;i>-1;i--){
-		if(cnt>=N)break;
-		cnt++;ans+=A[i];
-		if(cnt>=N)break;
-		cnt++;ans+=A[i];
+	ll N;cin>>N;
+	ll ac=0,wa=0,tle=0,re=0;
+	rep(i,N){
+		string s;cin>>s;
+		if(s=="AC")ac++;
+		else if(s=="WA")wa++;
+		else if(s=="TLE")tle++;
+		else re++;
 	}
-	cout<<(ans);
+	cout<<"AC x "<<ac<<endl;
+	cout<<"WA x "<<wa<<endl;
+	cout<<"TLE x "<<tle<<endl;
+	cout<<"RE x "<<re<<endl;
+	
     return 0;
 }
