@@ -44,5 +44,14 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
+	ll A, B, C, K; cin >> A >> B >> C >> K;
+	if(K<A) {
+		out(K)
+	} else if(K <= A+B) {
+		out(A)
+	} else {
+		ll R = K - (A + B);
+		out(A-R);
+	}
 	return 0;
 }

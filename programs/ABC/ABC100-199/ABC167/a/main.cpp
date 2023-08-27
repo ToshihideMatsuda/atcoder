@@ -44,5 +44,13 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
+	string S, T; cin >> S >> T;
+	rep(i,S.size()) if(S[i] != T[i]) {
+		out("No")
+		return 0;
+	}
+	out("Yes")
+
+
 	return 0;
 }

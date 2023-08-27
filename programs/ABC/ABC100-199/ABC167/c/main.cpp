@@ -44,5 +44,40 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
+	ll N, M, X; cin >> N >> M >> X;
+	
+	vector<ll> C(N);
+	vector A = vector(N, vector(M,0L));
+	rep(i,N) {
+		cin >> C[i];
+		rep(j,M) cin >> A[i][j];
+	}
+
+	ll ans = -1;
+	for(int i = 1; i < (1 << N); i++) {
+		vector<ll> choice;
+		rep(j,N) if( (i & (1 << j)) > 0 ) choice.push_back(j);
+
+
+		ll sum = 0;
+		vector<ll> B(M,0);
+		for(auto c : choice) {
+			sum += C[c];
+			rep(m,M) B[m] += A[c][m];
+		}
+
+		bool ok = true;
+		rep(m,M) if(B[m] < X) ok = false;
+
+		if(ok == false) continue;
+
+		if(ans == -1) ans = sum;
+		else ans = MIN(ans,sum);
+
+	}
+
+	out(ans)
+
+
 	return 0;
 }

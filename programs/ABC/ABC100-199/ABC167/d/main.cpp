@@ -44,5 +44,48 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
+	ll N, K; cin >> N >> K;
+	vector<ll> A(N+1);
+	rep(i,N) cin >> A[i+1];
+
+	vector<ll> path;
+	set<ll> visited;
+
+	ll p = 1;
+	path.push_back(p);
+	visited.insert(p);
+
+	ll T = 0;
+
+	while(true) {
+		p = A[p];
+		T++;
+		
+		if(T == K) {
+			out(p)
+			return 0;
+		}
+
+		if(visited.count(p)) {
+			break;
+		}
+
+		path.push_back(p);
+		visited.insert(p);
+	}
+
+	vector<ll> loop;
+	rep(i,path.size()) if(path[i] == p || loop.size() > 0) loop.push_back(path[i]);
+
+	K -= path.size();
+	K %= loop.size();
+	out(loop[K]);
+
+	
+
+
+
+
+
 	return 0;
 }

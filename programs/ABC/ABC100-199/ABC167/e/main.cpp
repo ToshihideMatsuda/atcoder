@@ -37,12 +37,62 @@ typedef unsigned long long ull;
 #define MOD 998244353
 
 #define MAX_N (2*100000+5)
-vector<ll> G[MAX_N];
-bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
-void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
+
+long long const SIZE = (2*100000+5) * 4;
+
+vector<long long> fact, fact_inv, inv;
+/*  init_nCk :二項係数のための前処理
+    計算量:O(n)
+*/
+bool init = false;
+void initFact() {
+    if(init) return ;
+    fact.resize(SIZE + 5);
+    fact_inv.resize(SIZE + 5);
+    inv.resize(SIZE + 5);
+
+    fact[0] = fact[1] = 1;
+    fact_inv[0] = fact_inv[1] = 1;
+    inv[1] = 1;
+
+    for (int i = 2; i < SIZE + 5; i++) {
+        fact[i] = fact[i - 1] * i % MOD;
+        inv[i] = MOD - inv[MOD % i] * (MOD / i) % MOD;
+        fact_inv[i] = fact_inv[i - 1] * inv[i] % MOD;
+    }
+    init = true;
+    
+}
+
+ll modPerm(ll n, ll k) {
+    initFact();
+    return (fact[n] * fact_inv[n-k]) % MOD;
+}
+
+ll modComb(ll n, ll k) {
+    initFact();
+    if(k==0) return 1;
+    ll a = modPerm(n, k);
+    return (a * fact_inv[k]) % MOD;
+}
+
+
+using mint = modint998244353;
 
 
 int main()
 {
+	ll N, M, K; cin >> N >> M >> K;
+	vector<mint> powM_1(N+5);
+	powM_1[0] = 1;
+	reps(i,1,N+5) powM_1[i] = powM_1[i-1] * (M-1);
+
+	mint ans = 0;
+	rep(k,K+1) {
+		ll c = modComb(N-1,k);
+		ans += M * c * powM_1[N-1-k];
+	}
+	out(ans.val())
+
 	return 0;
 }
