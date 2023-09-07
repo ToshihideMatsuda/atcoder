@@ -28,16 +28,72 @@ typedef unsigned long long ull;
 #define MINF -1*(1 << 30)
 #define INF_LL (1LL << 60)
 #define MINF_LL - (1LL << 60)
-#define MOD 998244353
-#define INV2 499122177 // inverse of 2 in MOD
 
-#define MAX_N (2*100000+5)
-vector<ll> G[MAX_N];
-bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
-void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
+#define MOD (1000000007)
 
+using mint = modint1000000007;
 
-int main()
-{
-	return 0;
+int main(){
+	ll N,K;cin>> N>>K;
+	vector<ll> pA,mA;
+	ll zero = 0;
+	rep(i,N){
+		ll a;cin>> a;
+		if(a>0)		pA.push_back(a);
+		else if(a<0)mA.push_back(a);
+		else zero ++;
+	}
+	
+	mint ans=1;
+	if(pA.size()+mA.size()<K){
+		ans = 0;
+	} else if(pA.size()+mA.size()==K){
+		if(mA.size() % 2 == 1 && zero > 0) { ans = 0; }
+		else {
+			for(auto p:pA) ans*=p;
+			for(auto m:mA) ans*=m;
+		}
+	} else{
+		sort(pA.begin(),pA.end(),greater<ll>());
+		sort(mA.begin(),mA.end());
+		if(pA.size()==0 && K%2==1){
+			rep(i,K) ans *= mA[N-1-i];
+			if(zero > 0) ans = 0;
+		} else {
+			
+			mint tmp = 1;
+			long double logtmp=0;
+			vector<mint>p(K+1);
+			vector<long double>logp(K+1);
+
+			p[0]=1;
+			logp[0]=0;
+			long double maxlog = 0;
+			rep(j, MIN(K, pA.size())){
+				p[j+1] = p[j]*pA[j];
+				logp[j+1]=logp[j]+log2l(pA[j]);
+			}
+
+			for(int i=0; i<=MIN(mA.size(),K); i+=2){
+
+				if(i>0){
+					tmp *= mA[i-2];
+					tmp *= mA[i-1];
+					logtmp += log2l(-mA[i-1])+log2l(-mA[i-2]);
+				}
+
+				if( K - i <= pA.size()) {
+					mint tmp2 = (tmp*p[ K-i]);
+					long double logtmp2=logtmp+logp[K-i];
+					if(maxlog<logtmp2){
+						ans=tmp2;
+						maxlog=logtmp2;
+					}
+				}
+			}
+		}
+	}
+	
+	cout<<(ans.val());
+    return 0;
 }
