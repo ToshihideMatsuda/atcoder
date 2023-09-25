@@ -1,97 +1,103 @@
-#include <iostream>
-#include <vector>
-#include <unordered_map>
-#include <map>
-#include <set>
-#include <stack>
-#include <queue>
-#include <algorithm>
-#include <iomanip>
-#include <numeric>
-
 #include <bits/stdc++.h> 
+#include <atcoder/all>
 
+using namespace atcoder;
 using namespace std;
-
-#define debug false
-
-#define rep(i,n)     for(int i = 0; i < n; i++ ) 
-#define reps(i,m,n)  for(int i = m; i < n; i++ ) 
-
+// 多倍長テンプレ（デバッグだとダメかも）
+/* ---------------------- ここから ---------------------- */
+#include <boost/multiprecision/cpp_dec_float.hpp>
+#include <boost/multiprecision/cpp_int.hpp>
+namespace mp = boost::multiprecision;
+// 任意長整数型
+using bll = mp::cpp_int;
+// 仮数部が10進数で1024桁の浮動小数点数型(TLEしたら小さくする)
+using real = mp::number<mp::cpp_dec_float<1024>>;
+/* ---------------------- ここまで ---------------------- */
 
 typedef long long ll;
 
-#define INF 1 << 28
-#define MINF -1*(1 << 28)
-#define INF_LL 1LL << 60
+#define rep(i,n)     for(ll i = 0; i < n; i++ ) 
+#define reps(i,m,n)  for(ll i = m; i < n; i++ ) 
+#define rev(i,n)     for(ll i = n; i > -1; i--) 
+#define revs(i,m,n)  for(ll i = m; i > n; i--) 
+#define MAX(a,b)   (a>b?a:b)
+#define MAX3(a,b,c) MAX(a,MAX(b,c))
+#define MIN(a,b)   (a<b?a:b)
+#define MIN3(a,b,c) MIN(a,MIN(b,c))
+#define out0(s) cout << s;
+#define out(s)  cout << s << endl;
+#define outd(s) cout << setprecision(15) << s << endl;
+#define pb(s) push_back(s)
+/*
+	vector<ll> X = {4,7,3,1,7,9,4};
+	SORT(X, <)
+	OUT(X,",") //1,3,4,4,7,7,9,
+
+	SORT(X, >)
+	OUT(X," ") //9 7 7 4 4 3 1
+*/
+#define SORT(A,R) std::sort((A).begin(),(A).end(), [](auto const& x, auto const& y) { return x R y; });
+#define OUT(A,separate) for(auto a : A) { cout << a << separate; }
+
+
+#define INF (1 << 30)
+#define MINF -1*(1 << 30)
+#define INF_LL (1LL << 60)
 #define MINF_LL - (1LL << 60)
 #define MOD 998244353
 
-#if debug == true
-    #define MAX_N 100 + 5
-#else
-    #define MAX_N 2*100000 + 5
-#endif
+#define MAX_N (2*100000+5)
+vector<ll> G[MAX_N];
+bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
+void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
-void OK() {
-  cout << "Yes" << endl;
-  exit(0);
-}
 
-int dp[1000000+5][10];
+using mint = modint998244353;
 
-/*
-ACCCAAAA
 
-1 * 2 * 26
-1 * 1 * 3
--1
-*/
-void solve(){
-    int T;
-    cin>> T;
-    vector<int> ans;
-    rep(_,T) {
-        int N;
-        string S;
-        cin >> N >> S;
-        
-        int inside = 1;
-        bool sameIsOk = true;
+int main()
+{
+    vector<mint> pow26(1000000 + 5);
+    pow26[0] = 1;
+    reps(i,1,1000000 + 5) {
+        pow26[i] = pow26[i-1] * 26;
+    }
+    ll T; cin >> T;
+    vector<ll> ANS;
+    while(T--) {
+        ll N; cin >> N; 
+        string S; cin >> S;
+        mint ans = 0;
 
-        rep(i, (N+1) /2) {
-            char c = S[i];
-            int cnt = c - 'A' + 1;
-            
-            if(c != 'A') {
-                inside = (inside * cnt) % MOD + (cnt - 1)  %MOD;
-            }
-
-            if(S[i] > S[N-1-i]) sameIsOk = false;
+        rep(i,(N+1)/2) {
+            mint under = S[i] - 'A';
+            ll L = MAX(0, N - 2 * (i + 1));
+            ans += under * pow26[(L+1)/2];
         }
 
-        int ansE = (inside + sameIsOk ? 1 : 0) % MOD;
-        ans.push_back(ansE);
-    }
+        bool add = true;
+        if(N%2 == 1) {
+            for(int i = 0; (N-1)/2 - i >= 0; i++) {
+                if(S[(N-1)/2 - i]  < S[(N-1)/2 + i]) break;
+                if(S[(N-1)/2 - i] == S[(N-1)/2 + i]) continue;
+                add = false; break;
+            }
+        } else {
+            for(int i = 0; N/2 - 1 - i >= 0; i++) {
+                if(S[N/2 -1 - i]  < S[N/2 + i]) break;
+                if(S[N/2 -1 - i] == S[N/2 + i]) continue;
+                add = false; break;
+            }
+        }
+        
+        if(add) {
+            ans += 1;
+        }
 
-    rep(i,T) cout << ans[i] << endl;
+        ANS.push_back(ans.val());
+    }
+    OUT(ANS,endl)
+
     
+	return 0;
 }
-
-
-int main(){
-
-#if debug == true
-    while(true){
-        cout << "---debugMode---" << endl;
-#endif
-        solve();
-        cout << endl;
-#if debug == true
-    }
-#endif
-
-    return 0;
-}
-
-
