@@ -1,10 +1,20 @@
 #include <bits/stdc++.h> 
 #include <atcoder/all>
+
 using namespace atcoder;
 using namespace std;
+// 多倍長テンプレ（デバッグだとダメかも）
+/* ---------------------- ここから ---------------------- */
+#include <boost/multiprecision/cpp_dec_float.hpp>
+#include <boost/multiprecision/cpp_int.hpp>
+namespace mp = boost::multiprecision;
+// 任意長整数型
+using bll = mp::cpp_int;
+// 仮数部が10進数で1024桁の浮動小数点数型(TLEしたら小さくする)
+using real = mp::number<mp::cpp_dec_float<1024>>;
+/* ---------------------- ここまで ---------------------- */
 
 typedef long long ll;
-typedef unsigned long long ull;
 
 #define rep(i,n)     for(ll i = 0; i < n; i++ ) 
 #define reps(i,m,n)  for(ll i = m; i < n; i++ ) 

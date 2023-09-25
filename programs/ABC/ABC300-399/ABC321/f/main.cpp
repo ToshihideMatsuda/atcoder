@@ -63,7 +63,7 @@ int main()
 			}
 		}
 		
-		dp = dp2;
+		dp = move(dp2);
 		ans.push_back(dp[K].val());
 	}
 
