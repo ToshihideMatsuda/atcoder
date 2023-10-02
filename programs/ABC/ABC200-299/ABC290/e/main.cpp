@@ -24,45 +24,33 @@ typedef unsigned long long ull;
 #define INV2 499122177 // inverse of 2 in MOD
 
 #define MAX_N (2*100000+5)
-vector<ll> G[MAX_N];
-bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
-void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
-
-ll sum(ll n) {
-  return (n) * (n+1)/2;
-}
-
-void solve() {
-  ll N; cin >> N;
-  vector<ll> A(N);
-  rep(i,N) {
-    cin >> A[i];
-  }
-
-  //各値の出現箇所を算出
-  vector<ll> P(2*100000+5);
-  rep(i,N) {
-    P[A[i]].push_back(i);
-  }
-
-  ll all = 0;
-  ll sum = N;
-  rep(i,N) {
-    all += sum;
-    sum -= (N-1-i);
-  }
-
-
-
-
-  out(ans)
-
-
-}
-
 
 int main()
 {
-  solve();
+
+  ll N; cin >> N;
+  ll ans = 0;
+  vector<ll> v[N+1];
+  ll tmp = 0;
+
+  reps(i,1,1+N) {
+    ll a;cin >> a;
+    tmp += i/2;
+    ans += tmp;
+
+    v[a].push_back(MIN(i,N+1-i));
+  }
+
+  reps(i,1,1+N) {
+    if(v[i].size() >= 2) {
+      sort(v[i].begin(),v[i].end());
+      rep(j,v[i].size() -1) {
+        ans -= v[i][j] * (v[i].size() - 1 - j);
+      }
+    }
+  }
+
+
+  out (ans)
 	return 0;
 }
