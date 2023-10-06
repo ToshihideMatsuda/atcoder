@@ -15,6 +15,7 @@ ll euler_phi(ll n) {
 }
 
 long long modPow(long long x, long long a) {
+  if (x >= MOD) { x %= MOD; }
   if (a == 0) return 1;
   if (a == 1) return x;
   if (a % 2) return (x * modPow(x, a - 1)) % MOD;
