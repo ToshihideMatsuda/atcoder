@@ -17,7 +17,11 @@ struct SegTree {
 #define MAX_MODE    1
 #define SUM_MODE    2
 #define XOR_MODE    3
-    int mode =  MIN_MODE;  // 0:最小値, 1:最大値, 2:和, 3:XOR
+
+#define ADD_MODE       true
+#define UPDATE_MODE    false
+    int mode =  MIN_MODE;        // 0:最小値, 1:最大値, 2:和, 3:XOR
+    bool addMode = UPDATE_MODE;  // true: 加算で処理、false：更新で処理
     
     // 演算結果に影響しない0元
     // 最小値：inf, 最大値: -inf, sum:0, xor:0
@@ -36,7 +40,7 @@ struct SegTree {
     
 public:
     
-    SegTree(int n_, int mode_, T Z) {
+    SegTree(int n_, int mode_, bool addMode_, T Z) {
         int x = 1;
         while(x < n_) {
             x *= 2;         //n以上の 2^m形式に変換
@@ -48,6 +52,8 @@ public:
         dat = dattmp;
         vector<T>lazytmp(n * 2 - 1, ZERO); //遅延評価配列も同じ数準備
         lazy = lazytmp;
+        mode = mode_;
+        addMode = addMode_;
         
     }
     
@@ -63,7 +69,8 @@ public:
             updateNolazy_forSum(a, b, x);
         }
         else {
-            updateNolazy_forSum(a, b, x);
+            cout<< "不適切な使用です err:1" << endl;
+            exit(-1);
         }
     }
     // dat[a]を値xで更新
@@ -105,12 +112,22 @@ public:
     //lazy[k]に登録してあった値を、１階層下の子要素に伝播させて、自身の値も変更
     void eval(int k) {
         if(lazy[k] == ZERO) return ;
-        if(k < n -1) //kは末端ノード（葉）ではない
-        {
-            lazy[2 * k + 1] = lazy[k];
-            lazy[2 * k + 2] = lazy[k];
+
+        if(addMode == ADD_MODE) {
+            if(k < n -1) //kは末端ノード（葉）ではない
+            {
+                lazy[2 * k + 1] += lazy[k];
+                lazy[2 * k + 2] += lazy[k];
+            }
+            dat[k] += lazy[k];
+        } else {
+            if(k < n -1) //kは末端ノード（葉）ではない
+            {
+                lazy[2 * k + 1] = lazy[k];
+                lazy[2 * k + 2] = lazy[k];
+            }
+            dat[k] = lazy[k];
         }
-        dat[k] = lazy[k];
         lazy[k] = ZERO;
     }
     
@@ -118,7 +135,11 @@ private:
     void updateLazy_forMinMax(int a, int b, T x, int k, int l, int r) {
         eval(k);
         if(a <= l && r <= b ) {      // 区間にすっぽり収まる際にはlazyを更新
-            lazy[k] = x ;
+            if(addMode == ADD_MODE) {
+                lazy[k] += x;
+            } else {
+                lazy[k] = x;
+            }
             eval(k);
         }  else if( a < r && l < b) { // 一部の区間が収まる場合
             updateLazy_forMinMax(a, b, x, 2 * k + 1, l          , (r + l)/ 2 );
@@ -131,7 +152,11 @@ private:
     //その時点で値を更新する
     void updateNolazy_forSum(int i, T x) { // i: 更新したい数列の位置（葉の位置）　x: 更新する値
         i += n - 1;                  // i番目の要素は i + n - 1の位置に格納
-        dat[i] = x;
+        if(addMode == ADD_MODE) {
+             dat[i] += x;
+        } else {
+             dat[i] = x;
+        }
         while(i > 0) { //親をたどって値を更新していく
             i = (i - 1) / 2;
             dat[i] = choice(dat[i * 2 + 1], dat[i * 2 + 2] );
@@ -162,8 +187,8 @@ private:
     
     T choice(T a, T b) {
         return
-            mode == MIN_MODE ? min(a, b) :
-            mode == MAX_MODE ? max(a, b) :
+            mode == MIN_MODE ? (a<b?a:b) :
+            mode == MAX_MODE ? (a>b?a:b) :
             mode == SUM_MODE ? a + b     :
             mode == XOR_MODE ? a ^ b     : ZERO;
     }
@@ -172,8 +197,9 @@ private:
 };
 
 
+
 int main(){
-    SegTree<int> segTreeMax(10, MAX_MODE, -(1<<28));
+    SegTree<int> segTreeMax(10, MAX_MODE, UPDATE_MODE, -(1<<28));
     
     segTreeMax.update(2, 9, 1);    // 2,3,4,5,6,7,8 -> 1
     segTreeMax.update(1, 2, 4);    // 1 -> 4
@@ -187,7 +213,7 @@ int main(){
     }
     
     
-    SegTree<int> segTreeMin(10, MIN_MODE, (1<<28));
+    SegTree<int> segTreeMin(10, MIN_MODE, UPDATE_MODE, (1<<28));
     
     segTreeMin.update(2, 9, 5);    // 2,3,4,5,6,7,8 -> 5
     segTreeMin.update(1, 2, 2);    // 1 -> 2
@@ -201,7 +227,7 @@ int main(){
     }
     
     
-    SegTree<int> segTreeSum(10, SUM_MODE, 0);
+    SegTree<int> segTreeSum(10, SUM_MODE, UPDATE_MODE, 0);
     
     segTreeSum.update(2,9,5);  // 2,3,4,5,6,7,8 -> 5
     segTreeSum.update(1,2,2);  // 1 -> 2

@@ -3,16 +3,6 @@
 
 using namespace atcoder;
 using namespace std;
-// 多倍長テンプレ（デバッグだとダメかも）
-/* ---------------------- ここから ---------------------- */
-#include <boost/multiprecision/cpp_dec_float.hpp>
-#include <boost/multiprecision/cpp_int.hpp>
-namespace mp = boost::multiprecision;
-// 任意長整数型
-using bll = mp::cpp_int;
-// 仮数部が10進数で1024桁の浮動小数点数型(TLEしたら小さくする)
-using real = mp::number<mp::cpp_dec_float<1024>>;
-/* ---------------------- ここまで ---------------------- */
 
 typedef long long ll;
 
@@ -47,19 +37,19 @@ typedef long long ll;
 #define MOD 998244353
 
 #define MAX_N (2*100000+5)
-vector<ll> G[MAX_N];
-bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
-void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
-//max: SegTreeAbstract<ll> segTreeMax(N+1, [](ll x, ll y) { return x < y ? y : x; }, -(1LL<<61));
-//min: SegTreeAbstract<ll> segTreeMin(N+1, [](ll x, ll y) { return x < y ? x : y; }, (1LL<<61));
-//sum: SegTreeAbstract<ll> segTreeSum(N+1, [](ll x, ll y) { return x + y; }, 0);
-//xor: SegTreeAbstract<ll> segTreeXor(N+1, [](ll x, ll y) { return x ^ y; }, 0);
 template<typename T>
-struct SegTreeAbstract {
-    //最大値: compare = [](ll x, lly)
-    function<T(T,T)> compare; //比較用関数オブジェクト
-    
+struct SegTree {
+    private :
+#define MIN_MODE    0
+#define MAX_MODE    1
+#define SUM_MODE    2
+#define XOR_MODE    3
+
+#define ADD_MODE       true
+#define UPDATE_MODE    false
+    int mode =  MIN_MODE;        // 0:最小値, 1:最大値, 2:和, 3:XOR
+    bool addMode = UPDATE_MODE;  // true: 加算で処理、false：更新で処理
     
     // 演算結果に影響しない0元
     // 最小値：inf, 最大値: -inf, sum:0, xor:0
@@ -78,39 +68,43 @@ struct SegTreeAbstract {
     
 public:
     
-    SegTreeAbstract(int n_, function<T(T,T)> compare_, T Z) {
+    SegTree(int n_, int mode_, bool addMode_, T Z) {
         int x = 1;
         while(x < n_) {
             x *= 2;         //n以上の 2^m形式に変換
         }
         n = x;
-        compare = compare_;
         ZERO = Z;
         
         vector<T>dattmp (n * 2 - 1, ZERO); //セグメント木は、要素数 sz * 2 - 1の配列を準備
         dat = dattmp;
         vector<T>lazytmp(n * 2 - 1, ZERO); //遅延評価配列も同じ数準備
         lazy = lazytmp;
+        mode = mode_;
+        addMode = addMode_;
         
     }
     
     
-    // 区間[a,b)を値xで更新、遅延評価なし
-    void update(int a, int b, T x) { //区間[a,b)を値xで更新
-        for(int i = a; i < b; i++) {
-            update(i,x);
+    // 区間[a,b)を値xで更新、最大最小-> 遅延評価。和, XOR, その他-> 通常
+    void update(int a, int b, T x) {
+        
+        if(mode == MIN_MODE || mode == MAX_MODE)
+        {
+            updateLazy_forMinMax(a, b, x, 0, 0, n);
+        }
+        else if(mode == SUM_MODE || mode == XOR_MODE) {
+            updateNolazy_forSum(a, b, x);
+        }
+        else {
+            cout<< "不適切な使用です err:1" << endl;
+            exit(-1);
         }
     }
-
-    // dat[i]を値xで更新、遅延評価なし
-    void update(int i, T x) { // i: 更新したい数列の位置（葉の位置）　x: 更新する値
-        i += n - 1;                  // i番目の要素は i + n - 1の位置に格納
-        dat[i] = x;
-        while(i > 0) { //親をたどって値を更新していく
-            i = (i - 1) / 2;
-            dat[i] = compare(dat[i * 2 + 1], dat[i * 2 + 2] );
-        }
-    }  
+    // dat[a]を値xで更新
+    void update(int a, T x) {
+        update(a,a+1,x);
+    }
     
     //区間[a,b)の値を取得するクエリ
     T query(int a, int b) { return query_sub(a, b, 0, 0, n); };
@@ -146,15 +140,63 @@ public:
     //lazy[k]に登録してあった値を、１階層下の子要素に伝播させて、自身の値も変更
     void eval(int k) {
         if(lazy[k] == ZERO) return ;
-        if(k < n -1) //kは末端ノード（葉）ではない
-        {
-            lazy[2 * k + 1] = lazy[k];
-            lazy[2 * k + 2] = lazy[k];
+
+        if(addMode == ADD_MODE) {
+            if(k < n -1) //kは末端ノード（葉）ではない
+            {
+                lazy[2 * k + 1] += lazy[k];
+                lazy[2 * k + 2] += lazy[k];
+            }
+            dat[k] += lazy[k];
+        } else {
+            if(k < n -1) //kは末端ノード（葉）ではない
+            {
+                lazy[2 * k + 1] = lazy[k];
+                lazy[2 * k + 2] = lazy[k];
+            }
+            dat[k] = lazy[k];
         }
-        dat[k] = lazy[k];
         lazy[k] = ZERO;
     }
     
+private:
+    void updateLazy_forMinMax(int a, int b, T x, int k, int l, int r) {
+        eval(k);
+        if(a <= l && r <= b ) {      // 区間にすっぽり収まる際にはlazyを更新
+            if(addMode == ADD_MODE) {
+                lazy[k] += x;
+            } else {
+                lazy[k] = x;
+            }
+            eval(k);
+        }  else if( a < r && l < b) { // 一部の区間が収まる場合
+            updateLazy_forMinMax(a, b, x, 2 * k + 1, l          , (r + l)/ 2 );
+            updateLazy_forMinMax(a, b, x, 2 * k + 2, (r + l) / 2, r );
+            dat[k] = choice(dat[k * 2 + 1], dat[k * 2 + 2] );
+            
+        }
+    }
+    
+    //その時点で値を更新する
+    void updateNolazy_forSum(int i, T x) { // i: 更新したい数列の位置（葉の位置）　x: 更新する値
+        i += n - 1;                  // i番目の要素は i + n - 1の位置に格納
+        if(addMode == ADD_MODE) {
+             dat[i] += x;
+        } else {
+             dat[i] = x;
+        }
+        while(i > 0) { //親をたどって値を更新していく
+            i = (i - 1) / 2;
+            dat[i] = choice(dat[i * 2 + 1], dat[i * 2 + 2] );
+        }
+    }
+    
+    //その時点で値を更新する
+    void updateNolazy_forSum(int a, int b, T x) { //区間[a,b)を値xで更新
+        for(int i = a; i < b; i++) {
+            updateNolazy_forSum(i,x);
+        }
+    }
     
 private:
     T query_sub(int a, int b, int k, int l, int r) {
@@ -168,8 +210,18 @@ private:
         T lv = query_sub(a, b, 2 * k + 1, l          , (r + l)/ 2 );
         T rv = query_sub(a, b, 2 * k + 2, (r + l) / 2, r );
         
-        return compare(lv,rv);
+        return choice(lv,rv);
     }
+    
+    T choice(T a, T b) {
+        return
+            mode == MIN_MODE ? (a<b?a:b) :
+            mode == MAX_MODE ? (a>b?a:b) :
+            mode == SUM_MODE ? a + b     :
+            mode == XOR_MODE ? a ^ b     : ZERO;
+    }
+    
+
 };
 
 
@@ -177,7 +229,34 @@ private:
 int main()
 {
 	ll N, D, W; cin >> N >> D >> W;
-	vector<ll> T(N), X(N);
-	rep(i,N) cin >> T[i] >> X[i];
+	vector<tuple<ll,ll,ll>> E[MAX_N];
+
+    // T[i] - D + 1 <= S <= T[i],
+    // X[i] - W + 1 <= L <= X[i]
+	
+    rep(i,N) {
+        ll t, x;
+        cin >> t >> x;
+        E[MAX(t-D+1,1)] .push_back({MAX(x-W+1,1), x, 1});
+        E[t+1]          .push_back({MAX(x-W+1,1), x, -1});
+    }
+    
+
+    SegTree<ll> segTreeMAX(MAX_N, MAX_MODE, ADD_MODE, 0);
+
+    ll ans = 0;
+    reps(i,1,MAX_N) {
+        for(auto [l,r,p] : E[i]) {
+            segTreeMAX.update(l,r+1,p);
+        }
+
+        ans = MAX(ans,segTreeMAX.allquery());
+
+    }
+
+    cout << ans << endl;
+    
+
+
 	return 0;
 }
