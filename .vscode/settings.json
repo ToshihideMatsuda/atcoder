@@ -105,7 +105,8 @@
         "memory_resource": "cpp",
         "source_location": "cpp",
         "stop_token": "cpp",
-        "syncstream": "cpp"
+        "syncstream": "cpp",
+        "all": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }
