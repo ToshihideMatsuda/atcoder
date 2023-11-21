@@ -1,0 +1,57 @@
+#include "bits/stdc++.h"
+#include <iostream>
+using namespace std;
+
+typedef long long ll;
+typedef unsigned long long ull;
+
+#define rep(i,n)     for(ll i = 0; i < n; i++ ) 
+#define reps(i,m,n)  for(ll i = m; i < n; i++ ) 
+#define rev(i,n)     for(ll i = n; i > -1; i--) 
+#define revs(i,m,n)  for(ll i = m; i > n; i--) 
+#define MAX(a,b)   (a>b?a:b)
+#define MAX3(a,b,c) MAX(a,MAX(b,c))
+#define MIN(a,b)   (a<b?a:b)
+#define MIN3(a,b,c) MIN(a,MIN(b,c))
+#define out(s) cout << s << endl;
+#define out0(s) cout << s;
+
+#define INF (1 << 30)
+#define MINF -1*(1 << 30)
+#define INF_LL (1LL << 60)
+#define MINF_LL - (1LL << 60)
+#define MOD 998244353
+
+#define MAX_N (2*100000+5)
+
+
+int main()
+{
+	ll n;cin>>n;
+	ll ans=0;
+	reps(i,1,1+n){
+		ll s;
+		 cin>> s;
+		ll m = i%10;
+		if(m==0)continue;
+		
+		ll v=0,ten=1;
+		while(v<i){
+			v+=ten*m;
+			ten*=10;
+		}
+		if(v==i){
+			ten=1;v=0;
+			ans--;
+			while(v<=s){
+			
+			v+=ten*m;
+			ten*=10;
+				ans++;
+		}
+		}
+	}
+	out(ans)
+	
+	return 0;
+}
