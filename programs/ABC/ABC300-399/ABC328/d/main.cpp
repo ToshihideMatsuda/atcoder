@@ -3,16 +3,6 @@
 
 using namespace atcoder;
 using namespace std;
-// 多倍長テンプレ（デバッグだとダメかも）
-/* ---------------------- ここから ---------------------- */
-#include <boost/multiprecision/cpp_dec_float.hpp>
-#include <boost/multiprecision/cpp_int.hpp>
-namespace mp = boost::multiprecision;
-// 任意長整数型
-using bll = mp::cpp_int;
-// 仮数部が10進数で1024桁の浮動小数点数型(TLEしたら小さくする)
-using real = mp::number<mp::cpp_dec_float<1024>>;
-/* ---------------------- ここまで ---------------------- */
 
 typedef long long ll;
 
@@ -47,27 +37,42 @@ typedef long long ll;
 #define MOD 998244353
 
 #define MAX_N (2*100000+5)
-vector<ll> G[MAX_N];
-bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
-void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
 
 int main()
 {
-	ll N, M; cin >> N >> M;
-	ll j = 0;
-	vector<ll> A(N+1);
-	rep(i,M) {
-		ll a;
-		cin >> a;
-		A[a] ++;
-		if(A[j] < A[a]) {
-			j = a;
-		} else if (A[j] == A[a] && a < j) {
-			j = a;
-		}
+	string S;
+	cin >> S;
+	stack<char> sta;
+	rep(i,S.size()) {
+		sta.push(S[i]);
 
-		out(j);
+		while(sta.size() >= 3) {
+			char c = sta.top(); sta.pop();
+			char b = sta.top(); sta.pop();
+			char a = sta.top(); sta.pop();
+			if(a == 'A' && b == 'B' && c == 'C') {
+				continue;
+			} else {
+				sta.push(a);
+				sta.push(b);
+				sta.push(c);
+				break;
+			}
+		}		
 	}
+
+	stack<char> sta2;
+	while(sta.size() > 0) {
+		sta2.push(sta.top()); sta.pop();
+	}
+
+
+	while(sta2.size() > 0) {
+		out0(sta2.top());sta2.pop();
+	}
+	
+	
+
 	return 0;
 }

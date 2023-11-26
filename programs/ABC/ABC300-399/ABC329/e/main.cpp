@@ -3,6 +3,16 @@
 
 using namespace atcoder;
 using namespace std;
+// 多倍長テンプレ（デバッグだとダメかも）
+/* ---------------------- ここから ---------------------- */
+#include <boost/multiprecision/cpp_dec_float.hpp>
+#include <boost/multiprecision/cpp_int.hpp>
+namespace mp = boost::multiprecision;
+// 任意長整数型
+using bll = mp::cpp_int;
+// 仮数部が10進数で1024桁の浮動小数点数型(TLEしたら小さくする)
+using real = mp::number<mp::cpp_dec_float<1024>>;
+/* ---------------------- ここまで ---------------------- */
 
 typedef long long ll;
 
@@ -44,20 +54,40 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
-	ll N, Q; cin >> N >> Q;
-	string S; cin >> S;
+	ll N, M; cin >> N >> M;
+	string S, T; cin >> S >> T;
 
-	vector<ll> R(N);
-	R[0] = 0;
-	rep(i,N-1) {
-		R[i+1] = R[i];
-		if(S[i] == S[i+1]) R[i+1] += 1;
+
+	queue<ll> Q;
+	set<ll> s;
+	rep(i,N-M+1) {
+		bool ok = true;
+		rep(j,M) if(S[i+j]  != T[j]) ok = false;
+		if(ok) {
+			s.insert(i);
+			Q.push(i);
+		}
 	}
 
-	rep(i,Q) {
-		ll l, r; cin >> l >> r;
-		out(R[r-1] - R[l-1])
+	
+	while(Q.size() > 0) {
+		auto q = Q.front(); Q.pop();
+		rep(i,M) {
+			S[i+q] = '#';
+		}
+		reps(k, MAX(0,q-M), MIN(N-M+1, q+M)) {
+			bool ok = true;
+			rep(j,M) if(S[k+j]  == T[j] || S[k+j] ==  '#') continue; else ok = false;
+			if(ok && s.count(k) == false) {
+				s.insert(k);
+				Q.push(k);
+			}
+		}
 	}
+
+	bool ok = true;
+	rep(i,N) if(S[i] != '#') ok = false;
+	out( (ok? "Yes" : "No" ))
 
 	return 0;
 }

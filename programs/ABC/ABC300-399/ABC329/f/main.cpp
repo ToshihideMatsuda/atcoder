@@ -3,6 +3,16 @@
 
 using namespace atcoder;
 using namespace std;
+// 多倍長テンプレ（デバッグだとダメかも）
+/* ---------------------- ここから ---------------------- */
+#include <boost/multiprecision/cpp_dec_float.hpp>
+#include <boost/multiprecision/cpp_int.hpp>
+namespace mp = boost::multiprecision;
+// 任意長整数型
+using bll = mp::cpp_int;
+// 仮数部が10進数で1024桁の浮動小数点数型(TLEしたら小さくする)
+using real = mp::number<mp::cpp_dec_float<1024>>;
+/* ---------------------- ここまで ---------------------- */
 
 typedef long long ll;
 
@@ -45,19 +55,26 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 int main()
 {
 	ll N, Q; cin >> N >> Q;
-	string S; cin >> S;
-
-	vector<ll> R(N);
-	R[0] = 0;
-	rep(i,N-1) {
-		R[i+1] = R[i];
-		if(S[i] == S[i+1]) R[i+1] += 1;
+	set<ll> C[N+1];
+	reps(i,1,N+1) {
+		ll c; cin >> c;
+		C[i].insert(c);
 	}
 
-	rep(i,Q) {
-		ll l, r; cin >> l >> r;
-		out(R[r-1] - R[l-1])
+	//マージテク。１要素が移動する回数がO(logN)で抑えられる。（移動のたびに２倍以上になるため）
+	while(Q-- > 0) {
+		ll a, b; cin >> a >> b;
+		if(C[a].size() > C[b].size()) {
+			swap(C[a],C[b]);
+		}
+
+		for(auto ca : C[a]) C[b].insert(ca);
+		C[a].clear();
+
+		out(C[b].size());
 	}
+
+
 
 	return 0;
 }

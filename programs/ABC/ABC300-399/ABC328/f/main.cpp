@@ -3,16 +3,6 @@
 
 using namespace atcoder;
 using namespace std;
-// 多倍長テンプレ（デバッグだとダメかも）
-/* ---------------------- ここから ---------------------- */
-#include <boost/multiprecision/cpp_dec_float.hpp>
-#include <boost/multiprecision/cpp_int.hpp>
-namespace mp = boost::multiprecision;
-// 任意長整数型
-using bll = mp::cpp_int;
-// 仮数部が10進数で1024桁の浮動小数点数型(TLEしたら小さくする)
-using real = mp::number<mp::cpp_dec_float<1024>>;
-/* ---------------------- ここまで ---------------------- */
 
 typedef long long ll;
 
@@ -47,12 +37,96 @@ typedef long long ll;
 #define MOD 998244353
 
 #define MAX_N (2*100000+5)
-vector<ll> G[MAX_N];
-bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
-void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+template<class Abel> struct UnionFind {
+	vector<int> par;
+	vector<int> rank;
+	vector<Abel> diff_weight;
+
+	UnionFind(int n = 1, Abel SUM_UNITY = 0) {
+		init(n, SUM_UNITY);
+	}
+
+	void init(int n = 1, Abel SUM_UNITY = 0) {
+		par.resize(n); rank.resize(n); diff_weight.resize(n);
+		for (int i = 0; i < n; ++i) par[i] = i, rank[i] = 0, diff_weight[i] = SUM_UNITY;
+	}
+
+	int root(int x) {
+		if (par[x] == x) {
+			return x;
+		}
+		else {
+			int r = root(par[x]);
+			diff_weight[x] += diff_weight[par[x]];
+			return par[x] = r;
+		}
+	}
+
+	Abel weight(int x) {
+		root(x);
+		return diff_weight[x];
+	}
+
+	bool issame(int x, int y) {
+		return root(x) == root(y);
+	}
+
+	bool merge(int x, int y, Abel w) {
+		w += weight(x); w -= weight(y);
+		x = root(x); y = root(y);
+		if (x == y) return false;
+		if (rank[x] < rank[y]) swap(x, y), w = -w;
+		if (rank[x] == rank[y]) ++rank[x];
+		par[y] = x;
+		diff_weight[y] = w;
+		return true;
+	}
+
+	Abel diff(int x, int y) {
+		return weight(y) - weight(x);
+	}
+};
 
 
 int main()
 {
+    ll N, Q; cin >> N >> Q;
+    map<ll,ll> G[N+5];
+
+    vector<ll> ans;
+    UnionFind<ll> uf(N+5);
+
+    reps(i,1,1+Q) {
+        ll a, b, d;
+        cin >> a >> b >> d;
+        if(a == b) {
+            if(d == 0) {
+                ans.push_back(i);
+            }
+        } else {
+        if( G[a].count(b) == false) { 
+            if(uf.issame(a,b) == false) {
+                G[a][b] = d;
+                G[b][a] = -d;
+                uf.merge(a,b,d);
+                ans.push_back(i);
+            } else if(uf.diff(a,b) == d){
+                ans.push_back(i);
+            }
+        } else if (G[a][b] == d) {
+            ans.push_back(i);
+        }
+        }
+    }
+
+    OUT(ans, " ")
+
+
+
 	return 0;
 }
