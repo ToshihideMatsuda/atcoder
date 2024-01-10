@@ -26,7 +26,6 @@ typedef unsigned long long ull;
 
 #define MAX_N (2*100000+5)
 
-using mint = modint998244353;
 
 template<typename T>
 struct UnionFindTree {
@@ -82,47 +81,30 @@ struct UnionFindTree {
 
 };
 
+
+vector<ll> G0[MAX_N];
 vector<pair<ll,ll>> G[MAX_N];
-vector<pair<ll,ll>> H[MAX_N];
 vector<ll> A;
 vector<ll> dp;
+
 UnionFindTree<ll> uft;
 
 void dfs(ll p, set<ll>& S) {
-	if(G[p].size() == 0) return;
 
-	if( !(A[p] <= G[p].back().first) ) {
-		return;
-	}
-
-	ll s = 0, e = G[p].size() - 1;
-
-	if( G[p][0].first < A[p] ) {
-		ll lb = 0, ub = e;
-		while(ub - lb > 1) {
-			ll mid = (ub + lb) / 2;
-			if(A[p] <= G[p][mid].first ) ub = mid;
-			else lb = mid;
+	for(auto [_, _g]:G[p]) {
+		ll g = uft.root(_g);
+		bool contains = S.count(A[g]);
+		if(contains == false) {
+			S.insert(A[g]);
 		}
-		s = ub;
-	}
-
-	for(ll i = s; i<= e; i ++) {
-		auto [_, g] = G[p][i]; 
-		if(A[p] <= A[g]){
-			bool contains = S.count(A[g]);
-			if(contains == false) {
-				S.insert(A[g]);
-			}
-
-			if(dp[g] < S.size()) {
-				dp[g] = S.size();
-				dfs(g, S);
-			}
-
-			if(contains == false) {
-				S.erase(A[g]);
-			}
+	
+		if(dp[g] < S.size()) {
+			dp[g] = S.size();
+			dfs(g, S);
+		}
+	
+		if(contains == false) {
+			S.erase(A[g]);
 		}
 	}
 
@@ -134,39 +116,39 @@ int main()
 	ll N, M; cin >> N >> M;
 	A.resize(N+1);
 	dp.resize(N+1);
-	
-	rep(i,N) {
-		cin >> A[i+1]; 
-		uft.insert(i+1);
-	}
 
+	
+	reps(i,1,1+N) {
+		cin >> A[i];
+		uft.insert(i);
+	}
+ 
 	rep(i,M) {
 		ll u, v; cin >> u >> v;
-		if(A[v] < A[u]) {
-			G[v].push_back({A[u], u});
-		} else if(A[u] < A[v]) {
-			G[u].push_back({A[v], v});
-		} else {
-			uft.unionTree(u,v);
+		if(A[u] == A[v]) uft.unionTree(u,v);
+		else if(A[u] < A[v]) G0[u].push_back(v);
+		else if(A[u] > A[v]) G0[v].push_back(u);
+	}
+
+	set<ll> H[MAX_N];
+	rep(i,N+1) {
+		for(auto g: G0[i]) {
+			H[uft.root(i)].insert(uft.root(g));
 		}
 	}
 
-	reps(i,N+1) {
-
+	rep(i,N+1) {
+		for(auto h: H[i]) G[i].push_back({A[h],h});
+		sort(G[i].begin(),G[i].end());
 	}
 
-
-
-	rep(i,N+1) if(G[i].size() >= 2) {
-		sort(G[i].begin(), G[i].end());
-	}
 
 	dp[uft.root(1)] = 1;
 	
 	set <ll> s =  { A[1] };
 	dfs(uft.root(1), s);
 
-	out(dp[N])
+	out(dp[uft.root(N)])
 	
 	return 0;
 }
