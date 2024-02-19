@@ -12,34 +12,30 @@ using namespace std;
 
 typedef long long ll;
 
-//max: SegTreeAbstract<ll> segTreeMax(N+1, [](ll x, ll y) { return x < y ? y : x; }, -(1LL<<61));
-//min: SegTreeAbstract<ll> segTreeMin(N+1, [](ll x, ll y) { return x < y ? x : y; }, (1LL<<61));
-//sum: SegTreeAbstract<ll> segTreeSum(N+1, [](ll x, ll y) { return x + y; }, 0);
-//xor: SegTreeAbstract<ll> segTreeXor(N+1, [](ll x, ll y) { return x ^ y; }, 0);
+//max: SegTree<ll> segTreeMax(N+1,    [](ll x, ll y) { return x < y ? y : x; }, -(1LL<<61));
+//min: SegTree<ll> segTreeMin(N+1,    [](ll x, ll y) { return x < y ? x : y; }, (1LL<<61));
+//sum: SegTree<ll> segTreeSum(N+1,    [](ll x, ll y) { return x + y; }, 0);
+//sum: SegTree<ll> segTreeSumMod(N+1, [](ll x, ll y) { return (x + y) % MOD ; }, 0);
+//xor: SegTree<ll> segTreeXor(N+1,    [](ll x, ll y) { return x ^ y; }, 0);
 template<typename T>
-struct SegTreeAbstract {
+struct SegTree {
     //最大値: compare = [](ll x, lly)
     function<T(T,T)> compare; //比較用関数オブジェクト
-    
     
     // 演算結果に影響しない0元
     // 最小値：inf, 最大値: -inf, sum:0, xor:0
     T ZERO;
-    
-    
+
     int n;          // 要素数
     vector<T> dat;  // セグメントtree配列
-                    // dat[0] 　　　　　　: [0,n)の値
-                    // i番目の数列（葉）   : dat[i + n - 1]
-                    // dat[k]の子要素    : dat[ 2 * k + 1], dat[ 2 * k + 2]
-                    //                    dat
-                    // dat[k]の親要素    : dat[ (k - 1) / 2 ]
-
-    vector<T> lazy; // 遅延評価配列
+                    // dat[0] 　　　　 :　[0,n)の値
+                    // i番目の数列（葉）: dat[i + n - 1]
+                    // dat[k]の子要素  : dat[ 2 * k + 1], dat[ 2 * k + 2]
+                    // dat[k]の親要素  : dat[ (k - 1) / 2 ]
     
 public:
     
-    SegTreeAbstract(int n_, function<T(T,T)> compare_, T Z) {
+    SegTree(int n_, function<T(T,T)> compare_, T Z) {
         int x = 1;
         while(x < n_) {
             x *= 2;         //n以上の 2^m形式に変換
@@ -50,8 +46,6 @@ public:
         
         vector<T>dattmp (n * 2 - 1, ZERO); //セグメント木は、要素数 sz * 2 - 1の配列を準備
         dat = dattmp;
-        vector<T>lazytmp(n * 2 - 1, ZERO); //遅延評価配列も同じ数準備
-        lazy = lazytmp;
         
     }
     
@@ -81,45 +75,31 @@ public:
     
     void debug() {
         cout <<  "---dat---" << endl;
+        vector<pair<ll,ll>> list;
+        list.push_back({0,n});
+        int i = 0;
+        while(list.size()< dat.size()) {
+            auto [l,r] = list[i++];
+            list.push_back({l,l+(r-l+1)/2});
+            list.push_back({l+(r-l+1)/2,r});
+        }
         for(int i = 0; i < dat.size(); i++) {
+            auto [l,r] = list[i];
+            string text = "[" + to_string(l) + ", " + to_string(r) + ") = ";
+            cout << text;
             if(dat[i] == ZERO) {
-                cout << "- ";
+                cout << "-" << endl;
             }
             else {
-                cout << dat[i] << " ";
+                cout << dat[i] << endl;
             }
         }
         
         cout <<  endl;
-        
-        cout <<  "---lazy---" << endl;
-        for(int i = 0; i < lazy.size(); i++) {
-            if(lazy[i] == ZERO) {
-                cout << "- ";
-            }
-            else {
-                cout << lazy[i] << " ";
-            }
-        }
-        cout <<  endl;
     }
-    
-    //lazy[k]に登録してあった値を、１階層下の子要素に伝播させて、自身の値も変更
-    void eval(int k) {
-        if(lazy[k] == ZERO) return ;
-        if(k < n -1) //kは末端ノード（葉）ではない
-        {
-            lazy[2 * k + 1] = lazy[k];
-            lazy[2 * k + 2] = lazy[k];
-        }
-        dat[k] = lazy[k];
-        lazy[k] = ZERO;
-    }
-    
     
 private:
     T query_sub(int a, int b, int k, int l, int r) {
-        eval(k);
         if(b <= l || r <= a)
             return ZERO;    //区間外
         if(a <= l && r <= b )
@@ -135,8 +115,8 @@ private:
 
 
 int main(){
-    /*
-    SegTreeAbstract<ll> segTreeMax(10, [](ll x, ll y) { return x < y ? y : x; }, -(1<<61));
+    
+    SegTree<ll> segTreeMax(10, [](ll x, ll y) { return x < y ? y : x; }, -(1<<61));
     
     segTreeMax.update(1, 2, 4);    // 1 -> 4
     segTreeMax.update(2, 9, 1);    // 2,3,4,5,6,7,8 -> 1
@@ -148,30 +128,30 @@ int main(){
     for(int i = 0;i <= 4; i ++) {
         cout << "segTreeMax.query(" << i << "," << 10 - i << ") : " << segTreeMax.query(i, 10-i) << endl;
     }
-    */
+    segTreeMax.debug();
+    
 
-    SegTreeAbstract<ll> segTreeMin(10, [](ll x, ll y) { return x < y ? x : y; }, (1LL<<61));
+    SegTree<ll> segTreeMin(10, [](ll x, ll y) { return x < y ? x : y; }, (1LL<<61));
     
     segTreeMin.update(2, 9, 5);    // 2,3,4,5,6,7,8 -> 5
     segTreeMin.update(1, 2, 2);    // 1 -> 2
     segTreeMin.update(6, 9, 4);    // 6,7,8 -> 4
-    segTreeMin.update(9,10, 1);    // 9 ->1
-    segTreeMin.debug();
+    segTreeMin.update(9,10, 1);    // 9 -> 1
     
     cout << "segTreeMin.query(6,7) : " << segTreeMin.query(6, 7) << endl;
     
     for(int i = 0;i <= 4; i ++) {
         cout << "segTreeMin.query(" << i << "," << 10 - i << ") : " << segTreeMin.query(i, 10-i) << endl;
     }
+    segTreeMin.debug();
     
     
-    SegTreeAbstract<ll> segTreeSum(10, [](ll x, ll y) { return x + y; }, 0);
+    SegTree<ll> segTreeSum(10, [](ll x, ll y) { return x + y; }, 0);
     
     segTreeSum.update(2,9,5);  // 2,3,4,5,6,7,8 -> 5
     segTreeSum.update(1,2,2);  // 1 -> 2
     segTreeSum.update(6,9,4);  // 6,7,8 -> 4
     segTreeSum.update(9,10,1); // 9 ->1
-    segTreeMin.debug();
     // 0 2 5 5 5 5 4 4 4 1
     
     cout << "segTreeSum.query(6,7) : " << segTreeSum.query(6, 7) << endl;
@@ -182,6 +162,7 @@ int main(){
     for(int i = 0;i <= 4; i ++) {
         cout << "segTreeSum.query(" << i << "," << 10 - i << ") : " << segTreeSum.query(i, 10-i) << endl;
     }
+    segTreeSum.debug();
     
     /*
      warning: failed to set breakpoint site at 0x1003a5b59 for breakpoint 1.1: error: 9 sending the breakpoint request
