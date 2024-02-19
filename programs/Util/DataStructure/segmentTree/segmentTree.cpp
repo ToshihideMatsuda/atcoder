@@ -19,7 +19,6 @@ typedef long long ll;
 //xor: SegTree<ll> segTreeXor(N+1,    [](ll x, ll y) { return x ^ y; }, 0);
 template<typename T>
 struct SegTree {
-    //最大値: compare = [](ll x, lly)
     function<T(T,T)> compare; //比較用関数オブジェクト
     
     // 演算結果に影響しない0元
@@ -44,9 +43,7 @@ public:
         compare = compare_;
         ZERO = Z;
         
-        vector<T>dattmp (n * 2 - 1, ZERO); //セグメント木は、要素数 sz * 2 - 1の配列を準備
-        dat = dattmp;
-        
+        dat = vector<T> (n * 2 - 1, ZERO); //セグメント木は、要素数 sz * 2 - 1の配列を準備
     }
     
     
@@ -74,7 +71,7 @@ public:
     T allquery() { return query_sub(0, n+1, 0, 0, n); };
     
     void debug() {
-        cout <<  "---dat---" << endl;
+
         vector<pair<ll,ll>> list;
         list.push_back({0,n});
         int i = 0;
@@ -83,6 +80,8 @@ public:
             list.push_back({l,l+(r-l+1)/2});
             list.push_back({l+(r-l+1)/2,r});
         }
+        
+        cout <<  "---dat---" << endl;
         for(int i = 0; i < dat.size(); i++) {
             auto [l,r] = list[i];
             string text = "[" + to_string(l) + ", " + to_string(r) + ") = ";
