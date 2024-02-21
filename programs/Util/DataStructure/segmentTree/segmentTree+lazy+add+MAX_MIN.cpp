@@ -11,16 +11,13 @@ using namespace std;
 
 typedef long long ll;
 
-//max: SegTree<ll> segTreeMax(N+1,    [](ll x, ll y) { return x < y ? y : x; }, 0 );
-/*
-    min: SegTree<ll> segTreeMin(N+1,    [](ll x, ll y) { 
-        if(x == 0) return y;
-        else if(y == 0) return x;
-        else return x < y ? x : y; 
-        }, 0);
-*/
+//SegTreeの各ノードは -(1L <<61)で初期化される。アップデートされていないノードは -(1L <<61)で戻ってくるので
+//max: SegTree<ll> segTreeMax(N+1, [](ll x, ll y) { if(x == SEG_MINF) return y; else return x < y ? y : x; }, SEG_MINF);
+//min: SegTree<ll> segTreeMin(N+1, [](ll x, ll y) { if(x == SEG_MINF) return y; else return x < y ? x : y; }, SEG_MINF);
+
 template<typename T>
 struct SegTree {
+    #define SEG_MINF   ( -(1L <<61) )
     // 演算結果に影響しない0元
     // 最小値：-inf, 最大値: inf
     T ZERO;
@@ -144,6 +141,7 @@ public:
 private:
     void updateLazy(int a, int b, T x, int k, int l, int r) {
         eval(k);
+        if(r<=a||b<=l)return;
         if(a <= l && r <= b ) {      // 区間にすっぽり収まる際にはlazyを更新
             if(lazy[k] == ZERO) {
                 lazy[k] = x;
@@ -188,7 +186,7 @@ int main(){
     
     
     {
-    SegTree<ll> segTreeMax(100, [](ll x, ll y) { return x < y ? y : x; }, -(1LL<<61));
+    SegTree<ll> segTreeMax(100,  [](ll x, ll y) { if(x == SEG_MINF) return y; else return x < y ? y : x; }, SEG_MINF);
     vector<ll> data(100, 0);
 
     bool valid = true;
@@ -230,11 +228,11 @@ int main(){
     }
     }
     
-    //MINはバグあり。。。なぜに
-    /*{
+    
+    {
     bool valid = true;
-    SegTree<ll> segTreeMin(100,    [](ll x, ll y) { return x < y ? y : x; }, -(1LL<<61));
-    vector<ll> data(100, 0);
+    SegTree<ll> segTreeMin(100,  [](ll x, ll y) { if(x == SEG_MINF) return y; else return x < y ? x : y; }, SEG_MINF);
+    vector<ll> data(100, segTreeMin.ZERO);
     for(int i = 0;i <= 10000; i ++) {
         {
             ll a = randomLL(1,99), b = randomLL(1,99), x = randomLL(1,99999);
@@ -242,8 +240,14 @@ int main(){
             ll tmp = max(a,b);
             a = min(a,b);
             b = tmp;
-            segTreeMin.update(a,b,-x);
-            for(int j = a; j < b;j++) data[j] += x;
+            segTreeMin.update(a,b,x);
+            for(int j = a; j < b;j++) {
+                if(data[j] == segTreeMin.ZERO) {
+                    data[j] = x;
+                } else {
+                    data[j] += x;
+                }
+            } 
         }
 
         {
@@ -257,14 +261,11 @@ int main(){
             ll x = segTreeMin.query(a,b);
             if(x == segTreeMin.ZERO) x = 0;
 
-            ll X = INF_LL;
-            for(int j = a; j < b;j++) if(data[j] != 0) X = min(data[j],X);
-            if(X == INF_LL) X = 0;
+            ll X = segTreeMin.ZERO;
+            for(int j = a; j < b;j++) X = min(data[j],X);
+            if(X == segTreeMin.ZERO) X = 0;
 
-            if(-x != X) {
-                //ll a = segTreeMin.allquery();
-                segTreeMin.debug();
-                ll x2 = segTreeMin.query(a,b);
+            if(x != X) {
                 valid = false;
                 break;
             }
@@ -275,7 +276,7 @@ int main(){
     } else {
         cout << "invalid segTreeMin" << endl;
     }
-    }*/
+    }
  
     return 1;
 }
