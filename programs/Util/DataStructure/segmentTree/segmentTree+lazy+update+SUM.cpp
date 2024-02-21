@@ -11,35 +11,31 @@ using namespace std;
 
 typedef long long ll;
 
-//max: SegTree<ll> segTreeMax(N+1,    [](ll x, ll y) { return x < y ? y : x; }, 0 );
-/*
-    min: SegTree<ll> segTreeMin(N+1,    [](ll x, ll y) { 
-        if(x == 0) return y;
-        else if(y == 0) return x;
-        else return x < y ? x : y; 
-        }, 0);
-*/
+//max: SegTree<ll> segTreeSum(N+1,    [](ll x, ll y) { return x + y }, 0 );
 template<typename T>
 struct SegTree {
+        
     // 演算結果に影響しない0元
-    // 最小値：-inf, 最大値: inf
+    // 最小値：inf, 最大値: -inf
     T ZERO;
 
     private :
-    function<T(T,T)> compare; //比較用関数オブジェクト
     
+    function<T(T,T)> compare; //比較用関数オブジェクト
+
     
     int n;          // 要素数
     vector<T> dat;  // セグメントtree配列
                     // dat[0] 　　　　　　: [0,n)の値
                     // i番目の数列（葉）   : dat[i + n - 1]
                     // dat[k]の子要素    : dat[ 2 * k + 1], dat[ 2 * k + 2]
+                    //                    dat
                     // dat[k]の親要素    : dat[ (k - 1) / 2 ]
 
     vector<T> lazy; // 遅延評価配列
-    
-    vector<pair<ll,ll>> area; // 範囲定義 area[k] = [a,b);
 
+    vector<pair<ll,ll>> area; // 範囲定義 area[k] = [a,b);
+    
 public:
     
     SegTree(int n_, function<T(T,T)> compare_, T Z) {
@@ -61,7 +57,6 @@ public:
             area.push_back({l,l+(r-l+1)/2});
             area.push_back({l+(r-l+1)/2,r});
         }
-
     }
     
     // dat[a]を値xで更新
@@ -75,8 +70,7 @@ public:
     }
     
     //区間[a,b)の値を取得するクエリ
-    T query(int a, int b) { 
-        return query_sub(a, b, 0, 0, n); };
+    T query(int a, int b) { return query_sub(a, b, 0, 0, n); };
     
     //全区間の値を取得するクエリ
     T allquery() { return query_sub(0, n+1, 0, 0, n); };
@@ -117,27 +111,16 @@ public:
 
         if(k < n -1) //kは末端ノード（葉）ではない
         {
+            auto [l, r] = area[k];
+            ll x = lazy[k] / (r - l);
+
+            auto [l1, r1] = area[2 * k + 1];
+            auto [l2, r2] = area[2 * k + 2];
             //自分の子要素に伝搬　(子要素は必要であれば次世代に伝搬) 
-            if(lazy[2 * k + 1] == ZERO) {
-                lazy[2 * k + 1] = lazy[k];
-            } else {
-                lazy[2 * k + 1] += lazy[k];
-            }
-
-
-            if(lazy[2 * k + 2] == ZERO) {
-                lazy[2 * k + 2] = lazy[k];
-            } else {
-                lazy[2 * k + 2] += lazy[k];
-            }
-
+            lazy[2 * k + 1] = x * (r1 - l1);
+            lazy[2 * k + 2] = x * (r2 - l2);
         }
-        if(dat[k] == ZERO) {
-            dat[k] = lazy[k];
-        } else {
-            dat[k] += lazy[k];
-        }
-
+        dat[k] = lazy[k];
         lazy[k] = ZERO;
     }
     
@@ -145,18 +128,12 @@ private:
     void updateLazy(int a, int b, T x, int k, int l, int r) {
         eval(k);
         if(a <= l && r <= b ) {      // 区間にすっぽり収まる際にはlazyを更新
-            if(lazy[k] == ZERO) {
-                lazy[k] = x;
-            } else {
-                lazy[k] += x;
-            }
+            lazy[k] = x * (r-l);
             eval(k);
         }  else if( a < r && l < b) { // 一部の区間が収まる場合
             updateLazy(a, b, x, 2 * k + 1, l          , (r + l)/ 2 );
             updateLazy(a, b, x, 2 * k + 2, (r + l) / 2, r );
             dat[k] = compare(dat[k * 2 + 1], dat[k * 2 + 2] );
-        } else {
-            int i = 0;
         }
     }
     
@@ -186,9 +163,8 @@ ll randomLL(ll a, ll b) {
 
 int main(){
     
-    
     {
-    SegTree<ll> segTreeMax(100, [](ll x, ll y) { return x < y ? y : x; }, -(1LL<<61));
+    SegTree<ll> segTreeSum(100, [](ll x, ll y) { return x + y;  }, 0);
     vector<ll> data(100, 0);
 
     bool valid = true;
@@ -199,8 +175,8 @@ int main(){
             ll tmp = max(a,b);
             a = min(a,b);
             b = tmp;
-            segTreeMax.update(a,b,x);
-            for(int j = a; j < b;j++) data[j] += x;
+            segTreeSum.update(a,b,x);
+            for(int j = a; j < b;j++) data[j] = x;
         }
 
         {
@@ -211,72 +187,24 @@ int main(){
             a = min(a,b);
             b = tmp;
 
-            ll x = segTreeMax.query(a,b);
-            if(x == segTreeMax.ZERO) x = 0;
+            ll x = segTreeSum.query(a,b);
+            if(x == segTreeSum.ZERO) x = 0;
 
             ll X = 0;
-            for(int j = a; j < b;j++) X = max(data[j],X);
+            for(int j = a; j < b;j++) X += data[j];
             if(x != X) {
-                
                 valid = false;
                 break;
             }
         }
     }
     if(valid) {
-        cout << "valid segTreeMax" << endl;
+        cout << "valid segTreeSum" << endl;
     } else {
-        cout << "invalid segTreeMax" << endl;
+        cout << "invalid segTreeSum" << endl;
     }
     }
     
-    //MINはバグあり。。。なぜに
-    /*{
-    bool valid = true;
-    SegTree<ll> segTreeMin(100,    [](ll x, ll y) { return x < y ? y : x; }, -(1LL<<61));
-    vector<ll> data(100, 0);
-    for(int i = 0;i <= 10000; i ++) {
-        {
-            ll a = randomLL(1,99), b = randomLL(1,99), x = randomLL(1,99999);
-            if(a == b) continue;
-            ll tmp = max(a,b);
-            a = min(a,b);
-            b = tmp;
-            segTreeMin.update(a,b,-x);
-            for(int j = a; j < b;j++) data[j] += x;
-        }
-
-        {
-            ll a = randomLL(1,99), b = randomLL(1,99);
-
-            if(a == b) continue;
-            ll tmp = max(a,b);
-            a = min(a,b);
-            b = tmp;
-
-            ll x = segTreeMin.query(a,b);
-            if(x == segTreeMin.ZERO) x = 0;
-
-            ll X = INF_LL;
-            for(int j = a; j < b;j++) if(data[j] != 0) X = min(data[j],X);
-            if(X == INF_LL) X = 0;
-
-            if(-x != X) {
-                //ll a = segTreeMin.allquery();
-                segTreeMin.debug();
-                ll x2 = segTreeMin.query(a,b);
-                valid = false;
-                break;
-            }
-        }
-    }
-    if(valid) {
-        cout << "valid segTreeMin" << endl;
-    } else {
-        cout << "invalid segTreeMin" << endl;
-    }
-    }*/
- 
     return 1;
 }
 
