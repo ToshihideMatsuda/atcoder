@@ -78,7 +78,7 @@ int main()
 				}
 			}
 
-			if(dp[a] < L+lb*D) {
+			if(L+lb*D+C<= dp[b] && dp[a] < L+lb*D) {
 				dp[a] = L+lb*D;
 				Q.push({dp[a],a});
 			}
