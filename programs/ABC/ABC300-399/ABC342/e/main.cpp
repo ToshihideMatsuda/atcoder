@@ -71,7 +71,7 @@ int main()
 			ll lb = 0, ub = K;
 			while(ub - lb > 1) {
 				ll mid = (lb+ub)/2;
-				if(L+mid*D+C<= dp[b]) {
+				if(L+mid*D+C<= dp[b] && dp[a] < L+mid*D) {
 					lb = mid;
 				} else {
 					ub = mid;
