@@ -106,7 +106,9 @@
         "source_location": "cpp",
         "stop_token": "cpp",
         "syncstream": "cpp",
-        "all": "cpp"
+        "all": "cpp",
+        "__verbose_abort": "cpp",
+        "strstream": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }
