@@ -59,7 +59,7 @@ int main() {
 					list[n] = {na, nn ,id};
 				}
 
-				mp[y].insert(id);
+				mp[y].push_back(id);
 				id++;
             }
         }
