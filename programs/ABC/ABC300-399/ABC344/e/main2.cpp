@@ -21,10 +21,10 @@ typedef long long ll;
 
 int main() {
 
-	vector<tuple<ll,ll,ll>> list(10);//4*100000 + 5);
+	vector<tuple<ll,ll,ll>> list(4*100000 + 5);
 	list[0] = {-1,1,-1};
 
-	map<ll, set<ll>> mp;
+	map<ll, vector<ll>> mp;
 	ll N; cin >> N;
 
     rep(i, N) {
@@ -33,7 +33,7 @@ int main() {
 		tuple<ll,ll,ll> A = {a, i+2, i};
 		list[i+1] = A;
 
-		mp[a].insert(i+1);
+		mp[a].push_back(i+1);
     }
 
 	ll index = N+1; // N+1~
