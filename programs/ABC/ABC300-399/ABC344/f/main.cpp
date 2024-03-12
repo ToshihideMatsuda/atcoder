@@ -54,5 +54,95 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
+	ll N; cin >> N;
+	vector P = vector(N+1,vector(N+1,0));
+	vector R = vector(N+1,vector(N+1,0));
+	vector D = vector(N+1,vector(N+1,0));
+	rep(i,N)  rep(j,N)   cin >> P[i+1][j+1];
+	rep(i,N)  rep(j,N-1) cin >> R[i+1][j+1];
+	rep(i,N-1)rep(j,N)   cin >> D[i+1][j+1];
+
+	set<ll> Pset;
+	reps(i, 1, N+1)reps(j,1,N+1) Pset.insert(P[i][j]);
+	vector<ll> Pvec;
+	map<ll,ll> Prev; 
+	ll idx = 0;
+	for(auto p:Pset) {
+		Pvec.push_back(p);
+		Prev[p] = idx++;
+	}
+
+	pair<ll,ll> dp[N+1][N+1][Pvec.size()];
+
+	reps(h,1,N+1)reps(w,1,N+1) rep(k,Pvec.size()) {
+		dp[h][w][k] = {INF_LL,INF_LL};
+	}
+
+	dp[1][1][Prev[P[1][1]]] = {0, 0}; 
+	reps(h,1,N+1)reps(w,1,N+1) {
+		
+		rep(k,Pvec.size()) if(dp[h][w][k].first < INF_LL) {
+			auto [cnt, m_money] = dp[h][w][k];
+			auto p = Pvec[k];
+			ll money = - (m_money);
+
+			//right
+			if(w < N) {
+
+				ll l = 0;
+				if(Pvec[k] < P[h][w+1]) {
+					l = Prev[P[h][w+1]];
+				} else {
+					l = k;
+				}
+
+				if(R[h][w] <= money) {
+					dp[h][w+1][l] = min(dp[h][w+1][l],{cnt+1,-(money-R[h][w])});
+				} else {
+					ll r = (R[h][w] - money) % p;
+					ll q = (R[h][w] - money) / p;
+					if(r > 0) {
+						q++;
+						r = p - r;
+					}
+					dp[h][w+1][l] = min(dp[h][w+1][l], {cnt+q+1,-r} );
+				}
+			}
+
+			//down
+			if(h < N) {
+
+				ll l = 0;
+				if(Pvec[k] < P[h+1][w]) {
+					l = Prev[P[h+1][w]];
+				} else {
+					l = k;
+				}
+
+				if(D[h][w] <= money) {
+					dp[h+1][w][l] = min(dp[h+1][w][l], {cnt+1,-(money-D[h][w])});
+				} else {
+					ll r = (D[h][w] - money) % p;
+					ll q = (D[h][w] - money) / p;
+					if(r > 0) {
+						q++;
+						r = p - r;
+					}
+
+					dp[h+1][w][l] = min(dp[h+1][w][l], {cnt+q+1,-r});
+				}
+			}
+		}
+	}
+
+
+	ll ans = INF_LL;
+
+	rep(k,Pvec.size()) {
+		ans = MIN(ans,dp[N][N][k].first);
+	}
+
+	out(ans)
+
 	return 0;
 }
