@@ -1,19 +1,5 @@
-#include <bits/stdc++.h> 
-#include <atcoder/all>
-
-using namespace atcoder;
+#include "bits/stdc++.h"
 using namespace std;
-// 多倍長テンプレ（デバッグだとダメかも）
-/* ---------------------- ここから ---------------------- */
-#include <boost/multiprecision/cpp_dec_float.hpp>
-#include <boost/multiprecision/cpp_int.hpp>
-namespace mp = boost::multiprecision;
-// 任意長整数型
-using bll = mp::cpp_int;
-// 仮数部が10進数で1024桁の浮動小数点数型(TLEしたら小さくする)
-using real = mp::number<mp::cpp_dec_float<1024>>;
-/* ---------------------- ここまで ---------------------- */
-
 typedef long long ll;
 
 #define rep(i,n)     for(ll i = 0; i < n; i++ ) 
@@ -47,12 +33,59 @@ typedef long long ll;
 #define MOD 998244353
 
 #define MAX_N (2*100000+5)
-vector<ll> G[MAX_N];
-bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
-void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
 
 int main()
 {
+
+	vector dp = vector(13,vector(10,0));
+	dp[0][0] = 0;
+
+	reps(i,1,13) {
+		rep(j,10) if(i == 1 && j == 0) continue; 
+		else {
+			if(j == 0) {
+				dp[i][j] = dp[i-1][j] + 
+			} else {
+
+			}
+		}
+	}
+
+
+	
+	ll Q;cin>>Q;
+	while(Q--){
+		ll x;cin>> x;
+		
+		
+		vector<ll> keta;
+
+		string ans="";
+		ll base = 0;
+		ll B = 1;
+		if(1 <= x && x <= N) {
+			out(to_string(neq[x-1]))
+		} else if(x <= (1+M)*N) {
+			out0(to_string(neq[((x-1)-N)/M]))
+			out0(neq2[(x-N-1)%M])
+			cout<<endl;
+		} else if(x <= (1+M+M*M)*N) {
+			out0(to_string(neq[((x-1)-(1+M)*N)/(M*M)]))
+			out0(neq2[(((x-1)-(1+M)*N)/M)%M])
+			out0(neq2[((x-1)-N)%M])
+			cout<<endl;
+		} else if(x <= (1+M+M*M+M*M*M)*N) {
+			out0(to_string(neq[((x-1)-(1+M+M*M)*N)/(M*M*M)]))
+			out0(neq2[((x-(1+M*M)*N-1)/M*M)%M])
+			out0(neq2[((x-(1+M)*N-1)/M)%M])
+			out0(neq2[(x-N-1)%M])
+
+			cout<<endl;
+
+		}
+	}
+
+
 	return 0;
 }

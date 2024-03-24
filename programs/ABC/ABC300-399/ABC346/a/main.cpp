@@ -54,5 +54,12 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
+	ll N; cin >> N;
+	vector<ll> A(N);
+	rep(i,N) cin >> A[i];
+	rep(i,N-1) {
+		out0(A[i] * A[i+1])
+		out0(" ")
+	}
 	return 0;
 }

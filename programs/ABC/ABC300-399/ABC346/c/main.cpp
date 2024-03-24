@@ -51,8 +51,21 @@ vector<ll> G[MAX_N];
 bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
 void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
-
+//9223372036854775807
+//2000000000000000000
 int main()
 {
+	ll N, K; cin >> N >> K;
+	set<ll> A;
+	rep(i,N){
+		ll a;
+		cin >> a;
+		A.insert(a);
+	}
+	ll ans = ((K) * (K+1))/2;
+	for(auto a : A) {
+		if(a <= K) ans -= a;
+	}
+	out(ans)
 	return 0;
 }

@@ -54,5 +54,27 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
+	ll W, B; cin >> W >> B;
+	string T = "wbwbwwbwbwbw";
+	string S = "";
+	rep(i,100) S += T;
+	rep(i,S.size()) {
+		ll w = 0, b = 0;
+		reps(j,i,S.size()) {
+			if(S[j] == 'w') w++;
+			else b ++;
+
+			if(w == W && b == B) {
+				out("Yes")
+				return 0;
+			}
+			if(w > W || b > B) {
+				goto next;
+			}
+		}
+		next :
+		continue;
+	}
+	out("No")
 	return 0;
 }

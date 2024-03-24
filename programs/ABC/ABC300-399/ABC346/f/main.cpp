@@ -54,5 +54,79 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
+	ll N; cin >> N;
+	string S, T; cin >> S >> T;
+	set<ll> s; rep(i,S.size()) s.insert(S[i]);
+	rep(i,T.size()) if(s.count(T[i]) == false) {
+		out(0)
+		return 0;
+	} 
+
+	// Tの全ての文字はSに含まれる。
+	vector Scnt = vector(S.size(),vector(26,0));
+	for(int i = S.size()-1;i > -1; i --) {
+		if(i != S.size()-1) {
+			rep(j,26) {
+				Scnt[i][j] = Scnt[i+1][j];
+			}
+		}
+		Scnt[i][S[i]-'a']++;
+	}
+
+	vector Sidx = vector(26,vector<ll>());
+	rep(i,S.size()) Sidx[S[i]-'a'].push_back(i);
+
+	ll lb = 0, ub = INF_LL;
+	while(ub-lb > 1) {
+		ll k = (ub+lb)/2;
+
+		ll idx = 0;
+		bool ok = true;
+		rep(i, T.size()) {
+			ll j = (idx % S.size());
+			ll t = Scnt[j][T[i]-'a'];
+			if(k <= t) {
+				if(k == 1 && S[j] == T[i]) {
+					idx++;
+				} else {
+					ll lb= j, ub = S.size();
+					while(ub - lb > 1) {
+						ll mid = (ub+lb)/2;
+						if( k<= t-Scnt[mid][T[i]-'a'] ){
+							ub = mid;
+						} else {
+							lb = mid;
+						}
+					}
+					idx += (ub-j);
+				}
+			} else {
+
+				ll q = (k-t)/Scnt[0][T[i]-'a'];
+				ll r = (k-t)%Scnt[0][T[i]-'a'];
+			
+				if(r == 0) {
+					idx += (S.size()-j) + ((q - 1) *S.size()) + Sidx[T[i]-'a'].back()+1 ;
+				} else if(r > 0){
+					idx += (S.size()-j) + (q * S.size()) + Sidx[T[i]-'a'][r-1]+1 ;
+				}
+			}
+
+			if(N * S.size() < idx) {
+				ok = false;
+				break;
+			}
+		}
+
+		if(ok) {
+			lb  = k;
+		} else {
+			ub = k;
+		}
+
+	}
+
+
+	out(lb)
 	return 0;
 }

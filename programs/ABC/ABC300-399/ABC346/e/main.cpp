@@ -54,5 +54,55 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
+	ll H, W, M; cin >> H >> W >> M;
+	vector<tuple<ll,ll,ll>> TAM;
+	rep(i,M) {
+		ll t, a, x; cin >> t >> a >> x;
+		TAM.push_back({t,a,x});
+	}
+
+	vector<ll> ans (2*100000 + 5);
+	ll zero = H*W;
+
+	set <ll> gyou, retsu;
+
+	rep(i,M) {
+		auto [t, a, x] = TAM[M-1-i];
+		if(t == 1) {
+			if(gyou.count(a) == false) {
+				ans[x] += W;
+				H--;
+				gyou.insert(a);
+			}
+		} else {
+			if(retsu.count(a) == false) {
+				ans[x] += H;
+				W--;
+				retsu.insert(a);
+			}
+		}
+	}
+
+	ll K =0;
+	reps(i,1,ans.size())if(ans[i] > 0) {
+		K++;
+		zero -= ans[i];
+	}
+
+	if(zero > 0) {
+		K++;
+	}
+	out(K);
+
+	if(zero > 0) {
+		out0("0 ") out(zero)
+	} 
+
+	reps(i,1,ans.size())if(ans[i] > 0) {
+		out0(i) out0(" ") out(ans[i])
+	}
+
+
+
 	return 0;
 }

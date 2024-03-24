@@ -54,5 +54,24 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
+	ll N; cin >> N;
+	vector<tuple<ll,ll,ll>> Xp, Xm, Yp, Ym;
+
+	rep(i,N) {
+		ll x,y; cin >> x >> y;
+
+		if(0 < x && 0 < y ) {
+			Xp.push_back({i,x,y});
+			Yp.push_back({i,x,y});
+		} else if(x < 0 && y < 0) {
+			Xm.push_back({i,x,y});
+			Ym.push_back({i,x,y});
+		} else if(x < 0){
+			
+		} else  {
+
+		}
+	}
+
 	return 0;
 }

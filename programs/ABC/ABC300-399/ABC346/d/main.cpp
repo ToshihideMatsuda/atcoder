@@ -54,5 +54,61 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
+	ll N; cin >> N;
+	string S; cin >> S;
+	vector<ll> C(N); rep(i,N) cin >> C[i];
+
+	ll ans = INF_LL;
+
+	string T = "";
+	T = "11";
+	rep(i,N-2) if(i%2 == 0) T += "0"; else T += "1"; 
+
+	ll tmp = 0;
+	rep(i,N) if(T[i] != S[i]) tmp += C[i];
+	ans = tmp;
+
+	reps(i,1,N) {
+		if(S[i] == T[i]) {
+			tmp += C[i];
+		} else {
+			tmp -= C[i];
+		}
+		T[i] = (1-(T[i]-'0')) + '0';
+		if(i == N-1) {
+			if(T[i] == '0') { //1010..10
+				break;
+			}
+		}
+		ans = MIN(ans, tmp);
+	}
+
+	T = "00";
+	rep(i,N-2) if(i%2 == 0) T += "1"; else T += "0"; 
+
+	tmp = 0;
+	rep(i,N) if(T[i] != S[i]) tmp += C[i];
+	ans = MIN(ans, tmp);
+
+	reps(i,1,N) {
+		if(S[i] == T[i]) {
+			tmp += C[i];
+		} else {
+			tmp -= C[i];
+		}
+		T[i] = (1-(T[i]-'0')) + '0';
+		if(i == N-1) {
+			if(T[i] == '1') { //0101..01
+				break;
+			}
+		}
+		ans = MIN(ans, tmp);
+	}
+
+	out(ans)
+	
+
+
+
 	return 0;
 }

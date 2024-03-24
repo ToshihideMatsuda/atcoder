@@ -4,15 +4,6 @@
 using namespace atcoder;
 using namespace std;
 // 多倍長テンプレ（デバッグだとダメかも）
-/* ---------------------- ここから ---------------------- */
-#include <boost/multiprecision/cpp_dec_float.hpp>
-#include <boost/multiprecision/cpp_int.hpp>
-namespace mp = boost::multiprecision;
-// 任意長整数型
-using bll = mp::cpp_int;
-// 仮数部が10進数で1024桁の浮動小数点数型(TLEしたら小さくする)
-using real = mp::number<mp::cpp_dec_float<1024>>;
-/* ---------------------- ここまで ---------------------- */
 
 typedef long long ll;
 
@@ -47,12 +38,77 @@ typedef long long ll;
 #define MOD 998244353
 
 #define MAX_N (2*100000+5)
-vector<ll> G[MAX_N];
-bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
-void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
-
 
 int main()
 {
+	ll N, M, K; cin >> N >> M >> K;
+
+	set<pair<ll,ll>> G[N+1];
+
+	rep(i,M) {
+		ll u,v; cin >>u >> v;
+		G[u].insert({v,i+1});
+		G[v].insert({u,i+1});
+	}
+
+
+	if(K % 2 ==  1) {
+		out("No")
+		return 0;
+	} else if(K == 0) {
+		out("Yes")
+		cout << endl;
+		return 0;
+	}
+
+	vector<ll> ans;
+	ll cnt = 0;
+	vector<bool> lamp(N+1);
+	reps(i,1,N+1) if(G[i].size() > 0){
+		vector<pair<ll,ll>> era;
+		for(auto [p,k] : G[i]) if(lamp[p]) era.push_back({p,k});
+		for(auto [p,k] : era) {
+			G[i].erase({p,k});
+			G[p].erase({i,k});
+		}
+		
+		bool full = ((G[i].size() + (lamp[i] ? 1 : 0 ) )% 2 == 1);
+		bool first = true;
+		for(auto [p,k] : G[i]) {
+
+			G[p].erase({i,k});
+
+			if(full == false && first) {
+				first = false;
+				continue;
+			}
+
+			first = false;
+			ans.push_back(k);
+			lamp[p] = !lamp[p];
+			lamp[i] = !lamp[i];
+			
+			if(lamp[p] == true && lamp[i] == true) {
+				cnt += 2;
+				if(K == cnt) {
+					out("Yes")
+					out(ans.size())
+					for(auto v : ans) {
+						out0(v) out0(" ")
+					}
+					cout << endl;
+					return 0;
+
+				}
+			}
+
+		}
+		
+	}
+
+
+	out("No")
+
+
 	return 0;
 }
