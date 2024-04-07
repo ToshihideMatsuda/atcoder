@@ -1,3 +1,5 @@
+/* 木の重心による解法 */
+
 #include <bits/stdc++.h> 
 #include <atcoder/all>
 
@@ -40,19 +42,85 @@ typedef long long ll;
 #define OUT(A,separate) for(auto a : A) { cout << a << separate; }
 
 
-#define INF (2147483647)
-#define MINF (-2147483648)
-#define INF_LL  (9223372036854775807LL)
-#define MINF_LL (-9223372036854775808LL)
+#define INF (1 << 30)
+#define MINF -1*(1 << 30)
+#define INF_LL (1LL << 60)
+#define MINF_LL - (1LL << 60)
 #define MOD 998244353
 
-#define MAX_N (2*100000+5)
+#define MAX_N (100000+5)
+ll N;
 vector<ll> G[MAX_N];
-bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
-void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
+ll C[MAX_N];
 
+bool ck[MAX_N]; 
+void clear() { rep(i,MAX_N) ck[i] = false; }
+
+ll R2SUM[MAX_N];
+
+ll dfs(ll p) {
+	ck[p] = true;
+	ll sum = C[p];
+	for(auto g:G[p]) if(ck[g] == false) {
+		sum += dfs(g);
+	}
+
+	R2SUM[p] = sum;
+	return sum;
+}
 
 int main()
 {
+	cin >> N;
+	rep(i,N-1) {
+		ll A, B; cin >> A >> B;
+		G[A].push_back(B);
+		G[B].push_back(A);
+	}
+	reps(i,1,N+1) cin >> C[i];
+
+	clear(); dfs(1);
+
+	ll p = 1;
+	ll all = R2SUM[1];
+
+	clear();
+
+	while(true) {
+		ck[p] = true;
+
+		for(auto g : G[p]) if(ck[g] == false){//親側は無視して良い。
+			if(R2SUM[g] > all/2 ){
+				p = g;
+				goto next;
+			}
+		}
+
+		break;
+
+		next:
+			continue;
+	}
+
+	ll ans = 0;
+	{
+		queue<pair<ll,ll>> Q;
+		clear();
+		Q.push({p,0});
+		ck[p] = true;
+	
+		while(Q.size() > 0) {
+			auto [q,t] = Q.front(); Q.pop();
+			for(auto g:G[q]) if(ck[g] == false){
+				ck[g] = true;
+				ans += C[g] * (t+1);
+				Q.push({g,t+1});
+			}
+		}
+	}
+
+	out(ans)
+
+
 	return 0;
 }

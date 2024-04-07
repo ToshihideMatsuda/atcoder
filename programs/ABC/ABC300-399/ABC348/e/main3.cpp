@@ -1,3 +1,5 @@
+/* 全方位木DP(rerooting)による解法 */
+
 #include <bits/stdc++.h> 
 #include <atcoder/all>
 
@@ -46,13 +48,62 @@ typedef long long ll;
 #define MINF_LL (-9223372036854775808LL)
 #define MOD 998244353
 
-#define MAX_N (2*100000+5)
+#define MAX_N (100000+5)
+ll N;
 vector<ll> G[MAX_N];
-bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
-void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
+ll C[MAX_N];
 
+bool ck[MAX_N]; 
+void clear() { rep(i,MAX_N) ck[i] = false; }
+
+ll sum_c[MAX_N];
+ll sub_f[MAX_N];
+ll f[MAX_N];
+
+void dfs(ll p) {
+	ck[p] = true;
+	sum_c[p] = C[p];
+	sub_f[0] = 0;
+	for(auto g:G[p]) if(ck[g] == false){
+		ck[g] = true;
+		dfs(g);
+
+		sum_c[p] += sum_c[g];	
+		sub_f[p] += (sub_f[g] + sum_c[g]);
+	}
+}
+
+void rerooting(ll p, ll other_sum_c, ll other_f) {
+	ck[p] = true;
+	f[p] = sub_f[p] + other_f;
+
+	for(auto g:G[p]) if(ck[g] == false){
+		ck[g] = true;
+		ll next_other_sum_c = other_sum_c + (sum_c[p] - sum_c[g]);
+		ll next_other_sum_f = (other_f + other_sum_c) 
+								+ (sub_f[p] -(sub_f[g] + sum_c[g]))
+								+ (sum_c[p] - sum_c[g]); 
+		rerooting(g, next_other_sum_c, next_other_sum_f);
+	}
+}
 
 int main()
 {
+	cin >> N;
+	rep(i,N-1) {
+		ll A, B; cin >> A >> B;
+		G[A].push_back(B);
+		G[B].push_back(A);
+	}
+	reps(i,1,N+1) cin >> C[i];
+
+	clear(); dfs(1);
+	clear(); rerooting(1,0,0);
+
+	ll ans = INF_LL;
+	reps(i,1,N+1) ans = MIN(ans,f[i]);
+	out(ans)
+
+
 	return 0;
 }
