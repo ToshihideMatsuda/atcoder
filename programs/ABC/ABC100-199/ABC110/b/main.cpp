@@ -3,6 +3,7 @@
 
 using namespace atcoder;
 using namespace std;
+// 多倍長テンプレ（デバッグだとダメかも）
 
 typedef long long ll;
 
@@ -36,63 +37,29 @@ typedef long long ll;
 #define MINF_LL - (1LL << 60)
 #define MOD 998244353
 
-#define MAX_N 300 + 5
-
-
-ll N, M, L;
-ll d[MAX_N][MAX_N];
-
-
-void warshall_floyd() {
-  reps(k,1,N+1) {           // 経由する頂点
-      reps(i,1,N+1) {       // 始点
-          reps (j,1,N+1) {  // 終点
-		  	if(i == 1 && j == 3 && k == 2) {
-				ll p =0;
-			}
-              d[i][j] = min(d[i][j], d[i][k] + d[k][j]);
-          }
-      }
-    }
-}
+#define MAX_N (2*100000+5)
+vector<ll> G[MAX_N];
+bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
+void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
 
 int main()
 {
-	 cin >> N >> M >> L;
-	reps(i,1,N+1) reps(j,1,N+1) d[i][j] = (i == j ? 0 : INF);
-	rep(i,M){
-	  	ll a, b, c;
-	  	cin >> a >> b >> c;
-	  	d[a][b] = c;
-	  	d[b][a] = c;
+	ll N, M, X, Y; cin >> N >> M >> X >> Y;
+	vector<ll> x(N), y(M);
+	rep(i,N) cin >> x[i];
+	rep(i,M) cin >> y[i];
+
+	sort(x.begin(),x.end());
+	sort(y.begin(),y.end());
+
+	for( int z = X + 1; z <= Y; z++) {
+		if(x.back() < z && z <= y.front()) {
+			out("No War")
+			return 0;
+		}
 	}
-
-	warshall_floyd();
-
-	vector<pair<ll,ll>> G;
-	reps(i,1,N+1) reps(j,i+1,N+1) if(i!=j && d[i][j] <= L){
-		G.push_back({i,j});
-	}
-
-	reps(i,1,N+1) reps(j,1,N+1) d[i][j] = (i == j ? 0 : INF);
-	for(auto [i,j]:G) {
-		d[i][j] = 1;
-		d[j][i] = 1;
-	}
-	warshall_floyd();
-
-	vector<ll> ans;
-	ll Q; cin >> Q;
-	while(Q--) {
-		ll s, t; cin >> s >> t;
-		if(d[s][t] == INF) ans.push_back(-1);
-		else ans.push_back(d[s][t]-1);
-	}
-
-	OUT(ans,endl)
-
-
+	out("War")
 
 	return 0;
 }

@@ -3,6 +3,16 @@
 
 using namespace atcoder;
 using namespace std;
+// 多倍長テンプレ（デバッグだとダメかも）
+/* ---------------------- ここから ---------------------- */
+#include <boost/multiprecision/cpp_dec_float.hpp>
+#include <boost/multiprecision/cpp_int.hpp>
+namespace mp = boost::multiprecision;
+// 任意長整数型
+using bll = mp::cpp_int;
+// 仮数部が10進数で1024桁の浮動小数点数型(TLEしたら小さくする)
+using real = mp::number<mp::cpp_dec_float<1024>>;
+/* ---------------------- ここまで ---------------------- */
 
 typedef long long ll;
 
@@ -36,63 +46,13 @@ typedef long long ll;
 #define MINF_LL - (1LL << 60)
 #define MOD 998244353
 
-#define MAX_N 300 + 5
-
-
-ll N, M, L;
-ll d[MAX_N][MAX_N];
-
-
-void warshall_floyd() {
-  reps(k,1,N+1) {           // 経由する頂点
-      reps(i,1,N+1) {       // 始点
-          reps (j,1,N+1) {  // 終点
-		  	if(i == 1 && j == 3 && k == 2) {
-				ll p =0;
-			}
-              d[i][j] = min(d[i][j], d[i][k] + d[k][j]);
-          }
-      }
-    }
-}
+#define MAX_N (2*100000+5)
+vector<ll> G[MAX_N];
+bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
+void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
 
 int main()
 {
-	 cin >> N >> M >> L;
-	reps(i,1,N+1) reps(j,1,N+1) d[i][j] = (i == j ? 0 : INF);
-	rep(i,M){
-	  	ll a, b, c;
-	  	cin >> a >> b >> c;
-	  	d[a][b] = c;
-	  	d[b][a] = c;
-	}
-
-	warshall_floyd();
-
-	vector<pair<ll,ll>> G;
-	reps(i,1,N+1) reps(j,i+1,N+1) if(i!=j && d[i][j] <= L){
-		G.push_back({i,j});
-	}
-
-	reps(i,1,N+1) reps(j,1,N+1) d[i][j] = (i == j ? 0 : INF);
-	for(auto [i,j]:G) {
-		d[i][j] = 1;
-		d[j][i] = 1;
-	}
-	warshall_floyd();
-
-	vector<ll> ans;
-	ll Q; cin >> Q;
-	while(Q--) {
-		ll s, t; cin >> s >> t;
-		if(d[s][t] == INF) ans.push_back(-1);
-		else ans.push_back(d[s][t]-1);
-	}
-
-	OUT(ans,endl)
-
-
-
 	return 0;
 }
