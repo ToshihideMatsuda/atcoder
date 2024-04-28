@@ -32,12 +32,13 @@ int main()
 	rep(i,4) {
 		sort(xyOE[i].begin(), xyOE[i].end());
 		ll n = xyOE[i].size();
+		ll sum = 0;
 		for(auto x: xyOE[i]) {
-			ans += (((xyOE[i].size() - n) - (n - 1) )*x)/2;
+			sum += (((xyOE[i].size() - n) - (n - 1) )*x);
 			n--;
 		}
+		ans += sum/2;
 	}
-
 	cout << (ans) << endl;
 
 	return 0;
