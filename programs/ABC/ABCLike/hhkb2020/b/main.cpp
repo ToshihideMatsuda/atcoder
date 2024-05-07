@@ -54,22 +54,19 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
-	ll T; cin >> T;
-
-
-	vector<ll> ans;
-	while(T --) {
-		ll N, M, K; cin >> N >> M >> K;
-		if(N ==M-1 && K==M-1) {
-			ans.push_back(0);
-		} else {
-			ll pow2N = 1;
-			rep(i,64) if( (N & (1 << i) ) > 0) pow2N = (pow2N * pow2_mod10[i])%10;
-
-			ans.push_back(pow2N);
-		}
-
+	ll H, W; cin>> H >> W;
+	vector<string> S(H);
+	rep(h,H) cin >> S[h];
+	ll cnt = 0;
+	rep(h,H-1)rep(w,W) {
+		//tate
+		if(S[h][w]   == '.' && S[h+1][w] == '.' ) cnt++;
 	}
-	OUT(ans,endl)
+
+	rep(h,H)rep(w,W-1) {
+		//tate
+		if(S[h][w] == '.' && S[h][w+1] == '.') cnt++;
+	}
+	out(cnt)
 	return 0;
 }

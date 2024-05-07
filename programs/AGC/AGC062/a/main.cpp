@@ -51,25 +51,35 @@ vector<ll> G[MAX_N];
 bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
 void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
+vector<pair<string,ll> > runLengthEncoding(string S) {
+    vector<pair<string,ll> > ret;
+    ll i = 0;
+    while(i < S.size()) {
+        ll cnt = 1;
+        while(i+1 < S.size() && S[i] == S[i+1]) {
+            cnt++;
+            i++;
+        }
+        ret.push_back(make_pair(S.substr(i,1),cnt));
+        i++;
+    }
+    return ret;
+}
 
 int main()
 {
 	ll T; cin >> T;
-
-
-	vector<ll> ans;
-	while(T --) {
-		ll N, M, K; cin >> N >> M >> K;
-		if(N ==M-1 && K==M-1) {
-			ans.push_back(0);
+	while(T--) {
+		ll N; cin >> N; 
+		string S; cin >> S;
+		auto data = runLengthEncoding(S);
+		if(data.size() == 1 && data[0].first == "B") {
+			out("B")
+		} else if(data.size() == 2 && data[0].first == "A" && data[1].first == "B"){
+			out("B")
 		} else {
-			ll pow2N = 1;
-			rep(i,64) if( (N & (1 << i) ) > 0) pow2N = (pow2N * pow2_mod10[i])%10;
-
-			ans.push_back(pow2N);
+			out("A")
 		}
-
 	}
-	OUT(ans,endl)
 	return 0;
 }

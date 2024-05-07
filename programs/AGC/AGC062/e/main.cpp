@@ -54,22 +54,5 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
-	ll T; cin >> T;
-
-
-	vector<ll> ans;
-	while(T --) {
-		ll N, M, K; cin >> N >> M >> K;
-		if(N ==M-1 && K==M-1) {
-			ans.push_back(0);
-		} else {
-			ll pow2N = 1;
-			rep(i,64) if( (N & (1 << i) ) > 0) pow2N = (pow2N * pow2_mod10[i])%10;
-
-			ans.push_back(pow2N);
-		}
-
-	}
-	OUT(ans,endl)
 	return 0;
 }

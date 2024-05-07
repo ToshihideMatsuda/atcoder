@@ -54,22 +54,26 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
-	ll T; cin >> T;
+	ll N, M; cin >> N >> M;
+	vector A = vector(N,vector(M,0));
 
+	rep(i,N)rep(j,M) cin >> A[i][j];
 
-	vector<ll> ans;
-	while(T --) {
-		ll N, M, K; cin >> N >> M >> K;
-		if(N ==M-1 && K==M-1) {
-			ans.push_back(0);
-		} else {
-			ll pow2N = 1;
-			rep(i,64) if( (N & (1 << i) ) > 0) pow2N = (pow2N * pow2_mod10[i])%10;
-
-			ans.push_back(pow2N);
-		}
-
+	vector<bitset<2000>> bit(N);
+	rep(j,M) {
+		vector<bitset<2000>> bs(1000);
+		rep(i,N) bs[A[i][j]].set(i);
+		rep(i,N) bit[i] ^= bs[A[i][j]];
 	}
-	OUT(ans,endl)
+	
+	ll ans = 0;
+	rep(i,N) {
+		ans += bit[i].count() + ( bit[i][i] ? -1 : 0 );
+	}
+	ans /= 2;
+	out(ans)
+
+
+
 	return 0;
 }
