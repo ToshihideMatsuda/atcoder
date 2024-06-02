@@ -1,18 +1,7 @@
 #include <bits/stdc++.h> 
-#include <atcoder/all>
 
-using namespace atcoder;
 using namespace std;
 // 多倍長テンプレ（デバッグだとダメかも）
-/* ---------------------- ここから ---------------------- */
-#include <boost/multiprecision/cpp_dec_float.hpp>
-#include <boost/multiprecision/cpp_int.hpp>
-namespace mp = boost::multiprecision;
-// 任意長整数型
-using bll = mp::cpp_int;
-// 仮数部が10進数で1024桁の浮動小数点数型(TLEしたら小さくする)
-using real = mp::number<mp::cpp_dec_float<1024>>;
-/* ---------------------- ここまで ---------------------- */
 
 typedef long long ll;
 
@@ -46,181 +35,7 @@ typedef long long ll;
 #define MINF_LL (-9223372036854775808LL)
 #define MOD 998244353
 
-#define MAX_N (2*100000+5)
-vector<ll> G[MAX_N];
-bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
-void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
-
-using mint = modint998244353;
-
-
-//max: SegTree<ll> segTreeSum(N+1,    [](ll x, ll y) { return x + y }, 0 );
-template<typename T>
-struct SegTree {
-
-    // 演算結果に影響しない0元
-    // 最小値：-inf, 最大値: inf
-    T ZERO;
-
-    private :
-    function<T(T,T)> compare; //比較用関数オブジェクト
-    
-    
-    int n;          // 要素数
-    vector<T> dat;  // セグメントtree配列
-                    // dat[0] 　　　　　　: [0,n)の値
-                    // i番目の数列（葉）   : dat[i + n - 1]
-                    // dat[k]の子要素    : dat[ 2 * k + 1], dat[ 2 * k + 2]
-                    // dat[k]の親要素    : dat[ (k - 1) / 2 ]
-
-    vector<T> lazy; // 遅延評価配列
-    
-    vector<pair<ll,ll>> area; // 範囲定義 area[k] = [a,b);
-
-public:
-    
-    SegTree(int n_, function<T(T,T)> compare_, T Z) {
-        int x = 1;
-        while(x < n_) {
-            x *= 2;         //n以上の 2^m形式に変換
-        }
-        n = x;
-        ZERO = Z;
-        compare = compare_;
-
-        dat = vector<T>(n * 2 - 1, ZERO); //セグメント木は、要素数 sz * 2 - 1の配列を準備
-        lazy = vector<T>(n * 2 - 1, ZERO); //遅延評価配列も同じ数準備;
-
-        area.push_back({0,n});
-        int i = 0;
-        while(area.size()< dat.size()) {
-            auto [l,r] = area[i++];
-            area.push_back({l,l+(r-l+1)/2});
-            area.push_back({l+(r-l+1)/2,r});
-        }
-
-    }
-    
-    // dat[a]を値xで更新
-    void update(int a, T x) {
-        update(a,a+1,x);
-    }
-
-    // 区間[a,b)を値xで更新、最大最小-> 遅延評価。和, XOR, その他-> 通常
-    void update(int a, int b, T x) {
-        updateLazy(a, b, x, 0, 0, n);
-    }
-    
-    //区間[a,b)の値を取得するクエリ
-    T query(int a, int b) { 
-        return query_sub(a, b, 0, 0, n); };
-    
-    //全区間の値を取得するクエリ
-    T allquery() { return query_sub(0, n+1, 0, 0, n); };
-    
-    void debug() {
-
-        cout <<  "---dat---" << endl;
-        for(int i = 0; i < dat.size(); i++) {
-            auto [l,r] = area[i];
-            string text = "[" + to_string(l) + ", " + to_string(r) + ") = ";
-            cout << text;
-            if(dat[i] == ZERO) {
-                cout << "-" << endl;
-            }
-            else {
-                cout << dat[i] << endl;
-            }
-        }
-
-        cout <<  "---lazy---" << endl;
-        for(int i = 0; i < lazy.size(); i++) {
-            auto [l,r] = area[i];
-            string text = "[" + to_string(l) + ", " + to_string(r) + ") = ";
-            cout << text;
-            if(lazy[i] == ZERO) {
-                cout << "-" << endl;
-            }
-            else {
-                cout << lazy[i] << endl;
-            }
-        }
-        cout <<  endl;
-    }
-    
-    //lazy[k]に登録してあった値を、１階層下の子要素に伝播させて、自身の値も変更
-    void eval(int k) {
-        if(lazy[k] == ZERO) return ;
-
-        if(k < n -1) //kは末端ノード（葉）ではない
-        {
-
-            auto [l, r] = area[k];
-            ll x = lazy[k] / (r - l);
-
-            auto [l1, r1] = area[2 * k + 1];
-            auto [l2, r2] = area[2 * k + 2];
-
-            //自分の子要素に伝搬　(子要素は必要であれば次世代に伝搬) 
-            if(lazy[2 * k + 1] == ZERO) {
-                lazy[2 * k + 1] = x * (r1 - l1);
-            } else {
-                lazy[2 * k + 1] += x * (r1 - l1);
-            }
-
-
-            if(lazy[2 * k + 2] == ZERO) {
-                lazy[2 * k + 2] = x * (r2 - l2);
-            } else {
-                lazy[2 * k + 2] += x * (r2 - l2);
-            }
-
-        }
-        if(dat[k] == ZERO) {
-            dat[k] = lazy[k];
-        } else {
-            dat[k] += lazy[k];
-        }
-
-        lazy[k] = ZERO;
-    }
-    
-private:
-    void updateLazy(int a, int b, T x, int k, int l, int r) {
-        eval(k);
-        if(a <= l && r <= b ) {      // 区間にすっぽり収まる際にはlazyを更新
-            if(lazy[k] == ZERO) {
-                lazy[k] = x * (r-l);
-            } else {
-                lazy[k] += x * (r-l);
-            }
-            eval(k);
-        }  else if( a < r && l < b) { // 一部の区間が収まる場合
-            updateLazy(a, b, x, 2 * k + 1, l          , (r + l)/ 2 );
-            updateLazy(a, b, x, 2 * k + 2, (r + l) / 2, r );
-            dat[k] = compare(dat[k * 2 + 1], dat[k * 2 + 2] );
-        } else {
-            int i = 0;
-        }
-    }
-    
-private:
-    T query_sub(int a, int b, int k, int l, int r) {
-        eval(k);
-        if(b <= l || r <= a)
-            return ZERO;    //区間外
-        if(a <= l && r <= b )
-            return dat[k]; // 区間にすっぽり収まる
-        
-        //一部重なる
-        T lv = query_sub(a, b, 2 * k + 1, l          , (r + l)/ 2 );
-        T rv = query_sub(a, b, 2 * k + 2, (r + l) / 2, r );
-        
-        return compare(lv,rv);
-    }
-
-};
-
+#define MAX_N 1000001
 
 
 
@@ -228,60 +43,35 @@ int main()
 {
 	ll N; cin >> N;
 
-	vector<ll> A(N);
-	rep(i,N) cin >> A[i];
-	sort(A.begin(),A.end());
-
-	SegTree<ll> segTreeSum(1000009, [](ll x, ll y) { return x + y;  }, 0);
-
-    ll T = 100;
-	ll ans = 0;
-    ll prevValue = -1;
+	vector<ll> A;
+    vector<ll> C(MAX_N);
 	rep(i,N) {
-        if(A[i] < T) {
-            ll v = 0;
-            if(i > 0 &&  A[i-1] == A[i]) {
-                v = MAX(prevValue-1,0);
-                
-            } else {
-                reps(j,i+1,N) v += A[j]/A[i]; 
-            }
+        ll a = 0; cin >> a;
+        C[a] ++;
+        A.push_back(a);
+    }
 
-            ans += v;
-            prevValue = v;
-            continue;
-        } else {
-            segTreeSum.update(A[i],A[i]+1,1);
-        }
+    reps(i,1,MAX_N) C[i] += C[i-1];
+
+	ll ans = 0;
+
+    vector<bool> s(MAX_N,false);
+
+    rep(i,A.size()) {
+
+        ll a = A[i];
+        if(s[a]) continue;
+        s[a] = true;
+
+        ll add = 0;
+		for(int k = a; k < MAX_N; k+= a) {
+            if(C[k-1] == N) break;
+            add ++;
+            ans += (C[a] - C[a-1]) * (C[MIN(k+a,MAX_N)-1] - C[k-1]) * add;
+		}
+        ans -= (C[a] - C[a-1]) * ((C[a] - C[a-1]) + 1) / 2;        
 	}
-    rep(i,N) {
-        if(A[i] < T) {
-            continue;
-        } else {
-
-
-
-		    ll add = 0;
-		    for(int k = A[i]; k < 1000001; k+= A[i]) {
-			    add ++;
-			    ll c = segTreeSum.query(k, MIN(k+A[i],1000001));
-                if(add == 1) {
-                    ans += (c-1) * add;
-                } else {
-                    ans += c * add;
-                }
-                
-		    } 
-            segTreeSum.update(A[i],A[i]+1,-1);
-
-        }
-	}
-
-
-
 
 	out(ans)
-
-
 	return 0;
 }
