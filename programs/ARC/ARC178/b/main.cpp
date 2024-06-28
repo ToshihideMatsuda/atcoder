@@ -75,13 +75,14 @@ ll pow(ll x, ll n, ll mod) {
 
 int main()
 {
-	
+	/*
 	ll cnt = 0;
 	ll carry = 0;
 	reps(i,10,100)reps(j,100,1000)if(i+j<= 999) cnt++; else {
 		carry ++;
 		//cout << i << "," << j << endl;;
 	}
+	*/
 	
 
 	ll T; cin >> T;

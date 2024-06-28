@@ -46,90 +46,17 @@ typedef long long ll;
 #define MINF_LL (-9223372036854775808LL)
 #define MOD 998244353
 
-
-long long const SIZE = (2*100000+5) * 4;
-
-vector<long long> fact, fact_inv, inv;
-/*  init_nCk :二項係数のための前処理
-    計算量:O(n)
-*/
-bool init = false;
-void initFact() {
-    if(init) return ;
-    fact.resize(SIZE + 5);
-    fact_inv.resize(SIZE + 5);
-    inv.resize(SIZE + 5);
-
-    fact[0] = fact[1] = 1;
-    fact_inv[0] = fact_inv[1] = 1;
-    inv[1] = 1;
-
-    for (int i = 2; i < SIZE + 5; i++) {
-        fact[i] = fact[i - 1] * i % MOD;
-        inv[i] = MOD - inv[MOD % i] * (MOD / i) % MOD;
-        fact_inv[i] = fact_inv[i - 1] * inv[i] % MOD;
-    }
-    init = true;
-    
-}
-
-ll modPerm(ll n, ll k) {
-    initFact();
-    return (fact[n] * fact_inv[n-k]) % MOD;
-}
-
-ll modComb(ll n, ll k) {
-    initFact();
-    if(k==0) return 1;
-    ll a = modPerm(n, k);
-    return (a * fact_inv[k]) % MOD;
-}
-
-long long modPow(long long x, long long a) {
-  if (x >= MOD) { x %= MOD; }
-  if (a == 0) return 1;
-  if (a == 1) return x;
-  if (a % 2) return (x * modPow(x, a - 1)) % MOD;
-  long long t = modPow(x, a / 2);
-  return (t * t) % MOD;
-}
-long long modInv(long long x) {
-  return modPow(x, MOD - 2);
-}
-
+#define MAX_N (2*100000+5)
+vector<ll> G[MAX_N];
+bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
+void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
 
 int main()
 {
-	initFact();
-
-	ll K; cin >> K;
-
-	vector<ll> dp(K+1);
-	dp[K] = 1; //全て空き
-
-	rep(i,26) {
-		ll C;
-		cin >> C;
-		vector<ll> nx(dp);
-
-		reps(c,1,C+1) {
-			reps(k,c,K+1) {
-				nx[k-c] += (dp[k] * modComb(k,c)) %MOD; 
-				nx[k-c] %= MOD;
-			}
-		}
-		
-		dp = std::move(nx);
-	}
-
-	ll ans = 0;
-	rep(k,K) {
-		ll keisu = modComb(K,k);
-		ans += (dp[k]*modInv(keisu)) %MOD;
-		ans %= MOD;
-	}
-	out(ans)
-
-	return 0;
+	string s,t;cin>>s>>t;
+	if(s=="AtCoder"&&t=="Land"){
+		out("Yes")
+	} else out("No") 
+   return 0;
 }
