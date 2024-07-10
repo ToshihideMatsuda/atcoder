@@ -46,13 +46,36 @@ typedef long long ll;
 #define MINF_LL (-9223372036854775807LL)
 #define MOD 998244353
 
-#define MAX_N (2*100000+5)
-vector<ll> G[MAX_N];
-bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
-void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
-
-
 int main()
 {
+	ll N, T; cin >> N >> T;
+	string S; cin >> S;
+	vector<ll>X0,X1;
+	rep(i,N) {
+		ll x;
+		cin >> x;
+		if(S[i]== '0') {
+			X0.push_back(x);
+		} else {
+			X1.push_back(x);
+		}
+	}
+
+	X0.push_back(INF_LL);
+	sort(X0.begin(),X0.end());
+
+		
+	ll ans = 0;
+	for(auto x:X1) {
+		auto from = lower_bound(X0.begin(),X0.end(),x) ;
+		auto to   = upper_bound(X0.begin(),X0.end(),x+2*T) ;
+
+		if((*to) == (*from)) continue;
+		if((*to) != x+2*T) to--;
+		ans += distance(X0.begin(),to) - distance(X0.begin(),from) + 1;
+	}
+
+	out(ans)
+
 	return 0;
 }

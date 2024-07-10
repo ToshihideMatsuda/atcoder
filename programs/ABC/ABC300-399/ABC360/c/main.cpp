@@ -43,7 +43,7 @@ typedef long long ll;
 #define INF (2147483647)
 #define MINF (-2147483648)
 #define INF_LL  (9223372036854775807LL)
-#define MINF_LL (-9223372036854775807LL)
+#define MINF_LL (-9223372036854775808LL)
 #define MOD 998244353
 
 #define MAX_N (2*100000+5)
@@ -54,5 +54,26 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
+	ll N; cin >> N;
+	vector<ll> A(N), W(N);
+	rep(i,N) cin >> A[i];
+	rep(i,N) cin >> W[i];
+	vector<ll> List[N+1];
+	rep(i,N)List[A[i]].push_back(W[i]);
+
+	ll ans = 0;
+	rep(i,N){
+		if(2 <= List[A[i]].size()) {
+			ll max = 0;
+			ll sum = 0;
+			for(auto l:List[A[i]]) {
+				max = MAX(l,max);
+				sum += l;
+			}
+			ans += sum - max;
+			List[A[i]] = {max};
+		}
+	}
+	out(ans)
 	return 0;
 }

@@ -43,7 +43,7 @@ typedef long long ll;
 #define INF (2147483647)
 #define MINF (-2147483648)
 #define INF_LL  (9223372036854775807LL)
-#define MINF_LL (-9223372036854775807LL)
+#define MINF_LL (-9223372036854775808LL)
 #define MOD 998244353
 
 #define MAX_N (2*100000+5)
@@ -51,8 +51,30 @@ vector<ll> G[MAX_N];
 bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
 void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
+using mint = modint998244353;
+
 
 int main()
 {
+	ll _N;
+	ll K; cin >> _N >> K;
+
+	mint N = _N;
+
+	mint p0 = 1, p1= 0;
+
+	mint pp = 1;
+	pp /= 2;
+
+	rep(i,K) {
+		p0 = p0*(1 - 2*(N-1)/(N*N)) + (1-p0)*2/(N*N) ;
+	}
+	rep(i,K) {
+		p1 = p1*(1 - 2*(N-1)/(N*N)) + (1-p1)*2/(N*N) ;
+	}
+
+	mint ans = (p0 + p1 * (N*(N+1)/2 - 1));
+	out(ans.val())
+
 	return 0;
 }
