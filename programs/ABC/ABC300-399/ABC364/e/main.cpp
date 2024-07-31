@@ -3,16 +3,6 @@
 
 using namespace atcoder;
 using namespace std;
-// 多倍長テンプレ（デバッグだとダメかも）
-/* ---------------------- ここから ---------------------- */
-#include <boost/multiprecision/cpp_dec_float.hpp>
-#include <boost/multiprecision/cpp_int.hpp>
-namespace mp = boost::multiprecision;
-// 任意長整数型
-using bll = mp::cpp_int;
-// 仮数部が10進数で1024桁の浮動小数点数型(TLEしたら小さくする)
-using real = mp::number<mp::cpp_dec_float<1024>>;
-/* ---------------------- ここまで ---------------------- */
 
 typedef long long ll;
 
@@ -42,7 +32,7 @@ typedef long long ll;
 
 #define INF (2147483647)
 #define MINF (-2147483648)
-#define INF_LL  (9223372036854775807LL)
+#define INF_LL  (922337203685477580LL)
 #define MINF_LL (-9223372036854775807LL)
 #define MOD 998244353
 
@@ -54,5 +44,40 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
-	return 0;
+    ll N; cin >> N;
+	ll X, Y; cin >> X >> Y;
+	vector<ll> A(N), B(N);  
+	rep(i,N) cin >> A[i] >> B[i];
+    
+    auto dp = vector(N+1, vector(N+1, vector(X+1, INF_LL) ) );
+
+    dp[0][0][0] = 0;
+
+    reps(n,1,1+N) {
+        dp[n][0][0] = 0;
+        rep(m,n) {
+            rep(i,X+1) {
+                if(0<m) dp[n][m][i] = MIN(dp[n][m][i], dp[n-1][m][i]);
+                if( dp[n-1][m][i] + B[n-1] <= Y && A[n-1] + i <= X) {
+                    dp[n][m+1][A[n-1]+i] = MIN(dp[n][m+1][A[n-1]+i], dp[n-1][m][i] + B[n-1]);
+                }
+            }
+        }
+    }
+
+    ll ans = 1;
+    rep(m,N+1) {
+        rep(i,X+1) {
+            if(dp[N][m][i] <= Y ) {
+                if(m == N) {
+                    ans = N;
+                } else {
+                    ans = MAX(ans,m+1);
+                }
+            }
+        }
+    }
+    out(ans)
+    
+    return 0;
 }
