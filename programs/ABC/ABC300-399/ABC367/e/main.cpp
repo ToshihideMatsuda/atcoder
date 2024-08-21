@@ -44,40 +44,123 @@ ll s = 418311299LL;
 ll N, K; 
 
 
+template<typename T>
+struct UnionFindTree {
+
+    unordered_map <T,T> tree;  // T -> TのUnionTreeの実態
+    unordered_map <T,int>dep; // unionfind木の深さ
+
+    UnionFindTree() {}
+
+    void insert(T edge){
+        tree[edge] = edge;
+        dep[edge] = 1;
+    }
+    
+    bool exist(T edge){
+        return tree.count(edge) > 0;
+    }
+
+    // rootを辿って同じものかを判定
+    bool same (T e1, T e2)  {
+        T x = root(e1);
+        T y = root(e2);
+
+        if(x== y) return true;
+        return false;
+    }
+
+    // rootを辿って、深さに応じてくっつける
+    void unionTree(T e1, T e2) {
+        T x = root(e1);
+        T y = root(e2);
+
+        if(x== y) return;
+
+        if(dep[x] >= dep[y] ) {
+            tree[y] = x;
+            dep[y] ++;
+        } else {
+            tree[x] = y;
+            dep[x] ++;
+        }
+    }
+
+    // treeの先を辿ってtreeにする
+    T root(T e) {
+        T r = tree[e];
+        if(r == e) { return r;}
+        else {
+            tree[e] = root(r);
+            return tree[e];
+        }
+    }
+
+};
+
+
+
 int main()
-{cin >> N >> K;
+{
+    cin >> N >> K;
+    //out direction
     vector<ll> X(N);rep(i,N) { cin >> X[i]; X[i]--; }
+    //in direction
     vector<vector<ll>> Y(N);rep(i,N) Y[X[i]].push_back(i);
+
     vector<ll> A(N);rep(i,N) cin >> A[i];
-    vector<ll> B(A);
-    vector<ll> D;
+    if(K == 0) {
+        OUT(A," ")
+        return 0;
+    }
+    vector<ll> ans(N,-1);
 
-    vector<ll> cnt(N);
-  
-    rep(i,N) cnt[X[i]] ++;
+    UnionFindTree<ll> utr;
+    rep(i,N) utr.insert(i);
+    rep(i,N) utr.unionTree(i,X[i]);
 
-    vector<ll> target;
-    rep(i,N) if( 2 <= cnt[i] ) target.push_back(i);
-    if(target.size() == 0) rep(i,N)  target.push_back(i);
-    
-    vector<bool> visited(N,false);
-    
-    for(auto t: target) {
-        visited[t] = true;
-        vector<ll> h = {t};
-        vector<ll> w = {t};
+    set<ll> R;
+    rep(i,N) if( R.count(utr.root(i)) == false ) {
+        R.insert(utr.root(i));
+        set<ll> s;
+        ll j = i;
+        while(s.count(j) == false) {
+            s.insert(j);
+            j = X[j];
+        }
+        vector<pair<ll,ll>> h;
+        vector<ll> w = {j};
 
         while(X[w.back()] != w[0]) {
-            if(2 <= Y[X[w.back()]].size()) {
-                h.push_back(X[w.back()]);
-            }
             w.push_back(X[w.back()]);
-            
         }
 
+        ll loop = w.size();
+        rep(i,loop) if(1 < Y[w[i]].size()) h.emplace_back(w[i],i);
 
+        rep(i,loop) ans[w[i]] = A[w[(K+i) % loop]];
 
+        function<void(ll, vector<ll>&, ll)>  f = [&](ll p, vector<ll>& branch, ll i) {
+            if(K <= branch.size()) {
+                ans[p] = A[branch[branch.size() - K]];
+            } else {
+                ans[p] = A[w[ (K - branch.size() + i) % loop]];
+            }
+
+            for(auto y:Y[p]) if(ans[y] == -1){
+                branch.push_back(p);
+                f(y, branch, i);
+                branch.pop_back();
+            }
+        };
+
+        for(auto p : h) {
+            vector<ll> a = {};
+            f(p.first,a,p.second);
+        }
     }
+
+    OUT(ans, " ")
 
 
 
