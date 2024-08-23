@@ -38,14 +38,6 @@ typedef long long ll;
 #define MOD 998244353
 
 #define MAX_N (2*100000+5)
-vector<ll> G[MAX_N];
-bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
-void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
-
-using mint = modint998244353;
-//max: SegTree<ll> segTreeMax(N+1,    [](ll x, ll y) { return x < y ? y : x; }, -(1LL<<61));
-//min: SegTree<ll> segTreeMin(N+1,    [](ll x, ll y) { return x < y ? x : y; }, (1LL<<61));
-//sum: SegTree<ll> segTreeSum(N+1,    [](ll x, ll y) { return x + y; }, 0);
 //sum: SegTree<ll> segTreeSumMod(N+1, [](ll x, ll y) { return (x + y) % MOD ; }, 0);
 //xor: SegTree<ll> segTreeXor(N+1,    [](ll x, ll y) { return x ^ y; }, 0);
 template<typename T>
@@ -145,56 +137,43 @@ private:
 
 
 
-ll h(ll v,ll i) {
-	return (v*i) + (v*v*i*i) + (v*v*v*i*i*i) + (v*v*v*v*i*i*i*i);
-}
-
-
 int main()
 { 
 	ll N, Q; cin >> N >> Q;
-	ll M = 5;
-	
-	vector A = vector(M,vector<ll>(N)); 
-	rep(i,N) {
-		ll a;
-		cin >> a;
-		A[0][i] = a;
-	}
-	reps(j,1,M)rep(i,N) A[j][i] = h(A[0][i],j);
-	
-	vector X = vector(M,vector<ll>(N)); 
-	rep(i,N){
-		ll x;
-		cin >> x;
-		X[0][i] = x;
-	}
-	reps(j,1,M)rep(i,N) X[j][i] = h(X[0][i],j);
+	vector A = vector<ll>(N); 
+	rep(i,N) cin >> A[i];	
+	vector X = vector<ll>(N); 
+	rep(i,N) cin >> X[i];	
 
-
-
-	auto segA = vector<SegTree<ll>>();
-	auto segX = vector<SegTree<ll>>();
-
-	rep(j,M){
-		segA.push_back(SegTree<ll> (N+1,    [](ll x, ll y) { return x + y; }, 0));
-		segX.push_back(SegTree<ll> (N+1,    [](ll x, ll y) { return x + y; }, 0));
-		rep(i,N) {
-			segA[j].update(i,A[j][i]);
-			segX[j].update(i,X[j][i]);
-		}
-	}
+    std::random_device seed_gen;
+    std::mt19937 engine(seed_gen());
 
 	while(Q--) {
+
 		ll l, r, L, R; cin >> l >> r >> L >> R;
 		if(r-l != R-L) {
 			out("No")
 			goto next;
 		}
+
+        vector<ll> P (N);
+        rep(i,N) cin >> P[i] = i;
+        rep(i,10) {
+            shuffle(P.begin(), P.end(), engine);
+            SegTree<ll> segA(N+1, [](ll x, ll y) { return (x + y)  ; }, 0);
+            SegTree<ll> segX(N+1, [](ll x, ll y) { return (x + y)  ; }, 0);
+
+            rep(j,N) {
+                segA.update(j, P[A[j]]);
+                segX.update(j, P[X[j]]);
+            }
+            
+
+        }
 		rep(j,M){
-			ll a = segA[j].query(l-1,r);
-			ll b = segX[j].query(L-1,R);
-			if(a != b) {
+			mint a = segA[j].query(l-1,r);
+			mint b = segX[j].query(L-1,R);
+			if(a.val() != b.val()) {
 				out("No")
 				goto next;
 			}
