@@ -108,7 +108,8 @@
         "syncstream": "cpp",
         "all": "cpp",
         "__verbose_abort": "cpp",
-        "strstream": "cpp"
+        "strstream": "cpp",
+        "execution": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

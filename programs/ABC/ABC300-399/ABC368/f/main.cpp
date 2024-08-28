@@ -34,29 +34,53 @@ typedef long long ll;
 #define INF (2147483647)
 #define MINF (-2147483648)
 #define INF_LL  (9223372036854775807LL)
-#define MINF_LL (-9223372036854775808LL)
+#define MINF_LL (-9223372036854775807LL)
 #define MOD 998244353
 
 #define MAX_N (2*100000+5)
-vector<ll> G[MAX_N];
-bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
-void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
+
+unordered_map<ll,ll> f[2*100000 + 5];
+void factorial_init(ll N) {
+    f[1][1] = 1;
+    for(ll i = 2; i < N+1; i++) {
+        if(f[i].size() == 0) {
+            for(int j = i; j < N+ 1; j+= i) {
+                ll tmp = j;
+                ll cnt = 0;
+                while(tmp % i == 0) {
+                    tmp = tmp / i;
+                    cnt ++;
+                }
+                f[j][i] = cnt;
+            }
+        }
+    }
+}
+
 
 
 int main()
-{
-	ll T; cin >> T;
-	while(T--) {
-		ll N, K; cin >> N >> K;
+{ 
+	ll N; cin >> N;
+	vector<ll> A(N); rep(i,N) cin >> A[i];
+    factorial_init(100000 + 10);
 
-		ll two = 1; rep(i,K) two *= 2;
-		vector<ll> A = {two - 1};
-		rep(i,N-1) A.push_back(A.back() / 2 + 1 );
-			
-		OUT(A," ")
-		cout << endl;
+    vector<ll> e_sum(N);
+    rep(i,N) {
+        ll x = 0;
+        for(auto [e,p]: f[A[i]]) if( e != 1) {
+            x += p;
+        }
+        e_sum[i] = x;
+    }
 
-	}
+    ll g = 0;
+    rep(i,N) g ^= e_sum[i];
+    if(g != 0) {
+        out("Anna")
+    } else {
+        out("Bruno")
+    }
 
 	return 0;
 }

@@ -34,7 +34,7 @@ typedef long long ll;
 #define INF (2147483647)
 #define MINF (-2147483648)
 #define INF_LL  (9223372036854775807LL)
-#define MINF_LL (-9223372036854775808LL)
+#define MINF_LL (-9223372036854775807LL)
 #define MOD 998244353
 
 #define MAX_N (2*100000+5)
@@ -42,21 +42,38 @@ vector<ll> G[MAX_N];
 bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
 void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
+set<ll> V;
+
+
+ll f(ll p) {
+	ck[p] = true;
+	ll s= 0;
+	for(auto q:G[p]) if(ck[q] == false) {
+		s += f(q); 
+	}
+
+	if(s > 0){
+		return s + 1;
+	} else if(V.count(p)){
+		return 1;
+	}
+	return 0;
+}
 
 int main()
 {
-	ll T; cin >> T;
-	while(T--) {
-		ll N, K; cin >> N >> K;
 
-		ll two = 1; rep(i,K) two *= 2;
-		vector<ll> A = {two - 1};
-		rep(i,N-1) A.push_back(A.back() / 2 + 1 );
-			
-		OUT(A," ")
-		cout << endl;
-
+	ll N, K; cin >> N >> K;
+	readG(N-1);
+	ll u = 0;
+	rep(i,K) {
+		ll v; cin >> v;
+		V.insert(v);
 	}
+
+	out(f(*V.begin()));
+
+
 
 	return 0;
 }

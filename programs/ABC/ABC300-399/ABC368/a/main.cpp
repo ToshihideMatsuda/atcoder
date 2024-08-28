@@ -3,7 +3,6 @@
 
 using namespace atcoder;
 using namespace std;
-// 多倍長テンプレ（デバッグだとダメかも）
 
 typedef long long ll;
 
@@ -34,7 +33,7 @@ typedef long long ll;
 #define INF (2147483647)
 #define MINF (-2147483648)
 #define INF_LL  (9223372036854775807LL)
-#define MINF_LL (-9223372036854775808LL)
+#define MINF_LL (-9223372036854775807LL)
 #define MOD 998244353
 
 #define MAX_N (2*100000+5)
@@ -45,18 +44,11 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
-	ll T; cin >> T;
-	while(T--) {
-		ll N, K; cin >> N >> K;
-
-		ll two = 1; rep(i,K) two *= 2;
-		vector<ll> A = {two - 1};
-		rep(i,N-1) A.push_back(A.back() / 2 + 1 );
-			
-		OUT(A," ")
-		cout << endl;
-
+	ll N, K; cin >> N >>K;
+	vector<ll> A(N);rep(i,N) cin >> A[i];
+	rep(i,N) {
+		out0(A[(N-K+i)%N])
+		out0(" ")
 	}
-
 	return 0;
 }

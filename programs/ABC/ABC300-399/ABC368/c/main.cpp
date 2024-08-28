@@ -4,6 +4,7 @@
 using namespace atcoder;
 using namespace std;
 // 多倍長テンプレ（デバッグだとダメかも）
+/* ---------------------- ここから ---------------------- */
 
 typedef long long ll;
 
@@ -34,7 +35,7 @@ typedef long long ll;
 #define INF (2147483647)
 #define MINF (-2147483648)
 #define INF_LL  (9223372036854775807LL)
-#define MINF_LL (-9223372036854775808LL)
+#define MINF_LL (-9223372036854775807LL)
 #define MOD 998244353
 
 #define MAX_N (2*100000+5)
@@ -43,20 +44,31 @@ bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
 void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
 
+
 int main()
 {
-	ll T; cin >> T;
-	while(T--) {
-		ll N, K; cin >> N >> K;
+	ll N; cin >> N;
+	ll T = 0;
+	rep(i,N) {
+		ll H; cin >> H;
+		ll C = H / 5;
+		H -= C*5;
+		T += C*3;
 
-		ll two = 1; rep(i,K) two *= 2;
-		vector<ll> A = {two - 1};
-		rep(i,N-1) A.push_back(A.back() / 2 + 1 );
-			
-		OUT(A," ")
-		cout << endl;
+		while(H > 0) {
+			T++;
+			if(T %3 == 0) {
+				H -= 3;
+			} else {
+				H -= 1;
+			}
+		}
+
 
 	}
+
+
+	out(T)
 
 	return 0;
 }

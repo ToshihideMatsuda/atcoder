@@ -34,29 +34,34 @@ typedef long long ll;
 #define INF (2147483647)
 #define MINF (-2147483648)
 #define INF_LL  (9223372036854775807LL)
-#define MINF_LL (-9223372036854775808LL)
+#define MINF_LL (-9223372036854775807LL)
 #define MOD 998244353
 
 #define MAX_N (2*100000+5)
-vector<ll> G[MAX_N];
-bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
-void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
+vector<tuple<ll,ll,ll>> G[MAX_N]; // G[a] = {s,t,b};
+vector<ll> X;
 
 int main()
 {
-	ll T; cin >> T;
-	while(T--) {
-		ll N, K; cin >> N >> K;
+    ll N, M, X1; cin >>  N >> M >> X1;
+    X.resize(N);
+    vector<>
+    rep(i,M) {
+        ll a, b, s, t; 
+        G[a].push_back({s,t,b});
+    }
 
-		ll two = 1; rep(i,K) two *= 2;
-		vector<ll> A = {two - 1};
-		rep(i,N-1) A.push_back(A.back() / 2 + 1 );
-			
-		OUT(A," ")
-		cout << endl;
+    rep(i,N+1) if(G[i].size() >= 2) {
+        sort(G[i].begin(), G[i].end());
+    }
+    
+    queue<ll> Q;
+    Q.push(1);
+    while(Q.size()) {
+        auto q = Q.front(); Q.pop();
+    }
 
-	}
 
 	return 0;
 }
