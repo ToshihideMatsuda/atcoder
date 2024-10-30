@@ -4,15 +4,6 @@
 using namespace atcoder;
 using namespace std;
 // 多倍長テンプレ（デバッグだとダメかも）
-/* ---------------------- ここから ---------------------- */
-#include <boost/multiprecision/cpp_dec_float.hpp>
-#include <boost/multiprecision/cpp_int.hpp>
-namespace mp = boost::multiprecision;
-// 任意長整数型
-using bll = mp::cpp_int;
-// 仮数部が10進数で1024桁の浮動小数点数型(TLEしたら小さくする)
-using real = mp::number<mp::cpp_dec_float<1024>>;
-/* ---------------------- ここまで ---------------------- */
 
 typedef long long ll;
 
@@ -47,63 +38,30 @@ typedef long long ll;
 #define MOD 998244353
 
 #define MAX_N (2*100000+5)
-set<ll> G[9], H[9];
+vector<ll> G[MAX_N];
+bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
+void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
 
 int main()
 {
-	ll N; cin >> N;
-	ll Mg, Mh; cin >> Mg;
-	rep(i,Mg) {
-		ll u,v;
-		cin >>  u >> v;
-		G[u].insert(v);
-		G[v].insert(u);
-	}
-	cin >> Mh;
+	string S, T; cin >> S >> T;
+	string K = S;
+	vector<string> X;
 
-	rep(i,Mh) {
-		ll u,v;
-		cin >>  u >> v;
-		H[u].insert(v);
-		H[v].insert(u);
+	ll M = S.size();
+	rep(i,M) if(S[i] > T[i]) {
+		K[i] = T[i];
+		X.push_back(K);
 	}
 
-	vector A = vector(N+1,vector<ll>(N+1));
-	reps(i,1,N){
-		for(int j=i+1; j <= N; j ++) {
-			cin >> A[i][j];
-			A[j][i] = A[i][j];
-		}
+	for(int i = M-1; i > -1 ; i --) if(S[i]<T[i]) {
+		K[i] = T[i];
+		X.push_back(K);
 	}
 
-
-	ll ans = INF_LL;
-	vector<ll> P;
-	reps(i,1,N+1)P.push_back(i);
-	do {
-		set<ll> GP[9];
-		reps(i,1,N+1) {
-			for(auto g : G[i]) {
-				GP[P[i-1]].insert(P[g-1]);
-			}
-		}
-
-		ll t = 0;
-		reps(i,1,N+1) {
-			reps(j,1,N+1) if(GP[i].count(j) != H[i].count(j)){
-				t += A[MIN(i,j)][MAX(i,j)];
-			}
-		}
-
-		ans = MIN(ans,t/2);
-
-
-
-	}while(next_permutation(P.begin(),P.end()));
-
-	out(ans)
-
+	out(X.size())
+	OUT(X, endl)
 
 
 	return 0;

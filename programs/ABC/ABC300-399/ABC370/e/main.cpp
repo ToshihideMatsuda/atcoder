@@ -54,18 +54,19 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
-	ll N; cin >> N;
-	vector<ll> A(N);rep(i,N) cin >> A[i];
-
-	vector<ll> dp(N+1);
-	ll ans = N;
-	dp[A[0]] = 1;
-	reps(i,1,N) {
-		ll n = i+1;
-		ans += (n - dp[A[i]])*(N-i);
-		dp[A[i]] = n;
+	ll N, K; cin >> N >> K;
+	vector<ll> A(N), S(N+1);
+	rep(i,N) {
+		cin >> A[i];
+		S[i+1] = S[i] + A[i];
 	}
-	out(ans)
+
+	// S[l, r)
+	auto hani = [&](ll l, ll r){ return S[r] - S[l]; }
+	
+
+	vector dp = vector(N+1,vector(N+1))
+
 
 	return 0;
 }

@@ -4,15 +4,6 @@
 using namespace atcoder;
 using namespace std;
 // 多倍長テンプレ（デバッグだとダメかも）
-/* ---------------------- ここから ---------------------- */
-#include <boost/multiprecision/cpp_dec_float.hpp>
-#include <boost/multiprecision/cpp_int.hpp>
-namespace mp = boost::multiprecision;
-// 任意長整数型
-using bll = mp::cpp_int;
-// 仮数部が10進数で1024桁の浮動小数点数型(TLEしたら小さくする)
-using real = mp::number<mp::cpp_dec_float<1024>>;
-/* ---------------------- ここまで ---------------------- */
 
 typedef long long ll;
 
@@ -54,30 +45,13 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
-	string S0,S1,S2;
-	cin >> S0 >> S1 >> S2;
-	vector<ll> ABC = {0,1,2};
-	do{
-		if( (S0 == "<" && ABC[0] < ABC[1]) || (S0 == ">" && ABC[0] > ABC[1]) )
-		if( (S1 == "<" && ABC[0] < ABC[2]) || (S1 == ">" && ABC[0] > ABC[2]) )
-		if( (S2 == "<" && ABC[1] < ABC[2]) || (S2 == ">" && ABC[1] > ABC[2]) ) {
-
-			rep(i,3)if(ABC[i] == 1) {
-				if(i == 0) {
-					out("A")
-					return 0;
-				} else if(i == 1){
-					out("B")
-				} else {
-					out("C")
-				}
-				return 0;
-			}
-
-
-		}
-
-	}while(next_permutation(ABC.begin(),ABC.end()));
-
+	ll L, R; cin >> L >> R;
+	if(L+R == 2 || L+R==0) {
+		out("Invalid")
+	} else if(R == 1) {
+		out("No")
+	} else {
+		out("Yes")
+	}
 	return 0;
 }

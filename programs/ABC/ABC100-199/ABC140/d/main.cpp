@@ -4,15 +4,6 @@
 using namespace atcoder;
 using namespace std;
 // 多倍長テンプレ（デバッグだとダメかも）
-/* ---------------------- ここから ---------------------- */
-#include <boost/multiprecision/cpp_dec_float.hpp>
-#include <boost/multiprecision/cpp_int.hpp>
-namespace mp = boost::multiprecision;
-// 任意長整数型
-using bll = mp::cpp_int;
-// 仮数部が10進数で1024桁の浮動小数点数型(TLEしたら小さくする)
-using real = mp::number<mp::cpp_dec_float<1024>>;
-/* ---------------------- ここまで ---------------------- */
 
 typedef long long ll;
 
@@ -43,7 +34,7 @@ typedef long long ll;
 #define INF (2147483647)
 #define MINF (-2147483648)
 #define INF_LL  (9223372036854775807LL)
-#define MINF_LL (-9223372036854775808LL)
+#define MINF_LL (-9223372036854775807LL)
 #define MOD 998244353
 
 #define MAX_N (2*100000+5)
@@ -52,28 +43,64 @@ bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
 void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
 
+// "aabbbbaaca" -> [("a",2),("b",4),("a",2),("c",1),("a",1)]
+vector<pair<string,ll> > runLengthEncoding(string S) {
+    vector<pair<string,ll> > ret;
+    ll i = 0;
+    while(i < S.size()) {
+        ll cnt = 1;
+        while(i+1 < S.size() && S[i] == S[i+1]) {
+            cnt++;
+            i++;
+        }
+        ret.push_back(make_pair(S.substr(i,1),cnt));
+        i++;
+    }
+    return ret;
+}
+
+	ll N, K; 
+	string S; 
+
+ll f(string& S,ll K,char R, char L) {
+	string T = "";
+	int i = 0;
+	while( i < N) {
+
+		if(K == 0) {
+			reps(j,i,N) T += S[j];
+			break;
+		}
+
+		if(S[i] == R) {
+			K--;
+			while(i < N && S[i] != L ) {
+				T += L;
+				i++;
+			}
+		} else {
+			T += S[i];
+			i++;
+		}
+	}
+
+
+
+	auto E = runLengthEncoding(T);
+	
+	ll ans = N - E.size();
+	return ans;
+}
+
+
 int main()
 {
-	ll N, M; cin >> N >> M;
-	vector A = vector(N,vector(M,0));
+	cin >> N >> K;;
+	cin >> S;
 
-	rep(i,N)rep(j,M) cin >> A[i][j];
-
-	vector<bitset<2000>> bit(N);
-	rep(j,M) {
-		vector<bitset<2000>> bs(1000);
-		rep(i,N) bs[A[i][j]].set(i);
-		rep(i,N) bit[i] ^= bs[A[i][j]];
-	}
 	
-	ll ans = 0;
-	rep(i,N) {
-		ans += bit[i].count() + ( bit[i][i] ? -1 : 0 );
-	}
-	ans /= 2;
+	ll ans = MAX(f(S,K,'R','L'),f(S,K,'L','R') );
 	out(ans)
-
-
 
 	return 0;
 }

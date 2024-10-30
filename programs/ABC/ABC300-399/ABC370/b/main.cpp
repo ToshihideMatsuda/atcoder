@@ -4,15 +4,6 @@
 using namespace atcoder;
 using namespace std;
 // 多倍長テンプレ（デバッグだとダメかも）
-/* ---------------------- ここから ---------------------- */
-#include <boost/multiprecision/cpp_dec_float.hpp>
-#include <boost/multiprecision/cpp_int.hpp>
-namespace mp = boost::multiprecision;
-// 任意長整数型
-using bll = mp::cpp_int;
-// 仮数部が10進数で1024桁の浮動小数点数型(TLEしたら小さくする)
-using real = mp::number<mp::cpp_dec_float<1024>>;
-/* ---------------------- ここまで ---------------------- */
 
 typedef long long ll;
 
@@ -54,17 +45,25 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
-	ll N, M; 
-	cin >> N >> M;
-	vector<ll> H(N+1,false);
-	vector<ll> C(M,false);
-	rep(i,M){
-		ll A; string B; cin >> A >>B;
-		if(B == "M" && H[A] == false) {
-			H[A] = true;
-			C[i] = true;
+	ll N; cin >> N;
+	vector A = vector(N+1,vector<ll>(N+1,0));
+	rep(i,N){
+		rep(j,i+1) {
+			cin >> A[i+1][j+1];
 		}
 	}
-	rep(i,M) if(C[i]) out("Yes") else out("No")
+
+	ll v = 1;
+
+	reps(i,1,N+1) {
+		ll m = MIN(i,v);
+		ll t = MAX(i,v);
+
+		v = A[t][m];
+
+	}
+
+	out(v)
+
 	return 0;
 }

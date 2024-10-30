@@ -4,15 +4,6 @@
 using namespace atcoder;
 using namespace std;
 // 多倍長テンプレ（デバッグだとダメかも）
-/* ---------------------- ここから ---------------------- */
-#include <boost/multiprecision/cpp_dec_float.hpp>
-#include <boost/multiprecision/cpp_int.hpp>
-namespace mp = boost::multiprecision;
-// 任意長整数型
-using bll = mp::cpp_int;
-// 仮数部が10進数で1024桁の浮動小数点数型(TLEしたら小さくする)
-using real = mp::number<mp::cpp_dec_float<1024>>;
-/* ---------------------- ここまで ---------------------- */
 
 typedef long long ll;
 
@@ -43,7 +34,7 @@ typedef long long ll;
 #define INF (2147483647)
 #define MINF (-2147483648)
 #define INF_LL  (9223372036854775807LL)
-#define MINF_LL (-9223372036854775808LL)
+#define MINF_LL (-9223372036854775807LL)
 #define MOD 998244353
 
 #define MAX_N (2*100000+5)
@@ -54,25 +45,23 @@ void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].pu
 
 int main()
 {
-	ll N, M; cin >> N >> M;
-	vector A = vector(N,vector(M,0));
+	ll N; cin >> N;
+	vector<ll> A(N), B(N), C(N-1);
+	rep(i,N) cin >> A[i];
+	rep(i,N) cin >> B[i];
+	rep(i,N-1) cin >> C[i];
 
-	rep(i,N)rep(j,M) cin >> A[i][j];
-
-	vector<bitset<2000>> bit(N);
-	rep(j,M) {
-		vector<bitset<2000>> bs(1000);
-		rep(i,N) bs[A[i][j]].set(i);
-		rep(i,N) bit[i] ^= bs[A[i][j]];
-	}
-	
 	ll ans = 0;
 	rep(i,N) {
-		ans += bit[i].count() + ( bit[i][i] ? -1 : 0 );
+		ans += B[A[i]-1];
+		if(i != 0) {
+			if(A[i-1]+1 == A[i]) {
+				ans += C[A[i-1]-1];
+			}
+		}
 	}
-	ans /= 2;
-	out(ans)
 
+	out(ans)
 
 
 	return 0;

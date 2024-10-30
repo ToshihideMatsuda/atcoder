@@ -1,18 +1,22 @@
-#include <bits/stdc++.h> 
-#include <atcoder/all>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <string>
+#include <bitset>
+#include <unordered_map>
+#include <unordered_set>
+#include <numeric>
+#include <cassert>
+#include <tuple>
+#include <functional>
+#include <limits>
 
-using namespace atcoder;
 using namespace std;
-// 多倍長テンプレ（デバッグだとダメかも）
-/* ---------------------- ここから ---------------------- */
-#include <boost/multiprecision/cpp_dec_float.hpp>
-#include <boost/multiprecision/cpp_int.hpp>
-namespace mp = boost::multiprecision;
-// 任意長整数型
-using bll = mp::cpp_int;
-// 仮数部が10進数で1024桁の浮動小数点数型(TLEしたら小さくする)
-using real = mp::number<mp::cpp_dec_float<1024>>;
-/* ---------------------- ここまで ---------------------- */
 
 typedef long long ll;
 
@@ -51,29 +55,25 @@ vector<ll> G[MAX_N];
 bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
 void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
-
 int main()
 {
-	ll N, M; cin >> N >> M;
-	vector A = vector(N,vector(M,0));
 
-	rep(i,N)rep(j,M) cin >> A[i][j];
+    ll N, M; cin >> N >> M;
 
-	vector<bitset<2000>> bit(N);
-	rep(j,M) {
-		vector<bitset<2000>> bs(1000);
-		rep(i,N) bs[A[i][j]].set(i);
-		rep(i,N) bit[i] ^= bs[A[i][j]];
-	}
-	
-	ll ans = 0;
-	rep(i,N) {
-		ans += bit[i].count() + ( bit[i][i] ? -1 : 0 );
-	}
-	ans /= 2;
-	out(ans)
+    rep(i,M) {
+        ll a, b; cin >> a >> b;
+        G[a].push_back(b);
+        G[b].push_back(a);
+    }
+
+    set<ll> H;
+    for(auto g:G[1])for(auto g2:G[g])if(g2==N) {
+        out("POSSIBLE")
+        return 0;
+    }
 
 
+        out("IMPOSSIBLE")
 
 	return 0;
 }

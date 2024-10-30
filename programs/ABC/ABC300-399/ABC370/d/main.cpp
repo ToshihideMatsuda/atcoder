@@ -4,15 +4,6 @@
 using namespace atcoder;
 using namespace std;
 // 多倍長テンプレ（デバッグだとダメかも）
-/* ---------------------- ここから ---------------------- */
-#include <boost/multiprecision/cpp_dec_float.hpp>
-#include <boost/multiprecision/cpp_int.hpp>
-namespace mp = boost::multiprecision;
-// 任意長整数型
-using bll = mp::cpp_int;
-// 仮数部が10進数で1024桁の浮動小数点数型(TLEしたら小さくする)
-using real = mp::number<mp::cpp_dec_float<1024>>;
-/* ---------------------- ここまで ---------------------- */
 
 typedef long long ll;
 
@@ -52,51 +43,84 @@ bool ck[MAX_N]; void clear() { rep(i,MAX_N) ck[i] = false; }
 void readG(ll M) { rep(i,M) { ll a, b; cin >> a >> b; G[a].push_back(b); G[b].push_back(a);} }
 
 
+
+
+
+
 int main()
 {
-	ll N; cin >> N;
-	vector<ll> X(N); rep(i,N) cin >> X[i];
-	vector<ll> P(N); rep(i,N) cin >> P[i];
+	ll H, W; cin >> H >> W;
 	ll Q; cin >> Q;
-	vector<ll> L(Q),R(Q);
-	rep(i,Q) cin >> L[i] >> R[i];
 
-	ll l = 1, r = 3, x = 2;
-	vector<tuple<ll,ll,ll>> all;
-	rep(i,N) {
-		all.push_back({X[i], x, i});
+	set<ll> C[H+1];
+	set<ll> R[W+1];
+	reps(i,1,H+1){
+		reps(j,1,W+1) C[i].insert(j);
+		C[i].insert(-1);
+		C[i].insert(INF_LL);
 	}
-	rep(i,Q) {
-		all.push_back({L[i],l,i});
-		all.push_back({R[i],r,i});
+	reps(i,1,W+1){
+		reps(j,1,H+1) R[i].insert(j);
+		R[i].insert(-1);
+		R[i].insert(INF_LL);
 	}
-	sort(all.begin(),all.end());
 
-	vector<pair<ll,ll>> LR(Q);
 
-	ll s = all.size();
-	ll j = 0;
-	rep(t,s) {
-		auto [v,w,i] = all[t];
-		if(w == x) {
-			j ++;
-		} else if(w == l) {
-			LR[i].first = j;
+	while(Q--) {
+		ll r,c; cin >> c >> r;
+
+		if(C[c].count(r)) {
+			C[c].erase(r);
+			R[r].erase(c);
 		} else {
-			LR[i].second = j;
+			{
+				auto k = C[c].lower_bound(r);
+				k--;
+				ll v = *k;
+				if(v != -1) {
+					C[c].erase(k);
+					R[v].erase(c);
+				}
+			}
+			{
+				auto k = C[c].lower_bound(r);
+				ll v = *k;
+				if(v != INF_LL) {
+					C[c].erase(k);
+					R[v].erase(c);
+				}
+			}
+
+			{
+				auto k = R[r].lower_bound(c);
+				k--;
+				ll v = *k;
+				if(v != -1) {
+					R[r].erase(k);
+					C[v].erase(r);
+				}
+			}
+			{
+				auto k = R[r].lower_bound(c);
+				ll v = *k;
+				if(v != INF_LL){
+					R[r].erase(k);
+					C[v].erase(r);
+				}
+			}
 		}
 	}
 
-	vector<ll> S(N+1);
-	rep(i,N) S[i+1] = S[i] + P[i];
-	
-	rep(i,Q) {
-		auto [l,r] = LR[i];
-		out(S[r] - S[l]);
+	ll ans = 0;
+
+	reps(h,1,H+1)reps(w,1,W+1)if(C[h].count(w) && R[w].count(h)) {
+
+		ans ++;
 	}
+	out(ans)
 
 
 
-
+	
 	return 0;
 }
