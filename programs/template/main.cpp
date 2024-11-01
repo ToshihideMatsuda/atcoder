@@ -40,10 +40,8 @@ typedef long long ll;
 #define OUT(A,separate) for(auto a : A) { cout << a << separate; }
 
 
-#define INF (2147483647)
-#define MINF (-2147483648)
-#define INF_LL  (9223372036854775807LL)
-#define MINF_LL (-9223372036854775807LL)
+#define INF  (2000000000000000001LL)
+#define MINF (-2000000000000000001LL)
 #define MOD 998244353
 
 #define MAX_N (2*100000+5)
